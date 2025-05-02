@@ -1,11 +1,48 @@
 {
   "version": 3,
   "targets": {
-    "net6.0": {}
+    "net6.0": {
+      "BurberDinner.Application/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "BurberDinner.Domain": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/BurberDinner.Application.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BurberDinner.Application.dll": {}
+        }
+      },
+      "BurberDinner.Domain/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "compile": {
+          "bin/placeholder/BurberDinner.Domain.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/BurberDinner.Domain.dll": {}
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "BurberDinner.Application/1.0.0": {
+      "type": "project",
+      "path": "../BurberDinner.Application/BurberDinner.Application.csproj",
+      "msbuildProject": "../BurberDinner.Application/BurberDinner.Application.csproj"
+    },
+    "BurberDinner.Domain/1.0.0": {
+      "type": "project",
+      "path": "../BurberDinner.Domain/BurberDinner.Domain.csproj",
+      "msbuildProject": "../BurberDinner.Domain/BurberDinner.Domain.csproj"
+    }
+  },
   "projectFileDependencyGroups": {
-    "net6.0": []
+    "net6.0": [
+      "BurberDinner.Application >= 1.0.0"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\Adm\\.nuget\\packages\\": {},
@@ -38,7 +75,11 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\usr\\.NET\\Clean Arch\\BurberDinner\\BurberDinner.Application\\BurberDinner.Application.csproj": {
+              "projectPath": "C:\\usr\\.NET\\Clean Arch\\BurberDinner\\BurberDinner.Application\\BurberDinner.Application.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
