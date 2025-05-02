@@ -12,8 +12,17 @@ Content-Type: application/json
 
 {
   "FirstName": "Ednei",
-  "LastName": "Lopes", 
-  "Email": "t_ednei.sivla@hapvida.com.br",
+  "LastName": "Silva", 
+  "Email": "t_ednei.silva@hapvida.com.br",
+  "Password": "12345678"
+}
+
+###
+POST https://localhost:7104/api/auth/login
+Content-Type: application/json
+
+{
+  "Email": "silva@hapvida.com.br",
   "Password": "12345678"
 }
 
