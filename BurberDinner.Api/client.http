@@ -11,8 +11,8 @@ POST https://localhost:7104/api/auth/register
 Content-Type: application/json
 
 {
-  "FirstName": "Ednei",
-  "LastName": "Silva", 
+  "FirstName": "Jorge",
+  "LastName": "& Mateus", 
   "Email": "t_ednei.silva@hapvida.com.br",
   "Password": "12345678"
 }

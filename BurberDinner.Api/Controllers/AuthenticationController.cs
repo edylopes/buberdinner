@@ -25,17 +25,18 @@ namespace BurberDinner.Api.Controllers
                 req.Password
             );
 
-            var response = new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName,
-                authResult.Email, authResult.Token);
-            return Ok(response);
+            return Ok(
+                new AuthenticationResponse(authResult.Id, authResult.FirstName!, authResult.LastName!,
+                    authResult.Email, authResult.Token!)
+            );
         }
 
         [HttpPost("login")]
         public IActionResult Login(LoginRequest req)
         {
             var authResult = _authenticationService.Login(req.Email, req.Password);
-            return Ok(new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName,
-                authResult.Email, authResult.Token));
+            return Ok(new AuthenticationResponse(authResult.Id, authResult.FirstName!, authResult.LastName!,
+                authResult.Email, authResult.Token!));
         }
     }
 }

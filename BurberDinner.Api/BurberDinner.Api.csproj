@@ -4,15 +4,16 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\BurberDinner.Contracts\BurberDinner.Contracts.csproj" />
-        <ProjectReference Include="..\BurberDinner.Application\BurberDinner.Application.csproj" />
-        <ProjectReference Include="..\BurberDinner.Infrastructure\BurberDinner.Infrastructure.csproj" />
+        <ProjectReference Include="..\BurberDinner.Contracts\BurberDinner.Contracts.csproj"/>
+        <ProjectReference Include="..\BurberDinner.Application\BurberDinner.Application.csproj"/>
+        <ProjectReference Include="..\BurberDinner.Infrastructure\BurberDinner.Infrastructure.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18"/>
     </ItemGroup>
 </Project>
