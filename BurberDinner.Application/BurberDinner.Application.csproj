@@ -2,7 +2,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BurberDinner.Domain\BurberDinner.Domain.csproj" />
-    
   </ItemGroup>
 
   <ItemGroup>

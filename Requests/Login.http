@@ -1,0 +1,9 @@
+### Send Request with heander and body
+POST https://localhost:7104/api/auth/login
+Content-Type: application/json
+
+{
+  "Email": "t_ednei.silva@hapvida.com.br",
+  "Password": "hapvida"
+}
+

@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using BurberDinner.Application.Common.Interfaces.Services;
+using BurberDinner.Domain.Entities;
 using BurberDinner.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 
@@ -20,20 +21,18 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _options = options.Value!;
     }
 
-    public string GenerateToken(Guid userId, string firstName, string lastName, string email)
+    public string GenerateToken(User user)
     {
         var handler = new JwtSecurityTokenHandler();
 
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, userId.ToString()),
-            new Claim(JwtRegisteredClaimNames.GivenName, firstName),
-            new Claim(JwtRegisteredClaimNames.FamilyName, lastName),
+            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new Claim(ClaimTypes.Role, "Admin")
-
         };
-
         var creds = new SigningCredentials(key: new SymmetricSecurityKey(key: ConvertSecretToBytes(
             _options.JwtSecretKey!)), algorithm: SecurityAlgorithms.HmacSha256);
 
@@ -41,7 +40,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             issuer: _options.Issuer,
             audience: _options.Audience,
             notBefore: _dateTimeProvider.UtcNow.AddSeconds(5),
-            expires: _dateTimeProvider.UtcNow.AddMinutes(_options.ExpireMinutes),
+            expires: _dateTimeProvider.UtcNow.AddDays(1),
             claims: claims,
             signingCredentials: creds
         );
@@ -49,6 +48,6 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         return handler.WriteToken(token);
     }
 
-    private static byte[] ConvertSecretToBytes(string secret, bool secretIsBase32 = false) 
+    private static byte[] ConvertSecretToBytes(string secret, bool secretIsBase32 = false)
         => Encoding.UTF8.GetBytes(secret);
 }

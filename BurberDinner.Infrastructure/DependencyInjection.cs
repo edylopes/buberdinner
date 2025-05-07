@@ -1,7 +1,10 @@
 using BurberDinner.Application.Common.Interfaces.Authentication;
+using BurberDinner.Application.Common.Interfaces.Persistence;
 using BurberDinner.Application.Common.Interfaces.Services;
+using BurberDinner.Domain.Entities;
 using BurberDinner.Infrastructure.Authentication;
 using BurberDinner.Infrastructure.Configuration;
+using BurberDinner.Infrastructure.Persistence;
 using BurberDinner.Infrastructure.Services;
 //MS
 using Microsoft.Extensions.Configuration;
@@ -17,6 +20,7 @@ public static class DependencyInjection
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.Configure<ConfigurationOptions>(configuration.GetSection(ConfigurationOptions.JWT));
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

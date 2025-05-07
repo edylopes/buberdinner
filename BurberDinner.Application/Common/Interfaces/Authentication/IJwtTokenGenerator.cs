@@ -1,1 +1,1 @@
-﻿namespace BurberDinner.Application.Common.Interfaces.Authentication;public interface IJwtTokenGenerator{    public string GenerateToken(Guid userId, string firstName, string lastName, string email);}
+﻿using BurberDinner.Domain.Entities;namespace BurberDinner.Application.Common.Interfaces.Authentication;public interface IJwtTokenGenerator{    public abstract string GenerateToken(User user);}
