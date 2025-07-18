@@ -1,13 +1,14 @@
+
 ### Send POST request with json body
 
 POST https://localhost:7104/api/auth/register
 Content-Type: application/json
 
 {
-  "FirstName": "Ednei",
-  "LastName": "Lopes",
-  "Email": "silva@hapvida.com.br",
-  "Password": "hapvida"
+  "firstname": "Ednei",
+  "lastname": "Lopes",
+  "email": "email@hapvida.com.br",
+  "password": "hapvida"
 }
 
 

@@ -16,9 +16,9 @@ namespace BurberDinner.Api.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest req)
+        public async Task<IActionResult> Register(RegisterRequest req)
         {
-            var (authResult, token) = _authenticationService.Register(
+            var authResult = await _authenticationService.Register(
                 req.FirstName,
                 req.LastName,
                 req.Email,
@@ -26,17 +26,17 @@ namespace BurberDinner.Api.Controllers
             );
 
             return Ok(
-                new AuthenticationResponse(authResult.Id, authResult.FirstName!, authResult.LastName!,
-                    authResult.Email, token!)
+                new AuthenticationResponse(authResult.Id, authResult.FirstName, authResult.LastName,
+                    authResult.Email, authResult.Token!)
             );
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest req)
+        public async Task<IActionResult> Login(LoginRequest req)
         {
-            var (authResult, token) = _authenticationService.Login(req.Email, req.Password);
-            return Ok(new AuthenticationResponse(authResult.Id, authResult.FirstName!, authResult.LastName!,
-                authResult.Email, token!));
+            var authResult = await _authenticationService.Login(req.Email, req.Password);
+            return Ok(new AuthenticationResponse(authResult.Id, authResult.FirstName,
+                authResult.LastName, authResult.Email, authResult.Token!));
         }
     }
 }

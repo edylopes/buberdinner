@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "gomFZwPU2kY=",
+  "dgSpecHash": "uPw/cWDBlnI=",
   "success": true,
   "projectFilePath": "C:\\usr\\.NET\\Clean Arch\\BurberDinner\\BurberDinner.Domain\\BurberDinner.Domain.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\Adm\\.nuget\\packages\\erroror\\1.2.0\\erroror.1.2.0.nupkg.sha512"
+  ],
   "logs": []
 }

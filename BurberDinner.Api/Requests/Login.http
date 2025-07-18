@@ -4,7 +4,7 @@ Content-Type: application/json
 
 
 {
-  "email": "silva@hapvida.com.br",
-  "password": "hapvida"
+  "email": "email@hapvida.com.br",
+  "Password": "hapvida"
 }
 

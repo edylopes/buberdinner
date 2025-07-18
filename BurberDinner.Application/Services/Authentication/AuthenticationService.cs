@@ -9,50 +9,49 @@ public class AuthenticationService : IAuthenticationService
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
 
-
     public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
     }
 
-    public AuthenticationResult Login(string email, string password)
+    public async Task<AuthenticationResult> Login(string email, string password)
     {
-        // 1. Validate the user  exist.
-        if (_userRepository.GetUserByEmail(email) is not { } user) //User
+        // 1. Validate the user exists
+        // 2. Validate the password is correct
+        if (_userRepository.GetUserByEmail(email) is not { } user)
         {
-            throw new Exception("Email or Password  is not correct.");
+            return null;
         }
-        //Check if password is correct.
-        if (user.Password != password) throw new Exception("Invalid password.");
-        //create jwt token
-        var token = _jwtTokenGenerator
-            .GenerateToken(user);
-        return new AuthenticationResult(user, token);
+
+        if (user?.Password != password) throw new Exception("Invalid password.");
+
+        return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, user.Token);
     }
 
-    public AuthenticationResult Register(string firstName, string lastName, string email, string password)
+    public async Task<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
     {
-        // 1. Validate the user doesn´t exist
-        if (_userRepository.GetUserByEmail(email) is not null)
+        // 1. Validate the user does´t exist
+        if (_userRepository?.GetUserByEmail(email) is not null)
         {
-            throw new Exception("The user already exists");
+            throw new Exception("User with given email already exists");
         }
 
-        // (Create User ) generate uniquie ID & persiste to DB
         var user = new User
         {
-            Id = Guid.NewGuid(),
             FirstName = firstName,
             LastName = lastName,
             Email = email,
-            Password = password,
+            Password = password
         };
-        _userRepository.Add(user);
         // Generate JWT Token
+
         var token = _jwtTokenGenerator
             .GenerateToken(user);
 
-        return new AuthenticationResult(user, token);
+        _userRepository.Add(user, token);
+        user.Token = token;
+
+        return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, user.Token);
     }
 }
