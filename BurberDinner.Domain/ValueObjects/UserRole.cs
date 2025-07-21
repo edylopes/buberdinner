@@ -24,7 +24,7 @@ namespace BurberDinner.Domain.ValueObjects
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("User role cannot be empty");
 
-            return Enum.TryParse<RoleType>("value", true, out var roleType)
+            return Enum.TryParse<RoleType>(value, true, out var roleType)
                 ? new UserRole(roleType)
                 : throw new UserRoleNotAllowedException(value);
 

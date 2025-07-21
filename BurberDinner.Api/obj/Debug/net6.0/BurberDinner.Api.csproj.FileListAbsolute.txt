@@ -261,7 +261,6 @@ C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\BurberDinn
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\BurberDinner.Infrastructure.dll
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\appsettings.Development.json
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\appsettings.json
-C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\Requests\http-client.env.json
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\BurberDinner.Api.staticwebassets.endpoints.json
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\BurberDinner.Api.deps.json
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\BurberDinner.Api.runtimeconfig.json
@@ -506,3 +505,4 @@ C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\obj\Debug\net6.0\refint\Bur
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\obj\Debug\net6.0\BurberDinner.Api.pdb
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\obj\Debug\net6.0\BurberDinner.Api.genruntimeconfig.cache
 C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\obj\Debug\net6.0\ref\BurberDinner.Api.dll
+C:\usr\.NET\Clean Arch\BurberDinner\BurberDinner.Api\bin\Debug\net6.0\OneOf.dll

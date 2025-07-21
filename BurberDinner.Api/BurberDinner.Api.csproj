@@ -1,37 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
-
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-      <UserSecretsId>22742d53-0527-4497-b73f-2caeb48bece5</UserSecretsId>
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <UserSecretsId>22742d53-0527-4497-b73f-2caeb48bece5</UserSecretsId>
   </PropertyGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\BurberDinner.Contracts\BurberDinner.Contracts.csproj" />
-        <ProjectReference Include="..\BurberDinner.Application\BurberDinner.Application.csproj" />
-        <ProjectReference Include="..\BurberDinner.Infrastructure\BurberDinner.Infrastructure.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
-        <PackageReference Include="System.Linq.Async" Version="6.0.3" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Compile Remove="Requets\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Requets\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Requets\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Requets\**" />
-    </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BurberDinner.Contracts\BurberDinner.Contracts.csproj"/>
+    <ProjectReference Include="..\BurberDinner.Application\BurberDinner.Application.csproj"/>
+    <ProjectReference Include="..\BurberDinner.Infrastructure\BurberDinner.Infrastructure.csproj"/>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18"/>
+    <PackageReference Include="System.Linq.Async" Version="6.0.3"/>
+    <PackageReference Include="OneOf" Version="3.0.271"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Requets\**"/>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Remove="Requets\**"/>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Requets\**"/>
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Requets\**"/>
+  </ItemGroup>
 </Project>

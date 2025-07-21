@@ -1,6 +1,6 @@
 
-using BurberDinner.Api.Utils;
-using BurberDinner.Domain.Exceptions;
+using System.Data.Common;
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -13,45 +13,66 @@ namespace BurberDinner.Api.Filters
     public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
     {
 
+        private const string SERVER_ERROR_URL = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1";
+        private const string CONTENT_TYPE = "application/problem+json";
         private readonly ILogger<ErrorHandlingFilterAttribute> _logger;
+        private readonly IHostEnvironment _env;
 
-        /// <summary>
-        /// Error URL is used to provide a link to the documentation for server errors RCF.
-        /// </summary>
-        const string SERVER_ERROR_URL = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1";
-
-        public ErrorHandlingFilterAttribute(ILogger<ErrorHandlingFilterAttribute> logger)
+        public ErrorHandlingFilterAttribute(ILogger<ErrorHandlingFilterAttribute> logger, IHostEnvironment env)
         {
             _logger = logger;
+            _env = env;
         }
         public override void OnException(ExceptionContext context)
         {
 
-            /*  var exception = ExceptionMappingRegistry.GetMapping(context.Exception); */
-            context.HttpContext.Response.ContentType = "application/json";
+            var problemDetails = CreateBaseProblemDetails(context.HttpContext);
+            problemDetails.Status = StatusCodes.Status500InternalServerError;
 
-            context.Result = context.Exception switch
+
+            switch (context.Exception)
             {
-                UserRoleNotAllowedException ex => new ObjectResult(new ProblemDetails
-                {
-                    Type = "https://httpstatuses.com/409",
-                    Title = "User Role Not Allowed",
-                    Status = StatusCodes.Status403Forbidden,
-                    Detail = $"User Role not Allowed.",
-                }),
-                _ => new ObjectResult(new ProblemDetails
-                {
-                    Type = SERVER_ERROR_URL,
-                    Title = "Internal Server Error",
-                    Status = StatusCodes.Status500InternalServerError,
-                    Detail = "An unexpected error occurred while processing your request.",
-                    Instance = context.HttpContext.Request.Path.Value
-                })
+                case DbException ex:
+                    _logger.LogError("Internal Server Error {ex}", ex);
+                    ConfigureProblemDetails(problemDetails, "Infrastructure error", ex.Message);
+                    break;
+                default:
+                    _logger.LogError(context.Exception, "An internal error occurred on the server {ex}", context.HttpContext.TraceIdentifier);
+                    ConfigureProblemDetails(problemDetails, "Internal Server Error", context.Exception.Message);
+                    break;
+            }
+
+            context.Result = new ObjectResult(problemDetails)
+            {
+                StatusCode = problemDetails.Status
             };
-            context.HttpContext.Response.StatusCode = context.Result is ObjectResult objectResult ? objectResult.StatusCode ?? StatusCodes.Status500InternalServerError : StatusCodes.Status500InternalServerError;
+
+            problemDetails.Extensions["exceptionType"] = context.Exception.GetType().Name;
+            problemDetails.Extensions["timestamp"] = DateTimeOffset.UtcNow;
+
+            context.HttpContext.Response.ContentType = CONTENT_TYPE;
             context.ExceptionHandled = true;
 
 
         }
+        private void ConfigureProblemDetails(ProblemDetails details, string title, string detail)
+        {
+            details.Title = title;
+            details.Detail = _env.IsDevelopment()
+             ? detail
+            : "An unexpected error occurred. Please contact support.";
+
+
+        }
+
+        private ProblemDetails CreateBaseProblemDetails(HttpContext context) => new ProblemDetails
+        {
+            Type = SERVER_ERROR_URL,
+            Instance = context.Request.Path.Value,
+            Extensions = { ["traceId"] = context.TraceIdentifier },
+
+        };
     }
+
+
 }

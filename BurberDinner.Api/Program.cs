@@ -1,31 +1,29 @@
+using BurberDinner.Api.Errors;
 using BurberDinner.Api.Filters;
-using BurberDinner.Api.Middleware;
-using BurberDinner.Api.Utils;
 using BurberDinner.Application;
 using BurberDinner.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
-{
-    builder.Services
-        .AddApplication()
-        .AddInfrastructure(builder.Configuration);
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
-    // Register the error handling filter globally
-    // ExceptionMappingRegistry.RegisterDefaults();
+builder.Services.AddSingleton<ProblemDetailsFactory, BurberDinnerProblemDetailsFactory>();
 
-    builder.Services.AddControllers(options =>
-    {
-        options.Filters.Add<ErrorHandlingFilterAttribute>();
-    });
+// Register the error handling filter globally
+// ErrorMappingRegistry.RegisterDefaults();
 
-}
+builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
+
 
 var app = builder.Build();
-{
-    // app.UseMiddleware<ErrorHandlingMiddleware>();
 
-    app.UseHttpsRedirection();
-    app.MapControllers();
-    app.Run();
-}
+// app.UseMiddleware<ErrorHandlingMiddleware>();
+
+
+app.UseExceptionHandler("/error");
+app.UseHttpsRedirection();
+app.MapControllers();
+app.Run();

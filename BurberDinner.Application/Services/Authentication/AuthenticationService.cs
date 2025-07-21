@@ -1,9 +1,11 @@
 using BurberDinner.Application.Common.Interfaces.Authentication;
 using BurberDinner.Application.Common.Interfaces.Persistence;
+using BurberDinner.Application.Errors;
 using BurberDinner.Domain.Entities;
-using BurberDinner.Domain.DomainErrors;
+using OneOf;
 
 namespace BurberDinner.Application.Services.Authentication;
+
 
 public class AuthenticationService : IAuthenticationService
 {
@@ -16,7 +18,7 @@ public class AuthenticationService : IAuthenticationService
         _userRepository = userRepository;
     }
 
-    public async Task<AuthenticationResult> Login(string email, string password)
+    public async Task<OneOf<AuthenticationResult, AppError>> Login(string email, string password)
     {
 
         if (await _userRepository.GetByEmailAsync(email) is not User user)
@@ -25,22 +27,21 @@ public class AuthenticationService : IAuthenticationService
         }
 
         if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            throw new Exception("Invalid password.");
-        // 3. Generate the token
+            return new ValidationError(null);
+
         var accessToken = _jwtTokenGenerator.GenerateToken(user);
 
         return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, accessToken, user.RefreshTokens?.FirstOrDefault(t => t.UserId == user.Id)?.Token ?? string.Empty, user.Role);
     }
-    public async Task<AuthenticationResult> Register(string firstName, string lastName, string email, string password, string role)
+    public async Task<OneOf<AuthenticationResult, AppError>> Register(string firstName, string lastName, string email, string password)
     {
-        // 1. Validate the user does not already exist
         if (await _userRepository.GetByEmailAsync(email) is not null)
         {
-            return null;
+            return new DuplicatedEmailError();
         }
         var hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
-        var user = new User(firstName, lastName, hashPassword, email, null);
+        var user = new User(firstName, lastName, hashPassword, email);
 
         var accessToken = _jwtTokenGenerator
             .GenerateToken(user);

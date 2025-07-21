@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "BbYN9jatlu0=",
+  "dgSpecHash": "Fsajn/fBXWo=",
   "success": true,
   "projectFilePath": "C:\\usr\\.NET\\Clean Arch\\BurberDinner\\BurberDinner.Infrastructure\\BurberDinner.Infrastructure.csproj",
   "expectedPackageFiles": [
@@ -43,6 +43,7 @@
     "C:\\Users\\Adm\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
+    "C:\\Users\\Adm\\.nuget\\packages\\oneof\\3.0.271\\oneof.3.0.271.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\system.configuration.configurationmanager\\5.0.0\\system.configuration.configurationmanager.5.0.0.nupkg.sha512",

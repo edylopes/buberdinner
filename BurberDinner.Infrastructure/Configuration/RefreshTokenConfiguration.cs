@@ -20,7 +20,6 @@ namespace BurberDinner.Infrastructure.Configuration
                 .FindNavigation(nameof(User.RefreshTokens))!
                 .SetPropertyAccessMode(PropertyAccessMode.Field);
 
-            builder.HasIndex(rt => rt.Token).IsUnique();
             builder.HasIndex(rt => rt.UserId);
 
         }

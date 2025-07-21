@@ -2169,6 +2169,15 @@
           "lib/netstandard2.0/NuGet.Versioning.dll": {}
         }
       },
+      "OneOf/3.0.271": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/OneOf.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/OneOf.dll": {}
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
         "type": "package",
         "runtimeTargets": {
@@ -3836,7 +3845,8 @@
           "BCrypt.Net-Next": "4.0.3",
           "BurberDinner.Domain": "1.0.0",
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.0-preview.3.25171.5",
-          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.0-preview.3.25171.5"
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.0-preview.3.25171.5",
+          "OneOf": "3.0.271"
         },
         "compile": {
           "bin/placeholder/BurberDinner.Application.dll": {}
@@ -6893,6 +6903,21 @@
         "lib/netstandard2.0/NuGet.Versioning.dll",
         "nuget.versioning.6.9.1.nupkg.sha512",
         "nuget.versioning.nuspec"
+      ]
+    },
+    "OneOf/3.0.271": {
+      "sha512": "pqpqeK8xQGggExhr4tesVgJkjdn+9HQAO0QgrYV2hFjE3y90okzk1kQMntMiUOGfV7FrCUfKPaVvPBD4IANqKg==",
+      "type": "package",
+      "path": "oneof/3.0.271",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net35/OneOf.dll",
+        "lib/net45/OneOf.dll",
+        "lib/netstandard1.3/OneOf.dll",
+        "lib/netstandard2.0/OneOf.dll",
+        "oneof.3.0.271.nupkg.sha512",
+        "oneof.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -11100,6 +11125,7 @@
       "BurberDinner.Contracts >= 1.0.0",
       "BurberDinner.Infrastructure >= 1.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.18",
+      "OneOf >= 3.0.271",
       "System.Linq.Async >= 6.0.3"
     ]
   },
@@ -11166,6 +11192,10 @@
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
             "target": "Package",
             "version": "[6.0.18, )"
+          },
+          "OneOf": {
+            "target": "Package",
+            "version": "[3.0.271, )"
           },
           "System.Linq.Async": {
             "target": "Package",

@@ -64,6 +64,10 @@
               "target": "Package",
               "version": "[6.0.18, )"
             },
+            "OneOf": {
+              "target": "Package",
+              "version": "[3.0.271, )"
+            },
             "System.Linq.Async": {
               "target": "Package",
               "version": "[6.0.3, )"
@@ -153,6 +157,10 @@
             "Microsoft.Extensions.Options.ConfigurationExtensions": {
               "target": "Package",
               "version": "[10.0.0-preview.3.25171.5, )"
+            },
+            "OneOf": {
+              "target": "Package",
+              "version": "[3.0.271, )"
             }
           },
           "imports": [

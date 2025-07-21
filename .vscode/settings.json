@@ -9,7 +9,7 @@
         "node_modules": true,
         "**/.vs": true,
         "**/.github": true,
-        "**/.idea": true,
+        "**/.idea": true
     },
     "search.exclude": {
         "**/bin": true,
@@ -42,5 +42,6 @@
     "files.watcherExclude": {
         "**/bin/**": true,
         "**/obj/**": true
-    }
+    },
+    "cSpell.words": ["Burber"]
 }

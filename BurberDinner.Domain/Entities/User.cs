@@ -24,7 +24,7 @@ public class User
     public bool EmailConfirmed { get; private set; }
 
     protected User() { }
-    public User(string firstName, string lastName, string hash, string email, string? role)
+    public User(string firstName, string lastName, string hash, string email, string? role = "User")
     {
 
         var address = new MailAddress(email);
