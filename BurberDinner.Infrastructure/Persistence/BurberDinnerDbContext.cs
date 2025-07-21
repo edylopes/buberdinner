@@ -10,6 +10,7 @@ public class BurberDinnerDbContext : DbContext
     public DbSet<Host> Hosts { get; set; }
     public DbSet<Dinner> Dinners { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

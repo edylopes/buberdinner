@@ -1,17 +1,11 @@
-using ErrorOr;
 
-namespace BurberDinner.DomainErros;
 
+namespace BurberDinner.Domain.DomainErrors;
 
 /// <summary>
-/// Contains error definitions related to user operations.
+/// Contains errors definitions related to user operations.
 /// </summary>
-public static partial class Errors
-{
-    public static class User
-    {
-        public static Error DuplicateEmail => Error.Conflict(
-            code: "User.DuplicateEmail",
-            description: "Email is already in use.");
-    }
-}
+public abstract record AppError;    
+public record DuplicatedEmailError : AppError;
+public record UserRoleNotAllowedError(string role) : AppError;
+

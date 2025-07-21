@@ -5,6 +5,7 @@ using System.Text;
 using BurberDinner.Domain.Entities;
 using Microsoft.Extensions.Options;
 using BurberDinner.Infrastructure.Configuration;
+using System.Security.Cryptography;
 
 
 
@@ -31,9 +32,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new Claim(JwtRegisteredClaimNames.Iat, _dateTimeProvider.UtcNow.ToShortDateString()),
-
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.Role, user.Role),
         };
+
         var creds = new SigningCredentials(key: new SymmetricSecurityKey(ConvertSecretToBytes(
             _options.JwtSecretKey!)), SecurityAlgorithms.HmacSha256);
 
@@ -49,11 +51,31 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         return handler.WriteToken(token);
     }
 
-    public string GenerateRefreshToken()
+
+    public RefreshToken GenerateRefreshToken(User user)
     {
-        throw new NotImplementedException();
+        byte[] randomBytes = GenerateRandomBytes();
+
+        return new RefreshToken(
+           token: Convert.ToBase64String(randomBytes),
+           expires: _dateTimeProvider.UtcNow.AddDays(7),
+           userId: user.Id
+        );
     }
 
     private static byte[] ConvertSecretToBytes(string secret, bool secretIsBase32 = false)
         => Encoding.UTF8.GetBytes(secret);
+
+    private static byte[] GenerateRandomBytes(byte length = 64)
+    {
+
+        if (length > 255)
+            throw new ArgumentOutOfRangeException(nameof(length), "Length must be less than or equal to 255.");
+
+        var randomBytes = new byte[length];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomBytes);
+
+        return randomBytes;
+    }
 }

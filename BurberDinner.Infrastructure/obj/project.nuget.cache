@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "fMhDLVmiBOU=",
+  "dgSpecHash": "BbYN9jatlu0=",
   "success": true,
   "projectFilePath": "C:\\usr\\.NET\\Clean Arch\\BurberDinner\\BurberDinner.Infrastructure\\BurberDinner.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Adm\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\Adm\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\erroror\\1.2.0\\erroror.1.2.0.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
     "C:\\Users\\Adm\\.nuget\\packages\\microsoft.bcl.memory\\9.0.0\\microsoft.bcl.memory.9.0.0.nupkg.sha512",

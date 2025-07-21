@@ -1,6 +1,7 @@
 using BurberDinner.Application.Common.Interfaces.Authentication;
 using BurberDinner.Application.Common.Interfaces.Persistence;
 using BurberDinner.Domain.Entities;
+using BurberDinner.Domain.DomainErrors;
 
 namespace BurberDinner.Application.Services.Authentication;
 
@@ -17,41 +18,39 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<AuthenticationResult> Login(string email, string password)
     {
-        // 1. Validate the user exists
-        // 2. Validate the password is correct
-        if (_userRepository.GetUserByEmail(email) is not { } user)
+
+        if (await _userRepository.GetByEmailAsync(email) is not User user)
+        {
+            throw new InvalidOperationException("User does`t exist.");
+        }
+
+        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+            throw new Exception("Invalid password.");
+        // 3. Generate the token
+        var accessToken = _jwtTokenGenerator.GenerateToken(user);
+
+        return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, accessToken, user.RefreshTokens?.FirstOrDefault(t => t.UserId == user.Id)?.Token ?? string.Empty, user.Role);
+    }
+    public async Task<AuthenticationResult> Register(string firstName, string lastName, string email, string password, string role)
+    {
+        // 1. Validate the user does not already exist
+        if (await _userRepository.GetByEmailAsync(email) is not null)
         {
             return null;
         }
+        var hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
-        if (user?.Password != password) throw new Exception("Invalid password.");
+        var user = new User(firstName, lastName, hashPassword, email, null);
 
-        return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, user.Token);
-    }
-
-    public async Task<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
-    {
-        // 1. Validate the user does´t exist
-        if (_userRepository?.GetUserByEmail(email) is not null)
-        {
-            throw new Exception("User with given email already exists");
-        }
-
-        var user = new User
-        {
-            FirstName = firstName,
-            LastName = lastName,
-            Email = email,
-            Password = password
-        };
-        // Generate JWT Token
-
-        var token = _jwtTokenGenerator
+        var accessToken = _jwtTokenGenerator
             .GenerateToken(user);
+        var refreshToken = _jwtTokenGenerator
+          .GenerateRefreshToken(user);
 
-        _userRepository.Add(user, token);
-        user.Token = token;
+        user.AddRefreshToken(refreshToken);
 
-        return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, user.Token);
+        await _userRepository.AddAsync(user);
+
+        return new AuthenticationResult(user.Id, user.FirstName, user.LastName, user.Email, accessToken, refreshToken.Token, user.Role);
     }
 }

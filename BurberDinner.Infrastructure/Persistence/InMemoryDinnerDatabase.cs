@@ -13,13 +13,11 @@ namespace BurberDinner.Infrastructure.Persistence
             return Task.CompletedTask;
         }
 
-        public async IAsyncEnumerable<Dinner> ListUserDinnersAsync(Guid userId)
+        public async Task<List<Dinner>> ListUserDinnersAsync(Guid userId)
         {
-            foreach (var dinners in _dinners.Where(dinner => dinner.Host.UserId == userId))
-            {
-                yield return dinners;
-                await Task.Yield(); // Ensure asynchronous operation
-            }
+            return _dinners.Where(dinner => dinner.Host.UserId == userId)
+                 .ToList();
+
         }
         public Task<Dinner> GetByIdAsync(Guid id)
         {
@@ -37,7 +35,7 @@ namespace BurberDinner.Infrastructure.Persistence
             return Task.CompletedTask;
         }
 
-        public Dinner GetUserByEmail(string email)
+        public Task<Dinner> GetUserByEmail(string email)
         {
             throw new NotImplementedException();
         }

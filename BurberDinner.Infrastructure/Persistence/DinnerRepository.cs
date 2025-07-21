@@ -19,7 +19,6 @@ namespace BurberDinner.Infrastructure.Persistence
             _context.Dinners.Add(dinner);
             await _context.SaveChangesAsync();
         }
-
         public async Task<List<Dinner>> ListUserDinnersAsync(Guid userId)
         {
             return await _context.Dinners
@@ -27,8 +26,7 @@ namespace BurberDinner.Infrastructure.Persistence
                 .ToListAsync();
 
         }
-
-        public Task<Dinner> GetByIdAsync(Guid id)
+        public Task<Dinner?> GetByIdAsync(Guid id)
         {
             return _context.Dinners.FindAsync(id).AsTask();
         }
@@ -39,10 +37,6 @@ namespace BurberDinner.Infrastructure.Persistence
             return _context.SaveChangesAsync();
         }
 
-        public Dinner GetUserByEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
     }
 
 }

@@ -1,0 +1,46 @@
+{
+    "files.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/*.user": true,
+        "**/*.suo": true,
+        "**/*.vspscc": true,
+        "**/*.vssscc": true,
+        "node_modules": true,
+        "**/.vs": true,
+        "**/.github": true,
+        "**/.idea": true,
+    },
+    "search.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/*.user": true,
+        "**/*.suo": true,
+        "**/*.vspscc": true,
+        "**/*.vssscc": true,
+        "node_modules": true
+    },
+    "files.watcherExclude": {
+        "**/bin/**": true,
+        "**/obj/**": true
+    },
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 10,
+
+    "editor.formatOnSave": true,
+    "editor.formatOnType": true,
+
+    "search.exclude": {
+        "**/bin": true,
+        "**/obj": true,
+        "**/*.user": true,
+        "**/*.suo": true,
+        "**/*.vspscc": true,
+        "**/*.vssscc": true,
+        "node_modules": true
+    },
+    "files.watcherExclude": {
+        "**/bin/**": true,
+        "**/obj/**": true
+    }
+}
