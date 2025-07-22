@@ -1,5 +1,5 @@
-using BurberDinner.Application.Common.Interfaces.Authentication;
-using BurberDinner.Application.Services.Authentication;
+using BuberDinner.Application.Common.Interfaces.Authentication;
+using BuberDinner.Application.Services.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BurberDinner.Application;

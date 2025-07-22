@@ -1,9 +1,9 @@
-using BurberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities;
 
 namespace BuberDinner.Application.Common.Interfaces.Persistence
 {
     public interface IDinnerRepository : IRepository<Dinner, Guid>
     {
-        List<Dinner> ListUserDinnersAsync(Guid id);
+        Task<List<Dinner>> ListUserDinnersAsync(Guid id);
     }
 }

@@ -50,7 +50,7 @@ public static class OneOfExtensions
                     Status = error.StatusCode,
                 };
 
-                return new ObjectResult(problemDetails) { StatusCode = error.statusCode };
+                return new ObjectResult(problemDetails) { StatusCode = error.StatusCode };
             }
         );
     }

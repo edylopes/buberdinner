@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurberDinner.Api", "BurberDinner.Api\BurberDinner.Api.csproj", "{1A90D036-4A22-4910-988C-193CEE251770}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuberDinner.Api", "BuberDinner.Api\BuberDinner.Api.csproj", "{1A90D036-4A22-4910-988C-193CEE251770}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurberDinner.Contracts", "BurberDinner.Contracts\BurberDinner.Contracts.csproj", "{EE246636-5752-4060-B3BD-BE2659A1F06E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuberDinner.Contracts", "BuberDinner.Contracts\BuberDinner.Contracts.csproj", "{EE246636-5752-4060-B3BD-BE2659A1F06E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurberDinner.Infrastructure", "BurberDinner.Infrastructure\BurberDinner.Infrastructure.csproj", "{4EE44AD7-177F-458C-A61F-F12401D2141F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuberDinner.Infrastructure", "BuberDinner.Infrastructure\BuberDinner.Infrastructure.csproj", "{4EE44AD7-177F-458C-A61F-F12401D2141F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurberDinner.Domain", "BurberDinner.Domain\BurberDinner.Domain.csproj", "{4363E139-EF24-44F2-A8F7-EA961EB80D96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuberDinner.Domain", "BuberDinner.Domain\BuberDinner.Domain.csproj", "{4363E139-EF24-44F2-A8F7-EA961EB80D96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BurberDinner.Application", "BurberDinner.Application\BurberDinner.Application.csproj", "{EE9C43A7-26DD-4234-9070-D62D019DE924}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuberDinner.Application", "BuberDinner.Application\BuberDinner.Application.csproj", "{EE9C43A7-26DD-4234-9070-D62D019DE924}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

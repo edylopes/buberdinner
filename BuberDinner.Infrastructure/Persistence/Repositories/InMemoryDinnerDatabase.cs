@@ -12,12 +12,12 @@ namespace BuberDinner.Infrastructure.Persistence.Repositories
             return Task.CompletedTask;
         }
 
-        public List<Dinner> ListUserDinnersAsync(Guid userId)
+        public Task<List<Dinner>> ListUserDinnersAsync(Guid userId)
         {
-            return _dinners.Where(dinner => dinner.Host.UserId == userId).ToList();
+            return Task.FromResult(_dinners.Where(dinner => dinner.Host.UserId == userId).ToList());
         }
 
-        public Task<Dinner> GetByIdAsync(Guid id)
+        public Task<Dinner?> GetByIdAsync(Guid id)
         {
             var dinner = _dinners.FirstOrDefault(d => d.Id == id);
             return Task.FromResult(dinner);

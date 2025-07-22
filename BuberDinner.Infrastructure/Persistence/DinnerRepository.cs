@@ -20,7 +20,7 @@ namespace BuberDinner.Infrastructure.Persistence
 
         public async Task<List<Dinner>> ListUserDinnersAsync(Guid userId)
         {
-            return await _context.Dinners.Where(d => d.HostId == userId).ToListAsync();
+            return _context.Dinners.Where(d => d.HostId == userId).ToList();
         }
 
         public Task<Dinner?> GetByIdAsync(Guid id)

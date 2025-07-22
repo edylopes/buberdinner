@@ -1,4 +1,4 @@
-using BurberDinner.Application.Errors;
+using BuberDinner.Application.Errors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BuberDinner.Api.Extensions;
