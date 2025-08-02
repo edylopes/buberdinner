@@ -1,8 +1,9 @@
-using System.Diagnostics;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
 
 namespace BuberDinner.Api.Errors;
 
@@ -88,11 +89,13 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
     {
         problemDetails.Status ??= statusCode;
         problemDetails.Instance ??= httpContext.Request.Path.Value;
+        Exception? exception = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
 
         if (_options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData))
         {
             problemDetails.Title ??= clientErrorData.Title;
             problemDetails.Type ??= clientErrorData.Link;
+            problemDetails.Detail = exception?.Message;
         }
 
         var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;

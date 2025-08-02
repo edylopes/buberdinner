@@ -29,7 +29,7 @@ public class User
         var address = new MailAddress(email);
 
         if (address.Address != email)
-            throw new ArgumentException("Email inválido");
+            throw new ArgumentException("Invalid email"); 
 
         Id = Guid.NewGuid();
         FirstName = firstName;

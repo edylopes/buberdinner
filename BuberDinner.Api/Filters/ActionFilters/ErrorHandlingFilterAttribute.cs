@@ -1,9 +1,8 @@
 using System.Data.Common;
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace BuberDinner.Api.Filters
+namespace BuberDinner.Api.Filters.ActionFilters
 {
     /// <summary>
     /// ErrorHandlingFilterAttribute is an ASP.NET Core filter  that handles exceptions thrown by controllers.
@@ -11,9 +10,10 @@ namespace BuberDinner.Api.Filters
     /// </summary>
     public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
     {
-        private const string SERVER_ERROR_URL =
+        private const string ServerErrorUrl =
             "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1";
-        private const string CONTENT_TYPE = "application/problem+json";
+
+        private const string ContentType = "application/problem+json";
         private readonly ILogger<ErrorHandlingFilterAttribute> _logger;
         private readonly IHostEnvironment _env;
 
@@ -59,7 +59,7 @@ namespace BuberDinner.Api.Filters
             problemDetails.Extensions["exceptionType"] = context.Exception.GetType().Name;
             problemDetails.Extensions["timestamp"] = DateTimeOffset.UtcNow;
 
-            context.HttpContext.Response.ContentType = CONTENT_TYPE;
+            context.HttpContext.Response.ContentType = ContentType;
             context.ExceptionHandled = true;
         }
 
@@ -71,12 +71,12 @@ namespace BuberDinner.Api.Filters
                 : "An unexpected error occurred. Please contact support.";
         }
 
-        private ProblemDetails CreateBaseProblemDetails(HttpContext context) =>
+        private static ProblemDetails CreateBaseProblemDetails(HttpContext context) =>
             new ProblemDetails
             {
-                Type = SERVER_ERROR_URL,
+                Type = ServerErrorUrl,
                 Instance = context.Request.Path.Value,
-                Extensions = { ["traceId"] = context.TraceIdentifier },
+                Extensions = { ["traceId"] = context.TraceIdentifier }
             };
     }
 }

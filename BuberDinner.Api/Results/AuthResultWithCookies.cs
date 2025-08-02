@@ -2,24 +2,24 @@ using BuberDinner.Application.Services.Authentication;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BuberDinner.Api.Filters.Results;
+namespace BuberDinner.Api.Results;
 
 internal class AuthResultWithCookies : IActionResult
 {
-    public AuthenticationResult Result { get; }
+    private readonly AuthenticationResult _result;
 
     public AuthResultWithCookies(AuthenticationResult result)
     {
-        Result = result;
+        _result = result;
     }
 
     public Task ExecuteResultAsync(ActionContext context)
     {
-        var Response = context.HttpContext.Response;
+        var response = context.HttpContext.Response;
 
-        Response.Cookies.Append(
+        response.Cookies.Append(
             "refreshToken",
-            Result.RefreshToken,
+            _result.RefreshToken,
             new CookieOptions
             {
                 HttpOnly = true,
@@ -28,18 +28,17 @@ internal class AuthResultWithCookies : IActionResult
                 Expires = DateTimeOffset.UtcNow.AddDays(7),
             }
         );
-
-        Response.Headers["Authorization"] = $"Bearer {Result.Token}";
+        response.Headers["Authorization"] = $"Bearer {_result.Token}";
 
         var payload = new AuthenticationResponse(
-            Result.Id,
-            Result.FirstName,
-            Result.LastName,
-            Result.Email,
-            Result.Role
+            _result.Id,
+            _result.FirstName,
+            _result.LastName,
+            _result.Email,
+            _result.Role
         );
 
-        var createdResult = new CreatedResult($"user/{Result.Id}", payload);
+        var createdResult = new CreatedResult($"user/{_result.Id}", payload);
 
         return createdResult.ExecuteResultAsync(context);
     }

@@ -7,25 +7,29 @@
     <UserSecretsId>22742d53-0527-4497-b73f-2caeb48bece5</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj"/>
-    <ProjectReference Include="..\BuberDinner.Application\BuberDinner.Application.csproj"/>
-    <ProjectReference Include="..\BuberDinner.Infrastructure\BuberDinner.Infrastructure.csproj"/>
+    <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />
+    <ProjectReference Include="..\BuberDinner.Application\BuberDinner.Application.csproj" />
+    <ProjectReference Include="..\BuberDinner.Infrastructure\BuberDinner.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18"/>
-    <PackageReference Include="System.Linq.Async" Version="6.0.3"/>
-    <PackageReference Include="OneOf" Version="3.0.271"/>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
+    <PackageReference Include="System.Linq.Async" Version="6.0.3" />
+    <PackageReference Include="OneOf" Version="3.0.271" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Requets\**"/>
+    <Compile Remove="Requets\**" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Remove="Requets\**"/>
+    <EmbeddedResource Remove="Requets\**" />
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="Requets\**"/>
+    <Content Remove="Requets\**" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Requets\**"/>
+    <None Remove="Requets\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Errors\Common\" />
+    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

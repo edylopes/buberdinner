@@ -5,10 +5,9 @@ namespace BuberDinner.Domain.Entities
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int MaxGuests { get; set; }
-        public Guid HostId { get; set; } // Foreign key to Host entity
-        public Host Host { get; set; } // Navigation property to Host entity
-
-        // public List<Guest> Guests { get; set; } = new List<Guest>();
+        public Guid HostId { get; set; }
+        public Host Host { get; set; } // Navigation property to Host 
+        public List<Guest> Guests { get; set; } = new List<Guest>();
         public int CurrentGuests { get; set; }
         public string ImageUrl { get; set; } = string.Empty; // URL to an image of the dinner
         public string Address { get; set; } = string.Empty; // Address where the dinner
