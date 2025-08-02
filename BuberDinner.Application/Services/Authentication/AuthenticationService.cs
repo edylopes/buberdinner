@@ -4,6 +4,7 @@ using BuberDinner.Application.Errors;
 using BuberDinner.Domain.Entities;
 using OneOf;
 
+
 namespace BuberDinner.Application.Services.Authentication;
 
 internal class AuthenticationService : IAuthenticationService
@@ -11,9 +12,7 @@ internal class AuthenticationService : IAuthenticationService
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
 
-    public AuthenticationService(
-        IJwtTokenGenerator jwtTokenGenerator,
-        IUserRepository userRepository
+    public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository
     )
     {
         _jwtTokenGenerator = jwtTokenGenerator;

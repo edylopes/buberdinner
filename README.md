@@ -76,7 +76,7 @@ POST {{host}}/auth/login
 }
 
 ```
-#### Hedears
+#### Hedears****
 ```c#
 Response.Headers["Authorization"] = $"Bearer eyahqyd...."
 Response.Cookies.Append("refreshToken", authResult.RefreshToken, new CookieOptions{})

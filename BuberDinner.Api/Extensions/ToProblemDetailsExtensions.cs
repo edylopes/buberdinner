@@ -5,16 +5,13 @@ namespace BuberDinner.Api.Extensions;
 
 public static class ToProblemDetailsExtensions
 {
-    public static IActionResult ToProblemDetails(this AppError error)
-    {
-        var problemDetails = new ProblemDetails
+    public static IActionResult ToProblemDetails(this AppError error) =>
+        new ObjectResult(new ProblemDetails
         {
             Type = error.TypeUrl,
-            Title = "Validations errors",
+            Title = "Validation errors",
             Detail = error.Message,
             Status = error.StatusCode,
-        };
-
-        return new ObjectResult(problemDetails) { StatusCode = error.StatusCode };
-    }
+        })
+        { StatusCode = error.StatusCode };
 }

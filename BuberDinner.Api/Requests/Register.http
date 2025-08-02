@@ -1,6 +1,4 @@
 
-### Send POST request with json body
-
 POST {{HostAddress}}/auth/register
 Content-Type: application/json
 

@@ -1,15 +1,13 @@
 namespace BuberDinner.Application.Errors;
 
-/// <summary>
 /// Contains errors definitions related to user operations.
-/// </summary>
+//// </summary>
+///F
 ///
-///
-public static class ErrorDefaults
+internal sealed class ErrorDefaults
 {
     public const string TypeUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1";
-    public const string TypeUrlNotFound =
-        "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
+    public const string TypeUrlNotFound = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
     public const int Conflict = 409;
     public const int BadRequest = 400;
     public const int Notfound = 400;
@@ -27,4 +25,4 @@ public record InvalidCredentialError()
     : AppError(ErrorDefaults.BadRequest, ErrorDefaults.TypeUrl, "Invalid email or password");
 
 public record UserNotFoundError()
-    : AppError(ErrorDefaults.BadRequest, ErrorDefaults.TypeUrl, "User not found");
+    : AppError(ErrorDefaults.Notfound, ErrorDefaults.TypeUrlNotFound, "User not found");
