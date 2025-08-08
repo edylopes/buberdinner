@@ -3,8 +3,9 @@
 
 POST {{HostAddress}}/auth/login
 Content-Type: application/json
+Cookie : refreshToken=gttqs0%2FHA%2BRAfIi7Hp%2FfsJULarvU8SCcd7LFv2I8qBjSa%2FvzlnTqMKiSWLNd0aOvV2cpZwhL7cgjIXtTKkIW9A
 
 {
-  "email": "t_ednei.silva@hapvida.com.br",
-  "password": "hapvid"
+  "email": "some@gmail.com.br",
+  "password": "cripyto"
 }

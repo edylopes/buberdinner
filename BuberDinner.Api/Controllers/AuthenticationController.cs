@@ -40,7 +40,22 @@ public class AuthenticationController : Controller
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest req)
     {
-        var authResult = await _authenticationService.Login(req.Email, req.Password);
-        return authResult.ToAuthActionResult(this);
+        //Request.Cookies.TryGetValue("refreshToken", out string token)
+
+        string? existingRefreshToken = null;
+        if (Request.Cookies.TryGetValue("refreshToken", out var token))
+        {
+            existingRefreshToken = token;
+        }
+
+        var result = await _authenticationService.Login(
+            req.Email,
+            req.Password,
+            existingRefreshToken
+        );
+        return result.Match(
+            success => new AuthResultWithCookies(success),
+            error => error.ToProblemDetails()
+        );
     }
 }

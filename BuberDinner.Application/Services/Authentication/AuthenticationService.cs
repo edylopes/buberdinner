@@ -1,9 +1,8 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
-using BuberDinner.Application.Errors;
+using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
 using OneOf;
-
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -12,14 +11,20 @@ internal class AuthenticationService : IAuthenticationService
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
 
-    public AuthenticationService(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository
+    public AuthenticationService(
+        IJwtTokenGenerator jwtTokenGenerator,
+        IUserRepository userRepository
     )
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
     }
 
-    public async Task<OneOf<AuthenticationResult, AppError>> Login(string email, string password)
+    public async Task<OneOf<AuthenticationResult, AppError>> Login(
+        string email,
+        string password,
+        string? existingRefreshToken = null
+    )
     {
         if (await _userRepository.GetByEmailAsync(email) is not User user)
         {
@@ -30,16 +35,32 @@ internal class AuthenticationService : IAuthenticationService
             return new InvalidCredentialError();
 
         var accessToken = _jwtTokenGenerator.GenerateToken(user);
+        RefreshToken refreshToken;
 
-        return new AuthenticationResult(
-            user.Id,
-            user.FirstName,
-            user.LastName,
-            user.Email,
-            accessToken,
-            user.RefreshTokens?.FirstOrDefault(t => t.UserId == user.Id)?.Token ?? string.Empty,
-            user.Role
-        );
+        if (!string.IsNullOrEmpty(existingRefreshToken))
+        {
+            // Buscar o token fornecido
+            var providedToken = user.RefreshTokens?.FirstOrDefault(t =>
+                t.Token == existingRefreshToken && t.IsActive);
+
+            if (providedToken != null)
+            {
+                // Usar o token fornecido se estiver válido
+                refreshToken = providedToken;
+                return MapAuthResult(user, accessToken, refreshToken);
+            }
+        }
+
+        // Gerar um novo token  para uma nova sessão
+        refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user);
+
+        // Adicionar o novo token ao usuário (sem revogar os existentes para permitir múltiplas sessões)
+        user.AddRefreshToken(refreshToken);
+
+        // Persistir as alterações
+        await _userRepository.UpdateAsync(user);
+
+        return MapAuthResult(user, accessToken, refreshToken);
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Register(
@@ -64,6 +85,15 @@ internal class AuthenticationService : IAuthenticationService
 
         await _userRepository.AddAsync(user);
 
+        return MapAuthResult(user, accessToken, refreshToken);
+    }
+
+    private static AuthenticationResult MapAuthResult(
+        User user,
+        string accessToken,
+        RefreshToken refreshToken
+    )
+    {
         return new AuthenticationResult(
             user.Id,
             user.FirstName,

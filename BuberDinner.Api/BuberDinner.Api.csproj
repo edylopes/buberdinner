@@ -29,7 +29,6 @@
     <None Remove="Requets\**" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Errors\Common\" />
     <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

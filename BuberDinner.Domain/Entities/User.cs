@@ -5,7 +5,7 @@ namespace BuberDinner.Domain.Entities;
 
 public class User
 {
-    public Guid Id { get; private set; } = Guid.NewGuid();
+    public Guid Id { get; private set; } 
     private UserRole _role { get; set; }
     public string Role
     {
@@ -29,7 +29,7 @@ public class User
         var address = new MailAddress(email);
 
         if (address.Address != email)
-            throw new ArgumentException("Invalid email"); 
+            throw new ArgumentException("Invalid email");
 
         Id = Guid.NewGuid();
         FirstName = firstName;
@@ -48,9 +48,8 @@ public class User
 
         if (_refreshTokens.Count(rt => !rt.IsExpired || !rt.Revoked) >= 5)
         {
-            var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
-            _refreshTokens.Remove(oldestToken);
-
+            //var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
+            //_refreshTokens.Remove(oldestToken
             throw new InvalidOperationException("Refresh tokens limit reached");
         }
 
