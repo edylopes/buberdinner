@@ -1,6 +1,4 @@
 using System.Text.Json.Serialization;
-using BuberDinner.Domain.Exceptions;
-
 namespace BuberDinner.Domain.ValueObjects
 {
     [JsonConverter(typeof(JsonStringEnumConverter))]
@@ -24,7 +22,7 @@ namespace BuberDinner.Domain.ValueObjects
 
             return Enum.TryParse<RoleType>(value, true, out var roleType)
                 ? new UserRole(roleType)
-                : throw new UserRoleNotAllowedException(value);
+                : throw new InvalidOperationException(value);
         }
 
         public override string ToString() => Value.ToString();

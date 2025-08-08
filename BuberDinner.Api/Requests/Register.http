@@ -2,12 +2,12 @@
 POST {{HostAddress}}/auth/register
 Content-Type: application/json
 
-{
+{ 
   "firstName": "Edy" ,
   "lastName": "Lopes",
-  "email": "t_ednei.silva@hapvida.com.br",
-  "password": "hapvida"
-}
+  "email": "some@gmail.com.br",
+  "password": "cripyto"
+}  
 
 
 

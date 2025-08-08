@@ -1,17 +1,17 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
-using System.Diagnostics;
 
-namespace BuberDinner.Api.Errors;
+namespace BuberDinner.Api.Common.Errors;
 
 public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
 {
     private readonly ApiBehaviorOptions _options;
 
-    /// <summary>
+    /// <summary> 
     /// Initializes a new instance of the <see cref="DefaultProblemDetailsFactory"/> class.
     /// </summary>
     /// <param name="options">The options for API behavior.</param>
@@ -95,10 +95,10 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
         {
             problemDetails.Title ??= clientErrorData.Title;
             problemDetails.Type ??= clientErrorData.Link;
-            problemDetails.Detail = exception?.Message;
         }
 
         var traceId = Activity.Current?.Id ?? httpContext?.TraceIdentifier;
+
         if (traceId != null)
         {
             problemDetails.Extensions["traceId"] = traceId;

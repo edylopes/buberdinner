@@ -1,4 +1,4 @@
-using BuberDinner.Application.Errors;
+using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Application.Services.Authentication;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +44,6 @@ public static class OneOfExtensions
             {
                 var problemDetails = new ProblemDetails
                 {
-                    Type = error.TypeUrl,
                     Title = "Validation Errors",
                     Detail = error.Message,
                     Status = error.StatusCode,

@@ -30,16 +30,19 @@ internal class AuthResultWithCookies : IActionResult
         );
         response.Headers["Authorization"] = $"Bearer {_result.Token}";
 
-        var payload = new AuthenticationResponse(
-            _result.Id,
-            _result.FirstName,
-            _result.LastName,
-            _result.Email,
-            _result.Role
-        );
-
-        var createdResult = new CreatedResult($"user/{_result.Id}", payload);
+        var createdResult = new CreatedResult($"user/{_result.Id}", MapAuthResult(_result));
 
         return createdResult.ExecuteResultAsync(context);
+    }
+
+    private static AuthenticationResponse MapAuthResult(AuthenticationResult result)
+    {
+        return new AuthenticationResponse(
+            result.Id,
+            result.FirstName,
+            result.LastName,
+            result.Email,
+            result.Role
+        );
     }
 }

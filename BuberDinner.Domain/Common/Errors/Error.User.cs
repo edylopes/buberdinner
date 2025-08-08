@@ -1,4 +1,4 @@
-namespace BuberDinner.Application.Errors;
+namespace BuberDinner.Domain.Common.Errors;
 
 /// Contains errors definitions related to user operations.
 //// </summary>
@@ -11,6 +11,7 @@ internal sealed class ErrorDefaults
     public const int Conflict = 409;
     public const int BadRequest = 400;
     public const int Notfound = 400;
+    public const int Validation = 400;
 }
 
 public abstract record AppError(int StatusCode, string TypeUrl, string Message);
@@ -20,9 +21,6 @@ public record DuplicatedEmailError()
 
 public record UserRoleNotAllowedError()
     : AppError(ErrorDefaults.BadRequest, ErrorDefaults.TypeUrl, "User Role not allowed");
-
-public record InvalidCredentialError()
-    : AppError(ErrorDefaults.BadRequest, ErrorDefaults.TypeUrl, "Invalid email or password");
 
 public record UserNotFoundError()
     : AppError(ErrorDefaults.Notfound, ErrorDefaults.TypeUrlNotFound, "User not found");

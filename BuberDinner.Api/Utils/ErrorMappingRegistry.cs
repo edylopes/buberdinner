@@ -1,4 +1,4 @@
-using BuberDinner.Application.Errors;
+using BuberDinner.Domain.Common.Errors;
 
 namespace BuberDinner.Api.Utils;
 
