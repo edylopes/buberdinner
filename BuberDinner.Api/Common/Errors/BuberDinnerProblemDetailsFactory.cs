@@ -103,7 +103,5 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
         {
             problemDetails.Extensions["traceId"] = traceId;
         }
-
-        problemDetails.Extensions.Add("Custom Property", "customValue");
     }
 }

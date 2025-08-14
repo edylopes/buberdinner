@@ -2,6 +2,7 @@
 POST {{HostAddress}}/auth/register
 Content-Type: application/json
 
+
 { 
   "firstName": "Edy" ,
   "lastName": "Lopes",

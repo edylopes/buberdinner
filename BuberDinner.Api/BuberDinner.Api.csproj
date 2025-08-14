@@ -12,6 +12,7 @@
     <ProjectReference Include="..\BuberDinner.Infrastructure\BuberDinner.Infrastructure.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
     <PackageReference Include="System.Linq.Async" Version="6.0.3" />
     <PackageReference Include="OneOf" Version="3.0.271" />
@@ -27,8 +28,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Requets\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Helpers\" />
   </ItemGroup>
 </Project>

@@ -1,4 +1,5 @@
 using BuberDinner.Api.Extensions;
+using BuberDinner.Api.Helpers;
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Services.Authentication;
 using BuberDinner.Contracts.Authentication;
@@ -11,51 +12,69 @@ namespace BuberDinner.Api.Controllers;
 public class AuthenticationController : Controller
 {
     private readonly ILogger<AuthenticationController> _logger;
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IAuthenticationService _authService;
 
     public AuthenticationController(
         IAuthenticationService authenticationService,
         ILogger<AuthenticationController> logger
     )
     {
-        _authenticationService = authenticationService;
+        _authService = authenticationService;
         _logger = logger;
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest req)
     {
-        var result = await _authenticationService.Register(
+
+        var result = await _authService.Register(
             req.FirstName,
             req.LastName,
             req.Email,
             req.Password
         );
-        return result.Match(
-            success => new AuthResultWithCookies(success),
-            error => error.ToProblemDetails()
+
+        return result.Match<IActionResult>(
+            authResult =>
+            {
+                var payload = MapAuthResult(authResult);
+                string location = $"user/{authResult.Id}";
+
+                return new ResponseResult<AuthResponse>(payload, true, location: location)
+                            .WithCookie("RefreshToken", authResult.RefreshToken)
+                            .WithHeader("Authorization", authResult.Token);
+            },
+            error => Problem(statusCode: error.StatusCode, detail: error.Message)
         );
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest req)
     {
-        //Request.Cookies.TryGetValue("refreshToken", out string token)
 
-        string? existingRefreshToken = null;
-        if (Request.Cookies.TryGetValue("refreshToken", out var token))
-        {
-            existingRefreshToken = token;
-        }
-
-        var result = await _authenticationService.Login(
+        var result = await _authService.Login(
             req.Email,
-            req.Password,
-            existingRefreshToken
+            req.Password
         );
-        return result.Match(
-            success => new AuthResultWithCookies(success),
-            error => error.ToProblemDetails()
+
+        return result.Match<IActionResult>(
+            success =>
+            {
+                var payload = MapAuthResult(success);
+                return new ResponseResult<AuthResponse>(payload)
+                        .WithCookie("RefreshToken", success.RefreshToken)
+                        .WithHeader("Authorization", success.Token);
+            },
+
+            error => Problem(statusCode: error.StatusCode, detail: error.Message)
         );
     }
+    private static AuthResponse MapAuthResult(AuthenticationResult result) =>
+        new AuthResponse(
+            result.Id,
+            result.FirstName,
+            result.LastName,
+            result.Email,
+            result.Role
+        );
 }
