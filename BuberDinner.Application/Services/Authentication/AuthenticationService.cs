@@ -35,29 +35,11 @@ internal class AuthenticationService : IAuthenticationService
             return new InvalidCredentialError();
 
         var accessToken = _jwtTokenGenerator.GenerateToken(user);
-        RefreshToken refreshToken;
-
-        if (!string.IsNullOrEmpty(existingRefreshToken))
-        {
-            // Buscar o token fornecido
-            var providedToken = user.RefreshTokens?.FirstOrDefault(t =>
-                t.Token == existingRefreshToken && t.IsActive);
-
-            if (providedToken != null)
-            {
-                // Usar o token fornecido se estiver válido
-                refreshToken = providedToken;
-                return MapAuthResult(user, accessToken, refreshToken);
-            }
-        }
-
-        // Gerar um novo token  para uma nova sessão
-        refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user);
+        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user);
 
         // Adicionar o novo token ao usuário (sem revogar os existentes para permitir múltiplas sessões)
         user.AddRefreshToken(refreshToken);
 
-        // Persistir as alterações
         await _userRepository.UpdateAsync(user);
 
         return MapAuthResult(user, accessToken, refreshToken);

@@ -16,6 +16,6 @@ public static class ToProblemDetailsExtensions
             }
         )
         {
-            StatusCode = error.StatusCode,
+            StatusCode = error.StatusCode
         };
 }

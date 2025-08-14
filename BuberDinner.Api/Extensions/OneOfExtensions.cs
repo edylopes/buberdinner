@@ -31,7 +31,7 @@ public static class OneOfExtensions
 
                 return new CreatedResult(
                     $"user/{user.Id}",
-                    new AuthenticationResponse(
+                    new AuthResponse(
                         user.Id,
                         user.FirstName,
                         user.LastName,
