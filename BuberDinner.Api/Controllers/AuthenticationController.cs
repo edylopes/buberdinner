@@ -26,7 +26,6 @@ public class AuthenticationController : Controller
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest req)
     {
-
         var result = await _authService.Register(
             req.FirstName,
             req.LastName,
@@ -38,11 +37,13 @@ public class AuthenticationController : Controller
             authResult =>
             {
                 var payload = MapAuthResult(authResult);
-                string location = $"user/{authResult.Id}";
-
-                return new ResponseResult<AuthResponse>(payload, true, location: location)
-                            .WithCookie("RefreshToken", authResult.RefreshToken)
-                            .WithHeader("Authorization", authResult.Token);
+                return new ResponseResult<AuthResponse>(
+                    payload,
+                    true,
+                    location: $"user/{authResult.Id}"
+                )
+                    .WithCookie("RefreshToken", authResult.RefreshToken)
+                    .WithHeader("Authorization", authResult.Token);
             },
             error => Problem(statusCode: error.StatusCode, detail: error.Message)
         );
@@ -51,30 +52,20 @@ public class AuthenticationController : Controller
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest req)
     {
-
-        var result = await _authService.Login(
-            req.Email,
-            req.Password
-        );
+        var result = await _authService.Login(req.Email, req.Password);
 
         return result.Match<IActionResult>(
             success =>
             {
                 var payload = MapAuthResult(success);
                 return new ResponseResult<AuthResponse>(payload)
-                        .WithCookie("RefreshToken", success.RefreshToken)
-                        .WithHeader("Authorization", success.Token);
+                    .WithCookie("RefreshToken", success.RefreshToken)
+                    .WithHeader("Authorization", success.Token);
             },
-
             error => Problem(statusCode: error.StatusCode, detail: error.Message)
         );
     }
+
     private static AuthResponse MapAuthResult(AuthenticationResult result) =>
-        new AuthResponse(
-            result.Id,
-            result.FirstName,
-            result.LastName,
-            result.Email,
-            result.Role
-        );
+        new AuthResponse(result.Id, result.FirstName, result.LastName, result.Email, result.Role);
 }
