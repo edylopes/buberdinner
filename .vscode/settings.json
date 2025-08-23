@@ -43,5 +43,5 @@
         "**/bin/**": true,
         "**/obj/**": true
     },
-    "cSpell.words": ["Burber"]
+    "cSpell.words": ["Burber", "Mediat"]
 }

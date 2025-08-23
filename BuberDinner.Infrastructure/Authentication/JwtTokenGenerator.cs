@@ -20,7 +20,15 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _options = options.Value!;
     }
 
-    public string GenerateToken(User user)
+    public (string Token, RefreshToken refreshToken) GenerateTokens(User user)
+    {
+        var token = GenerateToken(user);
+        var refreshToken = GenerateRefreshToken(user);
+
+        return (token, refreshToken);
+    }
+
+    private string GenerateToken(User user)
     {
         var handler = new JwtSecurityTokenHandler();
 
@@ -51,7 +59,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         return handler.WriteToken(token);
     }
 
-    public RefreshToken GenerateRefreshToken(User user)
+    private RefreshToken GenerateRefreshToken(User user)
     {
         byte[] randomBytes = GenerateRandomBytes();
 

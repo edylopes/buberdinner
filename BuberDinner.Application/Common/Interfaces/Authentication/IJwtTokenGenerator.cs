@@ -4,6 +4,5 @@ namespace BuberDinner.Application.Common.Interfaces.Authentication;
 
 public interface IJwtTokenGenerator
 {
-    public abstract string GenerateToken(User user);
-    public abstract RefreshToken GenerateRefreshToken(User user);
+    public (string Token, RefreshToken refreshToken) GenerateTokens(User user);
 }
