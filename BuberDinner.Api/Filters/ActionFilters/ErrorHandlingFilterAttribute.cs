@@ -76,7 +76,7 @@ namespace BuberDinner.Api.Filters.ActionFilters
             {
                 Type = ServerErrorUrl,
                 Instance = context.Request.Path.Value,
-                Extensions = { ["traceId"] = context.TraceIdentifier }
+                Extensions = { ["traceId"] = context.TraceIdentifier },
             };
     }
 }

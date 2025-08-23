@@ -1,4 +1,5 @@
-using BuberDinner.Application.Services.Authentication;
+using BuberDinner.Api.Controllers;
+using BuberDinner.Application.Services.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,10 +8,16 @@ namespace BuberDinner.Api.Results;
 internal class AuthResultWithCookies : IActionResult
 {
     private readonly AuthenticationResult _result;
+    private readonly ILogger<AuthenticationController> _logger;
     public readonly bool isNewUser;
 
-    public AuthResultWithCookies(AuthenticationResult result, bool newUser = true)
+    public AuthResultWithCookies(
+        AuthenticationResult result,
+        ILogger<AuthenticationController> logger,
+        bool newUser = true
+    )
     {
+        _logger = logger;
         _result = result;
         isNewUser = newUser;
     }
@@ -36,9 +43,12 @@ internal class AuthResultWithCookies : IActionResult
         var createdResult = new CreatedResult($"user/{_result.Id}", MapAuthResult(_result));
         var OkResult = new OkObjectResult(MapAuthResult(_result));
 
-        return isNewUser
-            ? createdResult.ExecuteResultAsync(context)
-            : OkResult.ExecuteResultAsync(context);
+        if (isNewUser)
+        {
+            return createdResult.ExecuteResultAsync(context);
+        }
+
+        return OkResult.ExecuteResultAsync(context);
     }
 
     private static AuthResponse MapAuthResult(AuthenticationResult result)

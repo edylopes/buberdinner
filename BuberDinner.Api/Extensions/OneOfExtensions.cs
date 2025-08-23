@@ -1,6 +1,6 @@
-using BuberDinner.Domain.Common.Errors;
-using BuberDinner.Application.Services.Authentication;
+using BuberDinner.Application.Services.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
+using BuberDinner.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
 using OneOf;
 
@@ -31,13 +31,7 @@ public static class OneOfExtensions
 
                 return new CreatedResult(
                     $"user/{user.Id}",
-                    new AuthResponse(
-                        user.Id,
-                        user.FirstName,
-                        user.LastName,
-                        user.Email,
-                        user.Role
-                    )
+                    new AuthResponse(user.Id, user.FirstName, user.LastName, user.Email, user.Role)
                 );
             },
             error =>

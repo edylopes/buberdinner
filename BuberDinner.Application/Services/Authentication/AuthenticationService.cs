@@ -1,10 +1,11 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
+using BuberDinner.Application.Services.Authentication.Common;
 using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
 using OneOf;
 
-namespace BuberDinner.Application.Services.Authentication;
+namespace BuberDinner.Application.Services.Authentication.Commands;
 
 internal class AuthenticationService : IAuthenticationService
 {
@@ -34,8 +35,7 @@ internal class AuthenticationService : IAuthenticationService
         if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
             return new InvalidCredentialError();
 
-        var accessToken = _jwtTokenGenerator.GenerateToken(user);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user);
+        var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
         // Adicionar o novo token ao usuário (sem revogar os existentes para permitir múltiplas sessões)
         user.AddRefreshToken(refreshToken);
@@ -60,8 +60,7 @@ internal class AuthenticationService : IAuthenticationService
 
         var user = new User(firstName, lastName, hashPassword, email);
 
-        var accessToken = _jwtTokenGenerator.GenerateToken(user);
-        var refreshToken = _jwtTokenGenerator.GenerateRefreshToken(user);
+        var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
         user.AddRefreshToken(refreshToken);
 
