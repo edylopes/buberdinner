@@ -5,7 +5,6 @@ namespace BuberDinner.Api.Results;
 
 public class ResponseResult<T> : IActionResult
 {
-
     private readonly T _payload;
     private readonly bool _isNewResource;
     private readonly int _statusCode;
@@ -14,7 +13,12 @@ public class ResponseResult<T> : IActionResult
     private readonly Dictionary<string, string> _headers = new();
     private readonly Dictionary<string, CookieOptions?> _pendingCookieOptions = new();
 
-    public ResponseResult(T payload, bool isNewResource = false, int statusCode = StatusCodes.Status200OK, string? location = null)
+    public ResponseResult(
+        T payload,
+        bool isNewResource = false,
+        int statusCode = StatusCodes.Status200OK,
+        string? location = null
+    )
     {
         _payload = payload;
         _isNewResource = isNewResource;
@@ -22,23 +26,21 @@ public class ResponseResult<T> : IActionResult
         _statusCode = statusCode;
     }
 
-
-    public ResponseResult<T> WithCookie(
-     string name,
-     string value,
-     CookieOptions? options = null)
+    public ResponseResult<T> WithCookie(string name, string value, CookieOptions? options = null)
     {
         // Guarda cookie para ser setado depois
         _cookies[name] = HeaderSanitizer.Sanitizer(value);
 
-        // Opcional: salvar opções personalizadas 
-        _pendingCookieOptions[name] = options ?? new CookieOptions
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.None,
-            Expires = DateTimeOffset.UtcNow.AddDays(7)
-        };
+        // Opcional: salvar opções personalizadas
+        _pendingCookieOptions[name] =
+            options
+            ?? new CookieOptions
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTimeOffset.UtcNow.AddDays(7),
+            };
 
         return this;
     }
@@ -51,25 +53,17 @@ public class ResponseResult<T> : IActionResult
 
     public Task ExecuteResultAsync(ActionContext context)
     {
-
         var response = context.HttpContext.Response;
 
         foreach (var kvp in _cookies)
         {
-
-            response.Cookies.Append(
-                kvp.Key,
-                kvp.Value,
-                _pendingCookieOptions[kvp.Key]!
-                );
-
+            response.Cookies.Append(kvp.Key, kvp.Value, _pendingCookieOptions[kvp.Key]!);
         }
 
         foreach (var kvp in _headers)
         {
             response.Headers[kvp.Key] = kvp.Value;
         }
-
 
         if (_isNewResource)
         {
@@ -79,7 +73,5 @@ public class ResponseResult<T> : IActionResult
 
         var okResult = new ObjectResult(_payload) { StatusCode = _statusCode };
         return okResult.ExecuteResultAsync(context);
-
-
     }
 }
