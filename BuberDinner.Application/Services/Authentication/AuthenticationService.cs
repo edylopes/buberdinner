@@ -1,6 +1,6 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
-using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
 using OneOf;
@@ -75,14 +75,6 @@ internal class AuthenticationService : IAuthenticationService
         RefreshToken refreshToken
     )
     {
-        return new AuthenticationResult(
-            user.Id,
-            user.FirstName,
-            user.LastName,
-            user.Email,
-            accessToken,
-            refreshToken.Token,
-            user.Role
-        );
+        return new AuthenticationResult(user, accessToken, refreshToken.Token);
     }
 }

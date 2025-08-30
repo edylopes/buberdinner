@@ -1,4 +1,4 @@
-using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Domain.Common.Errors;
 using OneOf;
 

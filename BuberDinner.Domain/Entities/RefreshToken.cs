@@ -6,7 +6,7 @@ public class RefreshToken
 {
     public Guid Id { get; private set; }
     public string Token { get; private set; } = string.Empty;
-    private DateTime Expires { get; }
+    private DateTimeOffset Expires { get; }
     public Guid UserId { get; private set; }
     public DateTime Created { get; private set; }
 

@@ -11,7 +11,7 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
 {
     private readonly ApiBehaviorOptions _options;
 
-    /// <summary> 
+    /// <summary>
     /// Initializes a new instance of the <see cref="DefaultProblemDetailsFactory"/> class.
     /// </summary>
     /// <param name="options">The options for API behavior.</param>
@@ -103,5 +103,7 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
         {
             problemDetails.Extensions["traceId"] = traceId;
         }
+
+        problemDetails.Extensions.Add("CustomValue", "Teste");
     }
 }
