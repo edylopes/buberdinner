@@ -1,5 +1,5 @@
 using BuberDinner.Api.Controllers;
-using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +9,17 @@ internal class AuthResultWithCookies : IActionResult
 {
     private readonly AuthenticationResult _result;
     private readonly ILogger<AuthenticationController> _logger;
-    public readonly bool isNewUser;
+    private readonly bool _isNewResource;
 
     public AuthResultWithCookies(
         AuthenticationResult result,
         ILogger<AuthenticationController> logger,
-        bool newUser = true
+        bool isNewResource = true
     )
     {
         _logger = logger;
         _result = result;
-        isNewUser = newUser;
+        _isNewResource = isNewResource;
     }
 
     public Task ExecuteResultAsync(ActionContext context)
@@ -38,27 +38,24 @@ internal class AuthResultWithCookies : IActionResult
             }
         );
 
-        response.Headers["Authorization"] = $"Bearer {_result.Token}";
+        response.Headers["Authorization"] = $"Bearer {_result.AccessToken}";
 
-        var createdResult = new CreatedResult($"user/{_result.Id}", MapAuthResult(_result));
+        var createdResult = new CreatedResult($"user/{_result.User.Id}", MapAuthResult(_result));
         var OkResult = new OkObjectResult(MapAuthResult(_result));
 
-        if (isNewUser)
-        {
-            return createdResult.ExecuteResultAsync(context);
-        }
-
-        return OkResult.ExecuteResultAsync(context);
+        return _isNewResource
+            ? createdResult.ExecuteResultAsync(context)
+            : OkResult.ExecuteResultAsync(context);
     }
 
     private static AuthResponse MapAuthResult(AuthenticationResult result)
     {
         return new AuthResponse(
-            result.Id,
-            result.FirstName,
-            result.LastName,
-            result.Email,
-            result.Role
+            result.User.Id,
+            result.User.FirstName,
+            result.User.LastName,
+            result.User.Email,
+            result.User.Role
         );
     }
 }

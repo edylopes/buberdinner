@@ -1,4 +1,4 @@
-using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +14,11 @@ public static class OneOfExtensions
     )
     {
         return result.Match<IActionResult>(
-            user =>
+            success =>
             {
                 controller.Response.Cookies.Append(
                     "refreshToken",
-                    user.RefreshToken,
+                    success.RefreshToken,
                     new CookieOptions
                     {
                         HttpOnly = true,
@@ -27,11 +27,17 @@ public static class OneOfExtensions
                         Expires = DateTimeOffset.UtcNow.AddDays(7),
                     }
                 );
-                controller.Response.Headers["Authorization"] = $"Bearer {user.Token}";
+                controller.Response.Headers["Authorization"] = $"Bearer {success.AccessToken}";
 
                 return new CreatedResult(
-                    $"user/{user.Id}",
-                    new AuthResponse(user.Id, user.FirstName, user.LastName, user.Email, user.Role)
+                    $"user/{success.User.Id}",
+                    new AuthResponse(
+                        success.User.Id,
+                        success.User.FirstName,
+                        success.User.LastName,
+                        success.User.Email,
+                        success.User.Role
+                    )
                 );
             },
             error =>

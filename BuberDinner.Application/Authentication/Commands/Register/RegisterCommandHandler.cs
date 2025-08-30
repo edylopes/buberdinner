@@ -1,5 +1,5 @@
 using BuberDinner.Application.Services.Authentication;
-using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Domain.Common.Errors;
 using MediatR;
 using OneOf;
@@ -11,9 +11,9 @@ public class RegisterCommandHandler
 {
     private readonly IAuthenticationService _authenticationService;
 
-    public RegisterCommandHandler(IAuthenticationService authtenticarionService)
+    public RegisterCommandHandler(IAuthenticationService authenticationService)
     {
-        _authenticationService = authtenticarionService;
+        _authenticationService = authenticationService;
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Handle(

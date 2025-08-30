@@ -1,7 +1,7 @@
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Queries;
-using BuberDinner.Application.Services.Authentication.Common;
+using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Contracts.Authentication;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,17 +29,14 @@ public class AuthenticationController : Controller
         );
 
         return result.Match<IActionResult>(
-            authResult =>
+            success =>
             {
-                var payload = MapAuthResult(authResult);
-                _logger.LogInformation("New user registered: {UserId}", authResult.Id);
-                return new ResponseResult<AuthResponse>(
-                    payload,
-                    true,
-                    location: $"user/{authResult.Id}"
-                )
-                    .WithCookie("RefreshToken", authResult.RefreshToken)
-                    .WithHeader("Authorization", authResult.Token);
+                var payload = MapAuthResult(success, success.User.Role);
+                _logger.LogInformation("New user registered: {UserId}", success.User.Id);
+                return new ResponseResult<AuthResponse>(payload)
+                    .AsCreated($"user/{success.User.Id}")
+                    .WithCookie("RefreshToken", success.RefreshToken)
+                    .WithHeader("Authorization", success.AccessToken);
             },
             error => Problem(statusCode: error.StatusCode, detail: error.Message)
         );
@@ -53,16 +50,23 @@ public class AuthenticationController : Controller
         return result.Match<IActionResult>(
             success =>
             {
-                var payload = MapAuthResult(success);
-                _logger.LogInformation("User logged in: {UserId}", success.Id);
+                var payload = MapAuthResult(success, success.User.Role);
+                _logger.LogInformation("User logged in: {UserId}", success.User.Id);
                 return new ResponseResult<AuthResponse>(payload)
+                    .AsOk()
                     .WithCookie("RefreshToken", success.RefreshToken)
-                    .WithHeader("Authorization", success.Token);
+                    .WithHeader("Authorization", success.AccessToken);
             },
             error => Problem(statusCode: error.StatusCode, detail: error.Message)
         );
     }
 
-    private static AuthResponse MapAuthResult(AuthenticationResult result) =>
-        new AuthResponse(result.Id, result.FirstName, result.LastName, result.Email, result.Role);
+    private static AuthResponse MapAuthResult(AuthenticationResult result, string role) =>
+        new AuthResponse(
+            result.User.Id,
+            result.User.FirstName,
+            result.User.LastName,
+            result.User.Email,
+            role
+        );
 }
