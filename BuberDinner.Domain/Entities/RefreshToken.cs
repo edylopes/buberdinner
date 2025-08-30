@@ -5,9 +5,9 @@ namespace BuberDinner.Domain.Entities;
 public class RefreshToken
 {
     public Guid Id { get; private set; }
-    public string Token { get; private set; } = string.Empty;
+    public string Token { get; init; } = string.Empty;
     private DateTimeOffset Expires { get; }
-    public Guid UserId { get; private set; }
+    public Guid UserId { get; init; }
     public DateTime Created { get; private set; }
 
     [JsonIgnore]
