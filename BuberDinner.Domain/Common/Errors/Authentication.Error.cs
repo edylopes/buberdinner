@@ -2,7 +2,6 @@
 
 public record InvalidCredentialError()
     : AppError(
-        ErrorDefaults.NoAuthorized,
-        ErrorDefaults.BadRequestUrl,
+     
         "Invalid email or password"
     );

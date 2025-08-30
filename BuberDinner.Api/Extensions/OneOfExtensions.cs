@@ -46,10 +46,10 @@ public static class OneOfExtensions
                 {
                     Title = "Validation Errors",
                     Detail = error.Message,
-                    Status = error.StatusCode,
+                    //Status = error.StatusCode,
                 };
 
-                return new ObjectResult(problemDetails) { StatusCode = error.StatusCode };
+                return new ObjectResult(problemDetails) { StatusCode = 400 };
             }
         );
     }

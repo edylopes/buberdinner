@@ -9,13 +9,13 @@ public static class ToProblemDetailsExtensions
         new ObjectResult(
             new ProblemDetails
             {
-                Type = error.TypeUrl,
-                Title = "Validation errors",
+                //Type = error.TypeUrl,
+                //Title = "Validation errors",
                 Detail = error.Message,
-                Status = error.StatusCode,
+                //Status = error.StatusCode,
             }
         )
         {
-            StatusCode = error.StatusCode
+            StatusCode = 500
         };
 }

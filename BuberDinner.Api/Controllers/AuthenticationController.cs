@@ -1,3 +1,4 @@
+using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Queries;
@@ -33,12 +34,17 @@ public class AuthenticationController : Controller
             {
                 var payload = MapAuthResult(success, success.User.Role);
                 _logger.LogInformation("New user registered: {UserId}", success.User.Id);
-                return new ResponseResult<AuthResponse>(payload)
-                    .AsCreated($"user/{success.User.Id}")
-                    .WithCookie("RefreshToken", success.RefreshToken)
-                    .WithHeader("Authorization", success.AccessToken);
+
+                return Okay.
+                        Created(payload, $"user/{success.User.Id}")
+                       .WithCookie("RefreshToken", success.RefreshToken)
+                       .WithHeader("Authorization", success.AccessToken);
             },
-            error => Problem(statusCode: error.StatusCode, detail: error.Message)
+            error =>
+            {
+                var (statusCode, url, message) = ErrorMapper.ToError(error);
+                return Problem(statusCode: statusCode, detail: message, type: url);
+            }
         );
     }
 
@@ -52,12 +58,16 @@ public class AuthenticationController : Controller
             {
                 var payload = MapAuthResult(success, success.User.Role);
                 _logger.LogInformation("User logged in: {UserId}", success.User.Id);
-                return new ResponseResult<AuthResponse>(payload)
-                    .AsOk()
+
+                return Okay.Ok(payload)
                     .WithCookie("RefreshToken", success.RefreshToken)
                     .WithHeader("Authorization", success.AccessToken);
             },
-            error => Problem(statusCode: error.StatusCode, detail: error.Message)
+            error =>
+            {
+                var (statusCode, url, message) = ErrorMapper.ToError(error);
+                return Problem(statusCode: statusCode, detail: message, type: url);
+            }
         );
     }
 

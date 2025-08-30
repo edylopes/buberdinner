@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BuberDinner.Api.Results;
 
-public class ResponseResult<TResult> : IActionResult
+public class ResponseResult<T> : IActionResult
 {
-    private readonly TResult _payload;
+    private readonly T _payload;
     private bool _isNewResource;
     private int? _statusCode;
     private string? _location;
@@ -14,7 +14,7 @@ public class ResponseResult<TResult> : IActionResult
     private readonly Dictionary<string, CookieOptions?> _pendingCookieOptions = new();
 
     public ResponseResult(
-        TResult payload,
+        T payload,
         bool isNewResource = false,
         int? statusCode = StatusCodes.Status200OK,
         string? location = null
@@ -26,15 +26,10 @@ public class ResponseResult<TResult> : IActionResult
         _location = location;
     }
 
-    public ResponseResult<TResult> WithCookie(
-        string name,
-        string value,
-        CookieOptions? options = null
-    )
+    public ResponseResult<T> WithCookie(string name, string value, CookieOptions? options = null)
     {
         // Guarda cookie para ser setado depois
         _cookies[name] = HeaderSanitizer.Sanitizer(value);
-
         // Opcional: salvar opções personalizadas
         _pendingCookieOptions[name] =
             options
@@ -49,20 +44,20 @@ public class ResponseResult<TResult> : IActionResult
         return this;
     }
 
-    public ResponseResult<TResult> WithHeader(string name, string value)
+    public ResponseResult<T> WithHeader(string name, string value)
     {
         _headers[name] = HeaderSanitizer.Sanitizer(value);
         return this;
     }
 
-    public ResponseResult<TResult> AsCreated(string location) =>
-        new ResponseResult<TResult>(_payload, true, StatusCodes.Status201Created, location);
+    public ResponseResult<T> AsCreated(string location) =>
+        new(_payload, true, StatusCodes.Status201Created, location);
 
-    public ResponseResult<TResult> AsOk() =>
-        new ResponseResult<TResult>(_payload, false, StatusCodes.Status200OK);
+    public ResponseResult<T> AsOk() =>
+        new(_payload, false, StatusCodes.Status200OK);
 
-    public ResponseResult<TResult> AsNoContent() =>
-        new ResponseResult<TResult>(_payload, false, statusCode: StatusCodes.Status200OK);
+    public ResponseResult<T> AsNoContent() =>
+        new ResponseResult<T>(_payload, false, statusCode: StatusCodes.Status200OK);
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
@@ -70,7 +65,10 @@ public class ResponseResult<TResult> : IActionResult
 
         foreach (var kvp in _cookies)
         {
-            response.Cookies.Append(kvp.Key, kvp.Value, _pendingCookieOptions[kvp.Key]!);
+            response.Cookies.Append(
+                kvp.Key,
+                kvp.Value,
+                _pendingCookieOptions[kvp.Key]!);
         }
 
         foreach (var kvp in _headers)
@@ -78,10 +76,11 @@ public class ResponseResult<TResult> : IActionResult
             response.Headers[kvp.Key] = kvp.Value;
         }
 
-        if (_statusCode == StatusCodes.Status200OK)
+        if (_payload is null && _statusCode == StatusCodes.Status200OK)
         {
-            response.StatusCode = _statusCode.Value;
+            response.StatusCode = StatusCodes.Status204NoContent;
             var res = new NoContentResult();
+            await res.ExecuteResultAsync(context);
             return;
         }
 
