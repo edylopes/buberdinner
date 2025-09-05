@@ -2,8 +2,8 @@ using System.Data.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace BuberDinner.Api.Filters.ActionFilters
-{
+namespace BuberDinner.Api.Filters;
+
     /// <summary>
     /// ErrorHandlingFilterAttribute is an ASP.NET Core filter  that handles exceptions thrown by controllers.
     /// It captures exceptions, retrieves the appropriate HTTP status code and error details from the ExceptionMappingRegistry,
@@ -45,7 +45,7 @@ namespace BuberDinner.Api.Filters.ActionFilters
                     );
                     ConfigureProblemDetails(
                         problemDetails,
-                        "Internal Server Error",
+                        "An Internal Server Error Occurred",
                         context.Exception.Message
                     );
                     break;
@@ -79,4 +79,3 @@ namespace BuberDinner.Api.Filters.ActionFilters
                 Extensions = { ["traceId"] = context.TraceIdentifier },
             };
     }
-}

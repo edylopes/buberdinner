@@ -8,16 +8,13 @@ namespace BuberDinner.Api.Results;
 internal class AuthResultWithCookies : IActionResult
 {
     private readonly AuthenticationResult _result;
-    private readonly ILogger<AuthenticationController> _logger;
     private readonly bool _isNewResource;
 
     public AuthResultWithCookies(
         AuthenticationResult result,
-        ILogger<AuthenticationController> logger,
         bool isNewResource = true
     )
     {
-        _logger = logger;
         _result = result;
         _isNewResource = isNewResource;
     }

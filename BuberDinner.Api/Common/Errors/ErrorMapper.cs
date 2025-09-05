@@ -30,5 +30,4 @@ public static class ErrorMapper
 
          _ => (StatusCodes.Status400BadRequest, ErrorDefaults.BadRequestUrl, "An unexpected error occurred")
      };
-
 }

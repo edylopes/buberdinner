@@ -1,12 +1,12 @@
 
+
 POST {{HostAddress}}/auth/register
 Content-Type: application/json
-
 
 { 
   "firstName": "Edy" ,
   "lastName": "Lopes",
-  "email": "some@gmail.com.br",
+  "email": "some2@gmail.com.br",
   "password": "cripyto"
 }  
 

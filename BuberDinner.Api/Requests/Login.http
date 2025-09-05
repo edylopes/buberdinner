@@ -1,11 +1,9 @@
-### Send Request with heander and body
-# @no-cookie-jar
+# @env local
 
 POST {{HostAddress}}/auth/login
 Content-Type: application/json
 
-
 {
-  "email": "some@gmail.com.br",
+  "email": "some1@gmail.com.br",
   "password": "cripyto"
 }
