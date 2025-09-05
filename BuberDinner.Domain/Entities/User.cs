@@ -24,7 +24,7 @@ public class User
 
     protected User() { }
 
-    public User(string firstName, string lastName, string hash, string email, string? role = "User")
+    public User(string firstName, string lastName, string hash, string email, string? role = null)
     {
         var address = new MailAddress(email);
 
@@ -36,7 +36,7 @@ public class User
         LastName = lastName;
         PasswordHash = hash;
         Email = email;
-        Role = role ?? RoleType.User.ToString();
+        Role = role ?? nameof(RoleType.User);
         EmailConfirmed = false;
         CreatedAt = DateTime.UtcNow;
     }
@@ -44,7 +44,7 @@ public class User
     public void AddRefreshToken(RefreshToken refreshToken)
     {
         if (refreshToken == null)
-            throw new ArgumentNullException(nameof(refreshToken));
+            throw new ArgumentNullException();
 
         if (_refreshTokens.Count(rt => !rt.IsExpired || !rt.Revoked) >= 5)
         {

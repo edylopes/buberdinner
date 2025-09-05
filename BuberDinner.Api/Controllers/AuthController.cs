@@ -4,6 +4,7 @@ using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Queries;
 using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Contracts.Authentication;
+using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,12 @@ public class AuthenticationController : Controller
 {
     private readonly ILogger<AuthenticationController> _logger;
     private readonly ISender _mediator;
+    private readonly IMapper _mapper;    
 
-    public AuthenticationController(ILogger<AuthenticationController> logger, ISender mediator)
-    {
+
+    public AuthenticationController(ILogger<AuthenticationController> logger, ISender mediator, IMapper mapper)
+    { 
+        _mapper = mapper;
         _logger = logger;
         _mediator = mediator;
     }
@@ -25,14 +29,14 @@ public class AuthenticationController : Controller
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterRequest req)
     {
-        var result = await _mediator.Send(
-            new RegisterCommand(req.FirstName, req.LastName, req.Email, req.Password)
-        );
-
+        var command = _mapper.Map<RegisterCommand>(req);
+        
+        var result = await _mediator.Send(command);
+        
         return result.Match<IActionResult>(
             success =>
             {
-                var payload = MapAuthResult(success, success.User.Role);
+                var payload = _mapper.Map<AuthResponse>(success);
                 _logger.LogInformation("New user registered: {UserId}", success.User.Id);
 
                 return Okay.
@@ -56,12 +60,12 @@ public class AuthenticationController : Controller
         return result.Match<IActionResult>(
             success =>
             {
-                var payload = MapAuthResult(success, success.User.Role);
+                var command = MapAuthResult(success, success.User.Role);
                 _logger.LogInformation("User logged in: {UserId}", success.User.Id);
 
-                return Okay.Ok(payload)
-                    .WithCookie("RefreshToken", success.RefreshToken)
-                    .WithHeader("Authorization", success.AccessToken);
+                return Okay.Ok(command)
+                        .WithCookie("RefreshToken", success.RefreshToken)
+                        .WithHeader("Authorization", success.AccessToken);
             },
             error =>
             {

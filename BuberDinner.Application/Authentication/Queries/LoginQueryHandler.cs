@@ -14,11 +14,7 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, OneOf<Authenticatio
     {
         _authenticationService = authenticationService;
     }
-
-    public Task<OneOf<AuthenticationResult, AppError>> Handle(
-        LoginQuery command,
-        CancellationToken cancellationToken
-    )
+    public Task<OneOf<AuthenticationResult, AppError>> Handle(LoginQuery command, CancellationToken cxt)
     {
         var result = _authenticationService.Login(command.Email, command.Password);
         return result;

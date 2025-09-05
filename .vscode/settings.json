@@ -11,19 +11,6 @@
         "**/.github": true,
         "**/.idea": true
     },
-    "search.exclude": {
-        "**/bin": true,
-        "**/obj": true,
-        "**/*.user": true,
-        "**/*.suo": true,
-        "**/*.vspscc": true,
-        "**/*.vssscc": true,
-        "node_modules": true
-    },
-    "files.watcherExclude": {
-        "**/bin/**": true,
-        "**/obj/**": true
-    },
     "files.autoSave": "afterDelay",
     "files.autoSaveDelay": 10,
 
