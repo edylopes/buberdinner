@@ -6,17 +6,16 @@ namespace BuberDinner.Api.Results;
 public class ResponseResult<T> : IActionResult
 {
     private readonly T _payload;
-    private bool _isNewResource;
-    private int? _statusCode;
-    private string? _location;
+    private readonly bool _isNewResource;
+    private readonly int? _statusCode;
+    private readonly string? _location;
     private readonly Dictionary<string, string> _cookies = new();
     private readonly Dictionary<string, string> _headers = new();
     private readonly Dictionary<string, CookieOptions?> _pendingCookieOptions = new();
 
     public ResponseResult(
         T payload,
-        bool isNewResource = false,
-        int? statusCode = StatusCodes.Status200OK,
+        bool isNewResource = false, int statusCode = StatusCodes.Status200OK,
         string? location = null
     )
     {
@@ -30,6 +29,7 @@ public class ResponseResult<T> : IActionResult
     {
         // Guarda cookie para ser setado depois
         _cookies[name] = HeaderSanitizer.Sanitizer(value);
+
         // Opcional: salvar opções personalizadas
         _pendingCookieOptions[name] =
             options
@@ -57,7 +57,7 @@ public class ResponseResult<T> : IActionResult
         new(_payload, false, StatusCodes.Status200OK);
 
     public ResponseResult<T> AsNoContent() =>
-        new ResponseResult<T>(_payload, false, statusCode: StatusCodes.Status200OK);
+        new(_payload, false, statusCode: StatusCodes.Status200OK);
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
@@ -87,6 +87,7 @@ public class ResponseResult<T> : IActionResult
         if (_isNewResource)
         {
             var createdResult = new CreatedResult(_location ?? string.Empty, _payload);
+            response.StatusCode = _statusCode!.Value;
             await createdResult.ExecuteResultAsync(context);
             return;
         }

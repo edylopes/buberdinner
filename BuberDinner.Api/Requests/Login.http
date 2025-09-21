@@ -1,9 +1,9 @@
 # @env local
-
-POST {{HostAddress}}/auth/login
+@Host=https://localhost:7104/api/v1
+POST {{Host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "some1@gmail.com.br",
+  "email": "some2@gmail.com.br",
   "password": "cripyto"
 }

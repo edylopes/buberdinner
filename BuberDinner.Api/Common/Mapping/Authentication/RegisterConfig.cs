@@ -1,13 +1,14 @@
-using BuberDinner.Application.Services.Authentication.Commands.Common;
+using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
 using Mapster;
 
 namespace BuberDinner.Api.Common.Mapping.Authentication;
 
-public class AuthMappingConfig : IRegister
+public class AuthResponseMapping : IRegister
 {
-    public void Register(TypeAdapterConfig config) 
+    public void Register(TypeAdapterConfig config)
     {
+        
         config.NewConfig<AuthenticationResult, AuthResponse>()
             .Map(dest => dest.id, src => src.User.Id)
             .Map(dest => dest.firstName, src => src.User.FirstName)
