@@ -1,24 +1,28 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Common.Interfaces.Persistence;
-using BuberDinner.Application.Services.Authentication.Commands.Common;
+using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
+using MapsterMapper;
 using OneOf;
 
-namespace BuberDinner.Application.Services.Authentication.Commands;
+namespace BuberDinner.Application.Services.Authentication;
 
 internal class AuthenticationService : IAuthenticationService
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
+    private readonly IMapper _mapper;
 
     public AuthenticationService(
         IJwtTokenGenerator jwtTokenGenerator,
-        IUserRepository userRepository
+        IUserRepository userRepository,
+        IMapper mapper
     )
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
+        _mapper = mapper;
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Login(
@@ -33,7 +37,7 @@ internal class AuthenticationService : IAuthenticationService
         }
 
         if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-            return new InvalidCredentialError();
+                return new InvalidCredentialError();
 
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
@@ -42,7 +46,9 @@ internal class AuthenticationService : IAuthenticationService
 
         await _userRepository.UpdateAsync(user);
 
-        return MapAuthResult(user, accessToken, refreshToken);
+        var result = _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
+        
+        return result;
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Register(
@@ -56,6 +62,7 @@ internal class AuthenticationService : IAuthenticationService
         {
             return new DuplicatedEmailError();
         }
+
         var hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
 
         var user = new User(firstName, lastName, hashPassword, email);
@@ -66,15 +73,7 @@ internal class AuthenticationService : IAuthenticationService
 
         await _userRepository.AddAsync(user);
 
-        return MapAuthResult(user, accessToken, refreshToken);
-    }
-
-    private static AuthenticationResult MapAuthResult(
-        User user,
-        string accessToken,
-        RefreshToken refreshToken
-    )
-    {
-        return new AuthenticationResult(user, accessToken, refreshToken.Token);
+        var result = _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
+        return result;
     }
 }

@@ -4,7 +4,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-    <UserSecretsId>22742d53-0527-4497-b73f-2caeb48bece5</UserSecretsId>
+    <UserSecretsId>c171b9c7-e159-4916-929e-5775a47a138f</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />

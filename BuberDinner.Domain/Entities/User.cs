@@ -7,6 +7,7 @@ public class User
 {
     public Guid Id { get; private set; } 
     private UserRole _role { get; set; }
+    
     public string Role
     {
         get => _role.ToString();

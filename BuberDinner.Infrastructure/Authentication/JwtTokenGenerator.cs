@@ -43,7 +43,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         };
 
         var creds = new SigningCredentials(
-            key: new SymmetricSecurityKey(ConvertSecretToBytes(_options.JwtSecretKey!)),
+            key: new SymmetricSecurityKey(ConvertSecretToBytes(_options.SecretKey!)),
             SecurityAlgorithms.HmacSha256
         );
 

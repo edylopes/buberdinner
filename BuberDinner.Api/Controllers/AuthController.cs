@@ -1,9 +1,10 @@
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Commands.Register;
+using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Application.Authentication.Queries;
-using BuberDinner.Application.Services.Authentication.Commands.Common;
 using BuberDinner.Contracts.Authentication;
+using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,8 +40,8 @@ public class AuthenticationController : Controller
                 var payload = _mapper.Map<AuthResponse>(success);
                 _logger.LogInformation("New user registered: {UserId}", success.User.Id);
 
-                return Okay.
-                        Created(payload, $"user/{success.User.Id}")
+                return ResultOkay
+                       .Created(payload, $"user/{payload.id}")
                        .WithCookie("RefreshToken", success.RefreshToken)
                        .WithHeader("Authorization", success.AccessToken);
             },
@@ -56,14 +57,14 @@ public class AuthenticationController : Controller
     public async Task<IActionResult> Login(LoginRequest req)
     {
         var result = await _mediator.Send(new LoginQuery(req.Email, req.Password));
-
         return result.Match<IActionResult>(
             success =>
             {
-                var command = MapAuthResult(success, success.User.Role);
+                var payload = _mapper.Map<AuthResponse>(success);
                 _logger.LogInformation("User logged in: {UserId}", success.User.Id);
 
-                return Okay.Ok(command)
+                return ResultOkay
+                        .Ok(payload)
                         .WithCookie("RefreshToken", success.RefreshToken)
                         .WithHeader("Authorization", success.AccessToken);
             },
