@@ -1,10 +1,8 @@
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Commands.Register;
-using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Application.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
-using ErrorOr;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -75,13 +73,4 @@ public class AuthenticationController : Controller
             }
         );
     }
-
-    private static AuthResponse MapAuthResult(AuthenticationResult result, string role) =>
-        new AuthResponse(
-            result.User.Id,
-            result.User.FirstName,
-            result.User.LastName,
-            result.User.Email,
-            role
-        );
 }

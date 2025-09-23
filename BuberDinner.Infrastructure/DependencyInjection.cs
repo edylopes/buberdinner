@@ -4,7 +4,7 @@ using BuberDinner.Infrastructure.Configuration;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructure(
+    public static IServiceCollection AddInfrastructureServices(
         this IServiceCollection services,
         ConfigurationManager configuration
     )

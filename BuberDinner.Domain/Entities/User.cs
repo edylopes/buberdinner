@@ -47,16 +47,15 @@ public class User
         if (refreshToken == null)
             throw new ArgumentNullException();
 
-        if (_refreshTokens.Count(rt => !rt.IsExpired || !rt.Revoked) >= 5)
+        if (_refreshTokens.Count(rt => rt is { IsExpired: false, Revoked: false }) >= 5)
         {
-            //var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
-            //_refreshTokens.Remove(oldestToken
-            throw new InvalidOperationException("Refresh tokens limit reached");
+           var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
+           _refreshTokens.Remove(oldestToken);
+           // throw new ApplicationException("Refresh tokens limit reached");
         }
-
         _refreshTokens.Add(refreshToken);
     }
-
+    
     public void RevokeRefreshToken(Guid refreshTokenId)
     {
         var refreshToken = _refreshTokens.FirstOrDefault(rt => rt.Id == refreshTokenId);
@@ -101,4 +100,5 @@ public class User
         Role = newRole;
         UpdatedAt = DateTime.UtcNow;
     }
+
 }
