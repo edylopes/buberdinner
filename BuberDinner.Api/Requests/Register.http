@@ -1,13 +1,12 @@
 
 @Host=https://localhost:7104/api/v1
-
-POST {{HostAddress}}/auth/register
+POST {{Host}}/auth/register
 Content-Type: application/json
 
 { 
   "firstName": "Edy" ,
   "lastName": "Lopes",
-  "email": "some1@gmail.com.br",
+  "email": "someone2@gmail.com.br",
   "password": "cripyto"
 }  
 

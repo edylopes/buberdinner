@@ -3,6 +3,8 @@ using BuberDinner.Api.Common.Mapping;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure.Configuration;
 using BurberDinner.Infrastructure;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 
 namespace BuberDinner.Api;
@@ -18,8 +20,8 @@ public static class DependencyInjection
         //Add Mapping 
         services.AddMappings();
         //Add Modules
-        services.AddApplication();
-        services.AddInfrastructure(configuration);
+        services.AddApplicationServices();
+        services.AddInfrastructureServices(configuration);
         
         //Configurations
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));

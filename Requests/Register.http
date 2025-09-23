@@ -1,7 +1,8 @@
 
 ### Send POST request with json body
 
-POST {{HostAddress}}/auth/register
+@Host=http://localhost:7104/auth/api/v1
+POST {{Host}}/auth/register
 Content-Type: application/json
 
 {

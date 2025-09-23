@@ -5,6 +5,7 @@ using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities;
 using MapsterMapper;
 using OneOf;
+using BuberDinner.Contracts.Authentication;
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -51,29 +52,27 @@ internal class AuthenticationService : IAuthenticationService
         return result;
     }
 
-    public async Task<OneOf<AuthenticationResult, AppError>> Register(
-        string firstName,
-        string lastName,
-        string email,
-        string password
-    )
+    public async Task<OneOf<AuthenticationResult, AppError>> Register(RegisterRequest req)
+   
     {
-        if (await _userRepository.GetByEmailAsync(email) is not null)
+        
+         var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.Password);
+        try
+        {
+            var user = new User(req.LastName, req.LastName, req.Password, req.Email);
+
+            var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
+
+            user.AddRefreshToken(refreshToken);
+
+            await _userRepository.AddAsync(user);
+
+           return _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
+        }
+        catch (Exception)
         {
             return new DuplicatedEmailError();
-        }
-
-        var hashPassword = BCrypt.Net.BCrypt.HashPassword(password);
-
-        var user = new User(firstName, lastName, hashPassword, email);
-
-        var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
-
-        user.AddRefreshToken(refreshToken);
-
-        await _userRepository.AddAsync(user);
-
-        var result = _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
-        return result;
+        }  
+        
     }
 }

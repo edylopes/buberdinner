@@ -1,4 +1,5 @@
 using BuberDinner.Application.Authentication.Common;
+using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
 using OneOf;
 
@@ -12,9 +13,6 @@ public interface IAuthenticationService
         string? existingRefreshToken = null
     );
     Task<OneOf<AuthenticationResult, AppError>> Register(
-        string firstName,
-        string lastName,
-        string email,
-        string password
+        RegisterRequest request
     );
 }

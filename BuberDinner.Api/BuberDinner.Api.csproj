@@ -20,19 +20,4 @@
     <PackageReference Include="System.Linq.Async" Version="6.0.3" />
     <PackageReference Include="OneOf" Version="3.0.271" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Requets\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Remove="Requets\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Remove="Requets\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="Requets\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Filters\ActionFilters\" />
-  </ItemGroup>
 </Project>
