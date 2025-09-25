@@ -9,7 +9,7 @@ using BuberDinner.Contracts.Authentication;
 
 namespace BuberDinner.Application.Services.Authentication;
 
-internal class AuthenticationService : IAuthenticationService
+public class AuthenticationService : IAuthenticationService
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
@@ -48,18 +48,18 @@ internal class AuthenticationService : IAuthenticationService
         await _userRepository.UpdateAsync(user);
 
         var result = _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
-        
+
         return result;
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Register(RegisterRequest req)
-   
+
     {
-        
-         var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.Password);
+
+       var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.Password);
+       var user = new User(req.LastName, req.LastName, hashPassword, req.Email);
         try
         {
-            var user = new User(req.LastName, req.LastName, req.Password, req.Email);
 
             var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
@@ -67,12 +67,12 @@ internal class AuthenticationService : IAuthenticationService
 
             await _userRepository.AddAsync(user);
 
-           return _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
+            return _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
         }
         catch (Exception)
         {
             return new DuplicatedEmailError();
-        }  
-        
+        }
+
     }
 }

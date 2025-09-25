@@ -5,14 +5,14 @@ namespace BuberDinner.Domain.Entities;
 
 public class User
 {
-    public Guid Id { get; private set; } 
-    private UserRole _role { get; set; }
-    
-    public string Role
-    {
-        get => _role.ToString();
-        private set => _role = UserRole.Create(value);
-    }
+    public Guid Id { get; private set; }
+    public UserRole Role { get; private set; }
+
+    /*   public UserRole Role
+      {
+          get => _role;
+          private set => _role = UserRole.Create(value.ToString());
+      } */
     private readonly List<RefreshToken> _refreshTokens = new();
     public IReadOnlyCollection<RefreshToken>? RefreshTokens => _refreshTokens.AsReadOnly();
     public string FirstName { get; private set; } = string.Empty;
@@ -23,9 +23,10 @@ public class User
     public string PasswordHash { get; private set; } = string.Empty;
     public bool EmailConfirmed { get; private set; }
 
+    // For EF Core
     protected User() { }
 
-    public User(string firstName, string lastName, string hash, string email, string? role = null)
+    public User(string firstName, string lastName, string passwordHash, string email)
     {
         var address = new MailAddress(email);
 
@@ -35,9 +36,9 @@ public class User
         Id = Guid.NewGuid();
         FirstName = firstName;
         LastName = lastName;
-        PasswordHash = hash;
+        PasswordHash = passwordHash;
         Email = email;
-        Role = role ?? nameof(RoleType.User);
+        Role = UserRole.Create(nameof(RoleType.User));
         EmailConfirmed = false;
         CreatedAt = DateTime.UtcNow;
     }
@@ -49,13 +50,13 @@ public class User
 
         if (_refreshTokens.Count(rt => rt is { IsExpired: false, Revoked: false }) >= 5)
         {
-           var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
-           _refreshTokens.Remove(oldestToken);
-           // throw new ApplicationException("Refresh tokens limit reached");
+            var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
+            _refreshTokens.Remove(oldestToken);
+            // throw new ApplicationException("Refresh tokens limit reached");
         }
         _refreshTokens.Add(refreshToken);
     }
-    
+
     public void RevokeRefreshToken(Guid refreshTokenId)
     {
         var refreshToken = _refreshTokens.FirstOrDefault(rt => rt.Id == refreshTokenId);
@@ -94,8 +95,9 @@ public class User
         PasswordHash = newPassword;
         UpdatedAt = DateTime.UtcNow;
     }
-
-    public void ChangeRole(string newRole)
+    public static User CreateAdmin(string firstName, string lastName, string passwordHash, string email)
+         => new User(firstName, lastName, passwordHash, email) { Role = UserRole.Create(nameof(RoleType.Admin)) };
+    public void ChangeRole(UserRole newRole)
     {
         Role = newRole;
         UpdatedAt = DateTime.UtcNow;

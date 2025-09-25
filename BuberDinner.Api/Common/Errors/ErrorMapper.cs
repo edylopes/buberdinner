@@ -10,11 +10,6 @@ internal sealed class ErrorDefaults
     public const string UnauthorizedUrl = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1";
     public const string ForbiddenUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3";
 
-    public const int Conflict = 409;
-    public const int Unauthorized = 401;
-    public const int BadRequest = 400;
-    public const int Notfound = 404;
-    public const int Validation = 400;
 }
 
 public static class ErrorMapper

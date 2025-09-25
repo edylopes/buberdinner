@@ -3,6 +3,8 @@ using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Domain.Common.Errors;
 using MediatR;
 using OneOf;
+using MapsterMapper;
+using BuberDinner.Contracts.Authentication;
 
 namespace BuberDinner.Application.Authentication.Commands.Register;
 
@@ -10,10 +12,12 @@ public class RegisterCommandHandler
     : IRequestHandler<RegisterCommand, OneOf<AuthenticationResult, AppError>>
 {
     private readonly IAuthenticationService _authenticationService;
+    private readonly IMapper _mapper;
 
-    public RegisterCommandHandler(IAuthenticationService authenticationService)
+    public RegisterCommandHandler(IAuthenticationService authenticationService, IMapper mapper)
     {
         _authenticationService = authenticationService;
+        _mapper = mapper;
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Handle(
@@ -21,13 +25,9 @@ public class RegisterCommandHandler
         CancellationToken cancellationToken
     )
     {
-        var result = await _authenticationService.Register(
-            command.FirstName,
-            command.LastName,
-            command.Email,
-            command.Password
-        );
+        var request = _mapper.Map<RegisterRequest>(command);
+        return  await _authenticationService.Register(request);
 
-        return result;
+
     }
 }
