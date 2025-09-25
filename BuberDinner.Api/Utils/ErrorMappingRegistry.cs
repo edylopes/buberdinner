@@ -1,17 +1,13 @@
-using BuberDinner.Domain.Common.Errors;
 
 namespace BuberDinner.Api.Utils;
 
+using BuberDinner.Domain.Common.Errors;
 public static class ErrorMappingRegistry
 {
     const string conflictUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8";
     const string forbiddenUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3";
 
-    private static readonly Dictionary<
-        Type,
-        (int statusCode, string title, string typeUrl)
-    > _mappings = new();
-
+    private static readonly Dictionary<Type, (int statusCode, string title, string typeUrl)> _mappings = new();
     public static void Register<TError>(int statusCode, string title, string typeUrl) //TODO  refactor if necessary
         where TError : AppError
     {
@@ -26,11 +22,7 @@ public static class ErrorMappingRegistry
 
     public static void RegisterDefaults()
     {
-        Register<DuplicatedEmailError>(
-            StatusCodes.Status409Conflict,
-            "Email Duplicated",
-            conflictUrl
-        );
+        Register<DuplicatedEmailError>(StatusCodes.Status409Conflict, "Email Duplicated", conflictUrl);
         Register<UserRoleNotAllowedError>(
             StatusCodes.Status403Forbidden,
             "User Role Not Allowed",

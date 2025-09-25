@@ -9,9 +9,9 @@ namespace BuberDinner.Domain.ValueObjects
         Premium,
     }
 
-    internal record UserRole
+    public record UserRole
     {
-        public RoleType Value { get; }
+        private RoleType Value { get; }
 
         private UserRole(RoleType value) => Value = value;
 

@@ -52,7 +52,7 @@ internal class AuthResultWithCookies : IActionResult
             result.User.FirstName,
             result.User.LastName,
             result.User.Email,
-            result.User.Role
+            result.User.Role.ToString()
         );
     }
 }

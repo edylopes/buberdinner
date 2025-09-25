@@ -36,9 +36,9 @@ public static class OneOfExtensions
                         success.User.FirstName,
                         success.User.LastName,
                         success.User.Email,
-                        success.User.Role
-                    )
-                );
+                        success.User.Role.ToString()
+                        )
+                    );
             },
             error =>
             {
