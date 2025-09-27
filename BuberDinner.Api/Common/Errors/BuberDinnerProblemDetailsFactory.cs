@@ -1,7 +1,5 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
 
@@ -89,6 +87,7 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
     {
         problemDetails.Status ??= statusCode;
         problemDetails.Instance ??= httpContext.Request.Path.Value;
+
         Exception? exception = httpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
 
         if (_options.ClientErrorMapping.TryGetValue(statusCode, out var clientErrorData))
@@ -104,6 +103,6 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
             problemDetails.Extensions["traceId"] = traceId;
         }
 
-        problemDetails.Extensions.Add("CustomValue", "Teste");
+        // problemDetails.Extensions["code"] = exception?.GetType().Name;
     }
 }

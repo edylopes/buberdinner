@@ -4,6 +4,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <NoWarn>NETSDK1138</NoWarn>
     <UserSecretsId>c171b9c7-e159-4916-929e-5775a47a138f</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>

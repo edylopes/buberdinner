@@ -1,7 +1,6 @@
-using BuberDinner.Api.Controllers;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace BuberDinner.Api.Results;
 
@@ -25,7 +24,7 @@ internal class AuthResultWithCookies : IActionResult
 
         response.Cookies.Append(
             "refreshToken",
-            _result.RefreshToken,
+            _result.refreshToken,
             new CookieOptions
             {
                 HttpOnly = true,
@@ -35,9 +34,9 @@ internal class AuthResultWithCookies : IActionResult
             }
         );
 
-        response.Headers["Authorization"] = $"Bearer {_result.AccessToken}";
+        response.Headers["Authorization"] = $"Bearer {_result.user}";
 
-        var createdResult = new CreatedResult($"user/{_result.User.Id}", MapAuthResult(_result));
+        var createdResult = new CreatedResult($"user/{_result.user.Id}", MapAuthResult(_result));
         var OkResult = new OkObjectResult(MapAuthResult(_result));
 
         return _isNewResource
@@ -48,11 +47,11 @@ internal class AuthResultWithCookies : IActionResult
     private static AuthResponse MapAuthResult(AuthenticationResult result)
     {
         return new AuthResponse(
-            result.User.Id,
-            result.User.FirstName,
-            result.User.LastName,
-            result.User.Email,
-            result.User.Role.ToString()
+            result.user.Id,
+            result.user.FirstName,
+            result.user.LastName,
+            result.user.Email,
+            result.user.Role.ToString()
         );
     }
 }

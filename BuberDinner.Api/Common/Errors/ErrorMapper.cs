@@ -2,7 +2,7 @@
 
 namespace BuberDinner.Api.Common.Errors;
 
-internal sealed class ErrorDefaults
+internal static class ErrorMapper
 {
     public const string BadRequestUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1";
     public const string NotFoundUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4";
@@ -10,19 +10,14 @@ internal sealed class ErrorDefaults
     public const string UnauthorizedUrl = "https://datatracker.ietf.org/doc/html/rfc7235#section-3.1";
     public const string ForbiddenUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3";
 
-}
-
-public static class ErrorMapper
-{
-
     public static (int statusCode, string url, string message) ToError(AppError error) =>
      error switch
      {
-         DuplicatedEmailError => (StatusCodes.Status409Conflict, ErrorDefaults.ConflictUrl, error.Message),
-         UserNotFoundError => (StatusCodes.Status404NotFound, ErrorDefaults.NotFoundUrl, error.Message),
-         UserRoleNotAllowedError => (StatusCodes.Status403Forbidden, ErrorDefaults.ForbiddenUrl, error.Message),
-         InvalidCredentialError => (StatusCodes.Status401Unauthorized, ErrorDefaults.UnauthorizedUrl, error.Message),
+         DuplicatedEmailError => (StatusCodes.Status409Conflict, ConflictUrl, error.message),
+         UserNotFoundError => (StatusCodes.Status404NotFound, NotFoundUrl, error.message),
+         UserRoleNotAllowedError => (StatusCodes.Status403Forbidden, ForbiddenUrl, error.message),
+         InvalidCredentialError => (StatusCodes.Status401Unauthorized, UnauthorizedUrl, error.message),
 
-         _ => (StatusCodes.Status400BadRequest, ErrorDefaults.BadRequestUrl, "An unexpected error occurred")
+         _ => (StatusCodes.Status400BadRequest, BadRequestUrl, "An unexpected error occurred")
      };
 }

@@ -2,4 +2,4 @@ using BuberDinner.Domain.Entities;
 
 namespace BuberDinner.Application.Authentication.Common;
 
-public record AuthenticationResult(User User, string AccessToken, string RefreshToken);
+public record AuthenticationResult(User user, string accessToken, string refreshToken);
