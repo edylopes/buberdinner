@@ -10,11 +10,11 @@ public class AuthResponseMapping : IRegister
     {
 
         config.NewConfig<AuthenticationResult, AuthResponse>()
-            .Map(dest => dest.id, src => src.User.Id)
-            .Map(dest => dest.firstName, src => src.User.FirstName)
-            .Map(dest => dest.lastName, src => src.User.LastName)
-            .Map(dest => dest.email, src => src.User.Email)
-            .Map(dest => dest.role, src => src.User.Role.ToString());
+            .Map(dest => dest.id, src => src.user.Id)
+            .Map(dest => dest.firstName, src => src.user.FirstName)
+            .Map(dest => dest.lastName, src => src.user.LastName)
+            .Map(dest => dest.email, src => src.user.Email)
+            .Map(dest => dest.role, src => src.user.Role.ToString());
 
     }
 }

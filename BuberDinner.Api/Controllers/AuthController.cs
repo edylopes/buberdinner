@@ -1,4 +1,6 @@
 using BuberDinner.Api.Common.Errors;
+using BuberDinner.Api.Extensions;
+using BuberDinner.Api.Extensions.Auth;
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Queries;
@@ -15,62 +17,28 @@ public class AuthenticationController : Controller
 {
     private readonly ILogger<AuthenticationController> _logger;
     private readonly ISender _mediator;
-    private readonly IMapper _mapper;    
-
+    private readonly IMapper _mapper;
 
     public AuthenticationController(ILogger<AuthenticationController> logger, ISender mediator, IMapper mapper)
-    { 
+    {
         _mapper = mapper;
         _logger = logger;
         _mediator = mediator;
     }
 
-    [HttpPost("register")]
+    [HttpPost(template: "register")]
     public async Task<IActionResult> Register(RegisterRequest req)
     {
-        var command = _mapper.Map<RegisterCommand>(req);
-        
-        var result = await _mediator.Send(command);
-        
-        return result.Match<IActionResult>(
-            success =>
-            {
-                var payload = _mapper.Map<AuthResponse>(success);
-                _logger.LogInformation("New user registered: {UserId}", success.User.Id);
-
-                return ResultOkay
-                       .Created(payload, $"user/{payload.id}")
-                       .WithCookie("RefreshToken", success.RefreshToken)
-                       .WithHeader("Authorization", success.AccessToken);
-            },
-            error =>
-            {
-                var (statusCode, url, message) = ErrorMapper.ToError(error);
-                return Problem(statusCode: statusCode, detail: message, type: url);
-            }
-        );
+        var result = await _mediator.Send(_mapper.Map<RegisterCommand>(req));
+        return result.ToAuthResponse(_mapper, HttpContext);
     }
-
-    [HttpPost("login")]
+    [HttpPost(template: "login")]
     public async Task<IActionResult> Login(LoginRequest req)
     {
-        var result = await _mediator.Send(new LoginQuery(req.Email, req.Password));
-        return result.Match<IActionResult>(
-            success =>
-            {
-                var payload = _mapper.Map<AuthResponse>(success);
-                _logger.LogInformation("User logged in: {UserId}", success.User.Id);
+        var result = await _mediator.Send(_mapper.Map<LoginQuery>(req));
 
-                return ResultOkay
-                        .Ok(payload)
-                        .WithCookie("RefreshToken", success.RefreshToken)
-                        .WithHeader("Authorization", success.AccessToken);
-            },
-            error =>
-            {
-                var (statusCode, url, message) = ErrorMapper.ToError(error);
-                return Problem(statusCode: statusCode, detail: message, type: url);
-            }
-        );
+        return result.ToResponseResult(
+           user => Ok(_mapper.Map<AuthResponse>(user)),
+           HttpContext);
     }
 }

@@ -2,6 +2,6 @@
 
 public record InvalidCredentialError()
     : AppError(
-     
+
         "Invalid email or password"
     );

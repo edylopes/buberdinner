@@ -38,7 +38,7 @@ public class AuthenticationService : IAuthenticationService
         }
 
         if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
-                return new InvalidCredentialError();
+            return new InvalidCredentialError();
 
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
@@ -47,7 +47,7 @@ public class AuthenticationService : IAuthenticationService
 
         await _userRepository.UpdateAsync(user);
 
-        var result = _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
+        var result = _mapper.Map<AuthenticationResult>(user) with { accessToken = accessToken };
 
         return result;
     }
@@ -56,18 +56,18 @@ public class AuthenticationService : IAuthenticationService
 
     {
 
-       var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.Password);
-       var user = new User(req.LastName, req.LastName, hashPassword, req.Email);
+        var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.Password);
+        var user = new User(req.LastName, req.LastName, hashPassword, req.Email);
         try
         {
 
-            var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
+            var (token, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
             user.AddRefreshToken(refreshToken);
 
             await _userRepository.AddAsync(user);
 
-            return _mapper.Map<AuthenticationResult>(user) with { AccessToken = accessToken };
+            return _mapper.Map<AuthenticationResult>(user) with { accessToken = token };
         }
         catch (Exception)
         {

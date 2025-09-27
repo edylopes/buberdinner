@@ -6,8 +6,8 @@ Content-Type: application/json
 
 { 
   "firstName": "Edy" ,
-  "lastName": "Lopes",
-  "email": "someone2@gmail.com.br",
+  "lastName": "lopes",
+  "email": "someone@gmail.com.br",
   "password": "cripyto"
 }  
 

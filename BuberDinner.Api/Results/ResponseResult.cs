@@ -1,5 +1,4 @@
 ﻿using BuberDinner.Api.Helpers;
-using Microsoft.AspNetCore.Mvc;
 
 namespace BuberDinner.Api.Results;
 
@@ -15,7 +14,8 @@ public class ResponseResult<T> : IActionResult
 
     public ResponseResult(
         T payload,
-        bool isNewResource = false, int statusCode = StatusCodes.Status200OK,
+        bool isNewResource = false,
+        int statusCode = StatusCodes.Status200OK,
         string? location = null
     )
     {
