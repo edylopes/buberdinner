@@ -4,6 +4,6 @@ POST {{Host}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "someone@gmail.com.br",
-  "password": "cripyt"
+   "email": "user@example.com",
+  "password": "string"
 }

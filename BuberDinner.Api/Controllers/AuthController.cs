@@ -1,25 +1,24 @@
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Extensions;
 using BuberDinner.Api.Extensions.Auth;
-using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Queries;
 using BuberDinner.Contracts.Authentication;
 using MapsterMapper;
 using MediatR;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace BuberDinner.Api.Controllers;
 
 [ApiController]
 [Route("api/v1/auth")]
-public class AuthenticationController : Controller
+public class AuthController : Controller
 {
-    private readonly ILogger<AuthenticationController> _logger;
+    private readonly ILogger<AuthController> _logger;
     private readonly ISender _mediator;
     private readonly IMapper _mapper;
 
-    public AuthenticationController(ILogger<AuthenticationController> logger, ISender mediator, IMapper mapper)
+    public AuthController(ILogger<AuthController> logger, ISender mediator, IMapper mapper)
     {
         _mapper = mapper;
         _logger = logger;

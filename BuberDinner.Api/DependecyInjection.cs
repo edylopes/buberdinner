@@ -1,10 +1,8 @@
 ﻿using AspNetCoreRateLimit;
 using BuberDinner.Api.Common.Mapping;
-using BuberDinner.Application;
 using BuberDinner.Infrastructure.Configuration;
 using BurberDinner.Infrastructure;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+
 
 
 namespace BuberDinner.Api;
@@ -22,7 +20,7 @@ public static class DependencyInjection
         //Add Modules
         services.AddApplicationServices();
         services.AddInfrastructureServices(configuration);
-        
+
         //Configurations
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
 
