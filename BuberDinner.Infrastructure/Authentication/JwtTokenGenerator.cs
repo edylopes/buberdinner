@@ -32,15 +32,15 @@ public class JwtTokenGenerator : IJwtTokenGenerator
     {
         var handler = new JwtSecurityTokenHandler();
 
-        var claims = new List<Claim>
+        List<Claim> claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
-            new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
-            new Claim(JwtRegisteredClaimNames.Iat, _dateTimeProvider.UtcNow.ToShortDateString()),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new Claim(ClaimTypes.Role, user.Role.ToString()),
+            new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
+            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.Role, user.Role.ToString()),
         };
+
 
         var creds = new SigningCredentials(
             key: new SymmetricSecurityKey(ConvertSecretToBytes(_options.SecretKey!)),
@@ -50,7 +50,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var token = new JwtSecurityToken(
             issuer: _options.Issuer,
             audience: _options.Audience,
-            notBefore: _dateTimeProvider.UtcNow.AddSeconds(5),
+            notBefore: DateTime.Now.AddSeconds(5),
             expires: _dateTimeProvider.UtcNow.AddMinutes(15),
             claims: claims,
             signingCredentials: creds

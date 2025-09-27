@@ -12,10 +12,10 @@ public class UserRepository : IUserRepository
             throw new ArgumentNullException("User is required", nameof(user));
 
         if (_users.Any(u => u.Email == user.Email))
-          throw new InvalidOperationException("User with this email already exists");
+            throw new InvalidOperationException("User with this email already exists");
 
         _users.Add(user);
-        
+
         return Task.CompletedTask;
     }
 

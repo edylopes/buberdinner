@@ -9,8 +9,8 @@ public static class DependencyInjection
         ConfigurationManager configuration
     )
     {
-        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
         services.AddScoped<IUserRepository, UserRepository>();
 
