@@ -7,11 +7,7 @@ namespace BuberDinner.Application.Services.Authentication;
 
 public interface IAuthenticationService
 {
-    Task<OneOf<AuthenticationResult, AppError>> Login(
-        string email,
-        string password,
-        string? existingRefreshToken = null
-    );
+    Task<OneOf<AuthenticationResult, AppError>> Login(LoginRequest req);
     Task<OneOf<AuthenticationResult, AppError>> Register(
         RegisterRequest request
     );

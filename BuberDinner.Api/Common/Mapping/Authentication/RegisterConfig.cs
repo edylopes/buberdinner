@@ -14,7 +14,7 @@ public class AuthResponseMapping : IRegister
             .Map(dest => dest.firstName, src => src.user.FirstName)
             .Map(dest => dest.lastName, src => src.user.LastName)
             .Map(dest => dest.email, src => src.user.Email)
-            .Map(dest => dest.role, src => src.user.Role.ToString());
+            .Map(dest => dest.roles, src => src.user.Roles.Select(r => r.ToString()).ToArray());
 
     }
 }

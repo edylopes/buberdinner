@@ -78,9 +78,28 @@ POST {{host}}/auth/login
 }
 ```
 
-#### Hedears\*\*\*\*
+### Hedears
 
-```c#
-Response.Headers["Authorization"] = $"Bearer eyahqyd...."
-Response.Cookies.Append("refreshToken", authResult.RefreshToken, new CookieOptions{})
+```cs
+
+ Response.Headers["Authorization"]
+ Response.Cookies.Append("refreshToken", authResult.RefreshToken, new CookieOptions{})
 ```
+
+🌐 2. **Middleware de Tratamento Global de Exceções**
+
+> Middleware intercepta erros e retorna respostas amigáveis e padronizadas à API
+
+​**Exceções específicas de domínio**​, como:
+
+-   `BusinessRuleValidationException`
+-   `RefreshTokenLimitExceededException`
+-   `RefreshTokenRequiredException`
+
+    ```cs
+    public class BusinessRuleValidationException : DomainException
+    {
+        public BusinessRuleValidationException(string message)
+            : base(message) { }
+    }
+    ```

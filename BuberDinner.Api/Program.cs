@@ -1,4 +1,5 @@
 using AspNetCoreRateLimit;
+using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
 using Microsoft.OpenApi.Models;

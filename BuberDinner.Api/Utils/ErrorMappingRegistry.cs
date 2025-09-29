@@ -8,7 +8,7 @@ public static class ErrorMappingRegistry
     const string forbiddenUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3";
 
     private static readonly Dictionary<Type, (int statusCode, string title, string typeUrl)> _mappings = new();
-    public static void Register<TError>(int statusCode, string title, string typeUrl) //TODO  refactor if necessary
+    public static void Register<TError>(int statusCode, string title, string typeUrl)
         where TError : AppError
     {
         _mappings[typeof(TError)] = (statusCode, title, typeUrl);

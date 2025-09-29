@@ -12,13 +12,13 @@ public class DinnerController : Controller
         _logger = logger;
     }
     [HttpGet("home")]
-    public IActionResult Index()
+    public IActionResult Invites()
     {
-        return View();
+        return Ok(Enumerable.Empty<string>());
     }
     [HttpGet("privacy")]
     public IActionResult Privacy()
     {
-        return View();
+        return Ok();
     }
 }
