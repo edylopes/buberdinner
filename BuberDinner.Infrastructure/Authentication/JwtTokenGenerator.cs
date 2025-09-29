@@ -3,7 +3,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using BuberDinner.Domain.Entities;
-using BuberDinner.Infrastructure.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -38,8 +37,13 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(JwtRegisteredClaimNames.GivenName, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(ClaimTypes.Role, user.Role.ToString()),
+            new(JwtRegisteredClaimNames.Email, user.Email),
+            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(_dateTimeProvider.UtcNow).ToString())
         };
+        foreach (var role in user.Roles)
+            claims.Add(new("roles", role.ToString()));
+
+
 
 
         var creds = new SigningCredentials(
@@ -50,7 +54,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var token = new JwtSecurityToken(
             issuer: _options.Issuer,
             audience: _options.Audience,
-            notBefore: DateTime.Now.AddSeconds(5),
+            notBefore: _dateTimeProvider.UtcNow.AddSeconds(3),
             expires: _dateTimeProvider.UtcNow.AddMinutes(15),
             claims: claims,
             signingCredentials: creds

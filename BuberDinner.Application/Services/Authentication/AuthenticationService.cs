@@ -6,6 +6,7 @@ using BuberDinner.Domain.Entities;
 using MapsterMapper;
 using OneOf;
 using BuberDinner.Contracts.Authentication;
+using BuberDinner.Domain.ValueObjects;
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -27,23 +28,22 @@ public class AuthenticationService : IAuthenticationService
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Login(
-        string email,
-        string password,
-        string? existingRefreshToken = null
+        LoginRequest req
     )
     {
-        if (await _userRepository.GetByEmailAsync(email) is not User user)
+        if (await _userRepository.GetByEmailAsync(req.Email) is not User user)
         {
             return new UserNotFoundError();
         }
 
-        if (!BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+        if (!BCrypt.Net.BCrypt.Verify(req.Password, user.PasswordHash))
             return new InvalidCredentialError();
 
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
         // Adicionar o novo token ao usuário (sem revogar os existentes para permitir múltiplas sessões)
         user.AddRefreshToken(refreshToken);
+
 
         await _userRepository.UpdateAsync(user);
 
@@ -57,7 +57,8 @@ public class AuthenticationService : IAuthenticationService
     {
 
         var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.Password);
-        var user = new User(req.LastName, req.LastName, hashPassword, req.Email);
+        var user = new User(req.FirstName, req.LastName, hashPassword, req.Email);
+        // user.AddRole(UserRole.Create(RoleType.Admin.ToString()));
         try
         {
 
@@ -69,7 +70,7 @@ public class AuthenticationService : IAuthenticationService
 
             return _mapper.Map<AuthenticationResult>(user) with { accessToken = token };
         }
-        catch (Exception)
+        catch (Exception ex) when (ex is InvalidOperationException && ex.Message.Contains("email"))
         {
             return new DuplicatedEmailError();
         }

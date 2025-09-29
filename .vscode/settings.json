@@ -1,4 +1,31 @@
 {
     "editor.fontFamily": "Fira Code, monospace",
-    "editor.fontLigatures": true
+    "editor.fontLigatures": true,
+    "files.exclude": {
+        "**/.git": true,
+        "**/.gitignore": true,
+        "**/.github": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/bin": true,
+        "**/obj": true,
+        "**/.config": true
+    },
+    "files.watcherExclude": {
+        "**/bin/**": true,
+        "**/obj/**": true
+    },
+    "csharp.suppressDotnetRestoreNotification": true,
+    "csharp.format.enable": true,
+    "csharp.format.indentationSize": 4,
+    "csharp.format.tabSize": 4,
+    "csharp.format.newLine": true,
+    "csharp.format.space": true,
+    "csharp.format.wrapping": true,
+    "csharp.implementationsCodeLens.enabled": true,
+    "csharp.suggestNamespaces": true,
+    "csharp.semanticHighlighting": true,
+    "dotnet.codeLens.enableReferencesCodeLens": true
 }

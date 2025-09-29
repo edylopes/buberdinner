@@ -1,6 +1,8 @@
-namespace BurberDinner.Infrastructure;
 
-using BuberDinner.Infrastructure.Configuration;
+using BuberDinner.Infrastructure.Authentication;
+
+
+namespace BurberDinner.Infrastructure;
 
 public static class DependencyInjection
 {
@@ -9,8 +11,8 @@ public static class DependencyInjection
         ConfigurationManager configuration
     )
     {
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
         services.AddScoped<IUserRepository, UserRepository>();
 

@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -103,6 +104,7 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
             problemDetails.Extensions["traceId"] = traceId;
         }
 
-        // problemDetails.Extensions["code"] = exception?.GetType().Name;
+        problemDetails.Extensions["timestamp"] = DateTimeOffset.UtcNow;
+        //  problemDetails.Extensions["exceptionType"] = exception?.GetType().Name;
     }
 }

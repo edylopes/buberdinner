@@ -1,4 +1,5 @@
 using System.Net.Mail;
+using BuberDinner.Domain.Exceptions;
 using BuberDinner.Domain.ValueObjects;
 
 namespace BuberDinner.Domain.Entities;
@@ -6,8 +7,7 @@ namespace BuberDinner.Domain.Entities;
 public class User
 {
     public Guid Id { get; private set; }
-    public UserRole Role { get; private set; }
-
+    public List<UserRole> Roles { get; private set; } = new();
     /*   public UserRole Role
       {
           get => _role;
@@ -38,7 +38,7 @@ public class User
         LastName = lastName;
         PasswordHash = passwordHash;
         Email = email;
-        Role = UserRole.Create(nameof(RoleType.User));
+        Roles = new List<UserRole> { UserRole.Create(nameof(RoleType.User)) };
         EmailConfirmed = false;
         CreatedAt = DateTime.UtcNow;
     }
@@ -49,11 +49,10 @@ public class User
             throw new ArgumentNullException();
 
         if (_refreshTokens.Count(rt => rt is { IsExpired: false, Revoked: false }) >= 5)
-        {
-            var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
-            _refreshTokens.Remove(oldestToken);
-            // throw new ApplicationException("Refresh tokens limit reached");
-        }
+            throw new RefreshTokenLimitExceededException("Refresh token limit has been exceeded.");
+        //Another role..
+        //var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
+        // _refreshTokens.Remove(oldestToken);
         _refreshTokens.Add(refreshToken);
     }
 
@@ -61,7 +60,7 @@ public class User
     {
         var refreshToken = _refreshTokens.FirstOrDefault(rt => rt.Id == refreshTokenId);
         if (refreshToken == null)
-            throw new InvalidOperationException("Refresh token not found");
+            throw new ArgumentException("Refresh token not found");
 
         refreshToken.Revoke();
     }
@@ -96,10 +95,10 @@ public class User
         UpdatedAt = DateTime.UtcNow;
     }
     public static User CreateAdmin(string firstName, string lastName, string passwordHash, string email)
-         => new User(firstName, lastName, passwordHash, email) { Role = UserRole.Create(nameof(RoleType.Admin)) };
-    public void ChangeRole(UserRole newRole)
+         => new User(firstName, lastName, passwordHash, email) { Roles = new List<UserRole> { UserRole.Create(nameof(RoleType.Admin)) } };
+    public void AddRole(UserRole newRole)
     {
-        Role = newRole;
+        Roles.Add(newRole);
         UpdatedAt = DateTime.UtcNow;
     }
 

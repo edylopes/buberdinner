@@ -57,7 +57,7 @@ public class ResponseResult<T> : IActionResult
         new(_payload, false, StatusCodes.Status200OK);
 
     public ResponseResult<T> AsNoContent() =>
-        new(_payload, false, statusCode: StatusCodes.Status200OK);
+        new(default!, false, statusCode: StatusCodes.Status204NoContent);
 
     public async Task ExecuteResultAsync(ActionContext context)
     {
@@ -76,11 +76,11 @@ public class ResponseResult<T> : IActionResult
             response.Headers[kvp.Key] = kvp.Value;
         }
 
-        if (_payload is null && _statusCode == StatusCodes.Status200OK)
+        if (_payload is null && _statusCode == StatusCodes.Status204NoContent)
         {
             response.StatusCode = StatusCodes.Status204NoContent;
-            var res = new NoContentResult();
-            await res.ExecuteResultAsync(context);
+            // No content to send, just return
+            await Task.CompletedTask;
             return;
         }
 

@@ -26,7 +26,7 @@ public class RegisterCommandHandler
     )
     {
         var request = _mapper.Map<RegisterRequest>(command);
-        return  await _authenticationService.Register(request);
+        return await _authenticationService.Register(request);
 
 
     }
