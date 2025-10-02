@@ -11,3 +11,5 @@ public record UserRoleNotAllowedError()
 
 public record UserNotFoundError()
     : AppError("User not found", "User not found");
+
+

@@ -6,7 +6,6 @@ using BuberDinner.Domain.Entities;
 using MapsterMapper;
 using OneOf;
 using BuberDinner.Contracts.Authentication;
-using BuberDinner.Domain.ValueObjects;
 
 namespace BuberDinner.Application.Services.Authentication;
 

@@ -1,4 +1,5 @@
-﻿using BuberDinner.Api.Helpers;
+﻿
+using BuberDinner.Api.Helpers;
 
 namespace BuberDinner.Api.Results;
 
@@ -13,11 +14,11 @@ public class ResponseResult<T> : IActionResult
     private readonly Dictionary<string, CookieOptions?> _pendingCookieOptions = new();
 
     public ResponseResult(
-        T payload,
-        bool isNewResource = false,
-        int statusCode = StatusCodes.Status200OK,
-        string? location = null
-    )
+         T payload,
+         bool isNewResource = false,
+         int statusCode = StatusCodes.Status200OK,
+         string? location = null
+     )
     {
         _payload = payload;
         _isNewResource = isNewResource;
@@ -27,10 +28,10 @@ public class ResponseResult<T> : IActionResult
 
     public ResponseResult<T> WithCookie(string name, string value, CookieOptions? options = null)
     {
-        // Guarda cookie para ser setado depois
+        // Save cookie to be added later
         _cookies[name] = HeaderSanitizer.Sanitizer(value);
 
-        // Opcional: salvar opções personalizadas
+        // Opcional: save cookies personalized
         _pendingCookieOptions[name] =
             options
             ?? new CookieOptions
@@ -76,18 +77,19 @@ public class ResponseResult<T> : IActionResult
             response.Headers[kvp.Key] = kvp.Value;
         }
 
+
+
+        // 204 No Content - no body is sent, just return
         if (_payload is null && _statusCode == StatusCodes.Status204NoContent)
         {
             response.StatusCode = StatusCodes.Status204NoContent;
-            // No content to send, just return
-            await Task.CompletedTask;
             return;
         }
-
+        // 201 Created - use CreatedResult to set Location header
         if (_isNewResource)
         {
-            var createdResult = new CreatedResult(_location ?? string.Empty, _payload);
             response.StatusCode = _statusCode!.Value;
+            var createdResult = new CreatedResult(_location ?? string.Empty, _payload);
             await createdResult.ExecuteResultAsync(context);
             return;
         }

@@ -34,14 +34,20 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         List<Claim> claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
+            new(ClaimTypes.Name, user.FirstName),
             new(JwtRegisteredClaimNames.FamilyName, user.LastName),
             new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(JwtRegisteredClaimNames.Email, user.Email),
-            new(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(_dateTimeProvider.UtcNow).ToString())
-        };
+            new(JwtRegisteredClaimNames.Iat,
+                    EpochTime.GetIntDate(_dateTimeProvider.UtcNow).ToString(),
+                    ClaimValueTypes.Integer64 ),
+
+             };
+
         foreach (var role in user.Roles)
-            claims.Add(new("roles", role.ToString()));
+            claims.Add(new(ClaimTypes.Role, role.ToString()));
+
+
 
 
 
@@ -55,7 +61,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             issuer: _options.Issuer,
             audience: _options.Audience,
             notBefore: _dateTimeProvider.UtcNow.AddSeconds(3),
-            expires: _dateTimeProvider.UtcNow.AddMinutes(15),
+            expires: _dateTimeProvider.UtcNow.AddMinutes(30),
             claims: claims,
             signingCredentials: creds
         );

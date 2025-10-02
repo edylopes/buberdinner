@@ -1,6 +1,6 @@
 # @env local
-@Host=https://localhost:7104/api/v1
-POST {{Host}}/auth/login
+@BaseUrl=https://localhost:7104/api/v1
+POST {{BaseUrl}}/auth/login
 Content-Type: application/json
 
 {
