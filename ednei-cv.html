@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ednei Lopes - Engenheiro de Software</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #2980b9;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 850px;
+            margin: 30px auto;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px 40px;
+            position: relative;
+        }
+        
+        .profile-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            margin-right: 25px;
+            color: white;
+            border: 3px solid white;
+        }
+        
+        .name-title h1 {
+            font-size: 32px;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+        
+        .name-title h2 {
+            font-size: 20px;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .contact-info {
+            background-color: var(--accent);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            color: white;
+            font-size: 14px;
+        }
+        
+        .contact-item i {
+            margin-right: 8px;
+        }
+        
+        section {
+            padding: 25px 40px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        section:last-child {
+            border-bottom: none;
+        }
+        
+        h3 {
+            color: var(--primary);
+            font-size: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--secondary);
+        }
+        
+        .profile-text {
+            line-height: 1.8;
+        }
+        
+        .experience-item, .education-item, .project-item {
+            margin-bottom: 25px;
+        }
+        
+        .experience-header, .education-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .experience-title {
+            font-weight: 600;
+            font-size: 18px;
+            color: var(--dark);
+        }
+        
+        .experience-company {
+            color: var(--secondary);
+            font-weight: 500;
+        }
+        
+        .experience-date {
+            color: #777;
+            font-size: 15px;
+        }
+        
+        ul {
+            padding-left: 20px;
+            margin-bottom: 5px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .skills-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .skill-category h4 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .skill-tag {
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            display: inline-block;
+        }
+        
+        .tag-highlight {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .project-item {
+            margin-bottom: 20px;
+        }
+        
+        .project-title {
+            font-weight: 600;
+            font-size: 17px;
+            margin-bottom: 5px;
+        }
+        
+        .project-link {
+            display: inline-block;
+            margin-top: 5px;
+            color: var(--secondary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .project-link:hover {
+            text-decoration: underline;
+        }
+        
+        .print-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        @media print {
+            .print-btn {
+                display: none;
+            }
+            
+            .container {
+                box-shadow: none;
+                margin: 0;
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .profile-container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .avatar {
+                margin: 0 auto 15px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .skills-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="profile-container">
+                <div class="avatar">EL</div>
+                <div class="name-title">
+                    <h1>Ednei Lopes</h1>
+                    <h2>Engenheiro de Software em Transição</h2>
+                </div>
+            </div>
+        </header>
+        
+        <div class="contact-info">
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i> Florianópolis, SC
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-phone"></i> (47) 99705-7788
+            </div>
+            <div class="contact-item">
+                <i class="fas fa-envelope"></i> fenderlopes@gmail.com
+            </div>
+            <div class="contact-item">
+                <i class="fab fa-github"></i> github.com/edylopes
+            </div>
+        </div>
+        
+        <section class="profile">
+            <h3>Perfil Profissional</h3>
+            <p class="profile-text">
+                Engenheiro de Software em transição de infraestrutura TI para desenvolvimento full-stack. 
+                Especializado em .NET, APIs REST e React, com domínio de princípios SOLID e arquitetura limpa. 
+                Combino experiência prática em resolução de problemas técnicos com formação acadêmica em ADS 
+                para entregar soluções escaláveis e de alto desempenho.
+            </p>
+        </section>
+        
+        <section class="experience">
+            <h3>Experiência Profissional</h3>
+            
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div>
+                        <div class="experience-title">Analista de Infraestrutura de TI</div>
+                        <div class="experience-company">Dexian Brasil, Balneário Camboriú</div>
+                    </div>
+                    <div class="experience-date">Maio 2023 – Atualmente</div>
+                </div>
+                <ul>
+                    <li>Otimização de processos técnicos: Desenvolvimento de scripts em PowerShell para automatizar atendimentos recorrentes (ex: reset de senhas), reduzindo tempo de resolução em 40%</li>
+                    <li>Colaboração com equipes de desenvolvimento: Suporte técnico a APIs da empresa, análise de logs para identificar falhas em endpoints REST</li>
+                    <li>Gestão de infraestrutura: Configuração de ambientes de teste para validação de atualizações de software</li>
+                </ul>
+            </div>
+            
+            <div class="experience-item">
+                <div class="experience-header">
+                    <div>
+                        <div class="experience-title">Analista de Suporte de TI</div>
+                        <div class="experience-company">Br Digital, Florianópolis</div>
+                    </div>
+                    <div class="experience-date">Março 2021 – Novembro 2022</div>
+                </div>
+                <ul>
+                    <li>Atendimento e tratamento de tickets de usuários da rede telecom</li>
+                    <li>Análise de problemas em infraestrutura de rede FTTH, Wi-Fi, roteadores e TCP/IP</li>
+                    <li>Diagnóstico de falhas e encaminhamento para equipes superiores</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section class="projects">
+            <h3>Projetos Técnicos</h3>
+            
+            <div class="project-item">
+                <div class="project-title">Sistema Médico - .NET + React</div>
+                <div>API REST com autenticação JWT, arquitetura em camadas e front-end React</div>
+                <div>Tecnologias: C#, Entity Framework, React Hooks, Bootstrap</div>
+                <a href="#" class="project-link">github.com/edylopes/medical-system</a>
+            </div>
+            
+            <div class="project-item">
+                <div class="project-title">Dashboard de Monitoramento - GraphQL</div>
+                <div>Solução para tracking de performance de endpoints com alertas via Slack</div>
+                <div>Stack: .NET GraphQL Server, PostgreSQL, Docker</div>
+                <a href="#" class="project-link">github.com/edylopes/monitoring-tool</a>
+            </div>
+        </section>
+        
+        <section class="education">
+            <h3>Formação Acadêmica</h3>
+            
+            <div class="education-item">
+                <div class="education-header">
+                    <div class="education-title">Bacharelado em Análise e Desenvolvimento de Sistemas</div>
+                 
+                </div>
+                <div class="education-institution">Universidade Estácio de Sá</div>
+                <div>Matérias relevantes: Arquitetura de Software, Algoritmos, Banco de Dados</div>
+            </div>
+        </section>
+        
+        <section class="skills">
+            <h3>Competências</h3>
+            <div class="skills-container">
+                <div class="skill-category">
+                    <h4>Linguagens & Frameworks</h4>
+                    <div class="skill-list">
+                        <span class="skill-tag tag-highlight">C#</span>
+                        <span class="skill-tag tag-highlight">.NET</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag tag-highlight">React</span>
+                        <span class="skill-tag">GraphQL</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h4>Engenharia de Software</h4>
+                    <div class="skill-list">
+                        <span class="skill-tag tag-highlight">APIs REST</span>
+                        <span class="skill-tag">Arquitetura MVC</span>
+                        <span class="skill-tag">SOLID</span>
+                        <span class="skill-tag">Testes Unitários</span>
+                        <span class="skill-tag">Docker</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h4>Infraestrutura & DevOps</h4>
+                    <div class="skill-list">
+                        <span class="skill-tag">Azure</span>
+                        <span class="skill-tag">PowerShell</span>
+                        <span class="skill-tag">TCP/IP</span>
+                        <span class="skill-tag">Suporte Técnico</span>
+                       
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <button class="print-btn" onclick="window.print()">
+        <i class="fas fa-print"></i> Imprimir/Salvar como PDF
+    </button>
+
+    <script>
+        // Script simples para impressão/PDF
+        document.querySelectorAll('.project-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if(this.getAttribute('href') === '#') {
+                    e.preventDefault();
+                    alert('Por favor, substitua com seu link real do GitHub');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

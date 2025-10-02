@@ -6,3 +6,6 @@ global using BuberDinner.Infrastructure.Persistence;
 global using BuberDinner.Infrastructure.Services;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+
+//Token
+

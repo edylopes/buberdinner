@@ -38,9 +38,11 @@ public static class OneOfResponseExtension
             {
                 var payload = mapper.Map<AuthResponse>(success);
 
-                return HttpResults.Created(payload, $"user/{payload.id}")
-                    .WithCookie("RefreshToken", success.refreshToken)
-                    .WithHeader("Authorization", success.accessToken);
+                return HttpResults.Created(payload, $"/api/v1/user/{payload.id}")
+                            .WithCookie("RefreshToken", success.refreshToken)
+                            .WithHeader("Authorization", success.accessToken);
+
+
             },
             httpContext
         );

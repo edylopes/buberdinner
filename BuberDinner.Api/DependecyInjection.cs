@@ -12,18 +12,19 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddInfraStructureModule(
         this IServiceCollection services,
-        ConfigurationManager configuration
+        IConfiguration configuration
     )
     {
 
         //Add Mapping 
         services.AddMappings();
+
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
+
         //Add Modules
         services.AddApplicationServices();
         services.AddInfrastructureServices(configuration);
 
-        //Configurations
-        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
 
         // Rate limit counter and rules store
         services.Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"));

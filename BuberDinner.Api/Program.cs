@@ -2,13 +2,17 @@ using AspNetCoreRateLimit;
 using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
+using BuberDinner.Infrastructure.Authentication;
 using Microsoft.OpenApi.Models;
 
 
 var builder = WebApplication.CreateBuilder(args);
 {
-    builder
-        .Services.AddInfraStructureModule(builder.Configuration);
+
+
+    builder.Services.AddInfraStructureModule(builder.Configuration);
+    builder.Services.AddJwtAuthentication(builder.Configuration);
+
 
     builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
@@ -42,6 +46,9 @@ if (builder.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+// middleware auth
+app.UseAuthentication();
 app.UseAuthorization();
+// middleware endpoints
 app.MapControllers();
 app.Run();
