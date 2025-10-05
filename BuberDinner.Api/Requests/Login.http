@@ -4,6 +4,6 @@ POST {{BaseUrl}}/auth/login
 Content-Type: application/json
 
 {
- "email": "someone@gmail.com.br",
- "password": "cripydf"
+   "email": "someonegmail.com.br",
+  "password": ""
 }

@@ -12,6 +12,7 @@ public static class ErrorMappingRegistry
         where TError : AppError
     {
         _mappings[typeof(TError)] = (statusCode, title, typeUrl);
+
     }
 
     public static (int statusCode, string title, string typeUrl)? GetMapping(AppError error)

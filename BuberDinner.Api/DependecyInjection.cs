@@ -18,11 +18,11 @@ public static class DependencyInjection
 
         //Add Mapping 
         services.AddMappings();
+        services.AddApplicationServices();
 
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
 
         //Add Modules
-        services.AddApplicationServices();
         services.AddInfrastructureServices(configuration);
 
 

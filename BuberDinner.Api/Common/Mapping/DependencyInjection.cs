@@ -1,5 +1,7 @@
 using BuberDinner.Api.Common.Mapping.Authentication;
+using BuberDinner.Application.Authentication.Queries;
 using BuberDinner.Application.Common.Mapping;
+using BuberDinner.Contracts.Authentication;
 using Mapster;
 using MapsterMapper;
 
@@ -12,6 +14,9 @@ public static class MappingDependencyInjection
         var config = TypeAdapterConfig.GlobalSettings;
 
         //Add assembly  of the layers API and Application
+
+        services.AddMapster();
+
         config.Scan(typeof(AuthRegisterMapping).Assembly);
         config.Scan(typeof(AuthResponseMapping).Assembly);
 

@@ -5,22 +5,21 @@ using MediatR;
 using OneOf;
 using BuberDinner.Contracts.Authentication;
 using MapsterMapper;
+using Mapster;
 
 namespace BuberDinner.Application.Authentication.Queries;
 
 public class LoginQueryHandler : IRequestHandler<LoginQuery, OneOf<AuthenticationResult, AppError>>
 {
     private readonly IAuthenticationService _authService;
-    private readonly IMapper _mapper;
 
     public LoginQueryHandler(IAuthenticationService authenticationService, IMapper mapper)
     {
         _authService = authenticationService;
-        _mapper = mapper;
     }
-    public Task<OneOf<AuthenticationResult, AppError>> Handle(LoginQuery command, CancellationToken cxt)
+    public async Task<OneOf<AuthenticationResult, AppError>> Handle(LoginQuery query, CancellationToken cxt)
     {
-        var result = _authService.Login(_mapper.Map<LoginRequest>(command));
+        var result = await _authService.Login(query);
         return result;
     }
 }

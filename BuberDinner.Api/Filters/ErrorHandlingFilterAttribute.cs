@@ -1,6 +1,8 @@
 using System.Data.Common;
 using BuberDinner.Domain.Exceptions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace BuberDinner.Api.Filters;
 
@@ -12,6 +14,8 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
 {
     private const string ServerErrorUrl =
         "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1";
+    private const string BadRequestUrl =
+        "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1";
 
     private const string ContentType = "application/problem+json";
     private readonly ILogger<ErrorHandlingFilterAttribute> _logger;
@@ -43,6 +47,44 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
                 ConfigureProblemDetails(problemDetails, "Domain Error", ex.Message);
                 problemDetails.Status = StatusCodes.Status400BadRequest;
                 break;
+            case ValidationException ex:
+
+                var modelState = new ModelStateDictionary();
+
+                foreach (var error in ex.Errors)
+                {
+                    modelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+
+                var validationProblem = new ValidationProblemDetails(modelState)
+                {
+                    Title = "One or more validation errors occurred.",
+                    Status = StatusCodes.Status400BadRequest,
+                    Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                    Instance = context.HttpContext.Request.Path,
+                    Detail = string.Join("\n", ex.Errors.Select(e => $"-- {e.PropertyName}: {e.ErrorMessage}"))
+                };
+
+
+                _logger.LogWarning("Validation failed: {@Errors}", ex.Errors);
+
+
+                ConfigureProblemDetails(validationProblem, problemDetails.Title!, problemDetails.Detail!);
+
+
+                context.Result = new ObjectResult(validationProblem)
+                {
+                    StatusCode = validationProblem.Status,
+                };
+
+                validationProblem.Extensions["exceptionType"] = context.Exception.GetType().Name;
+                validationProblem.Extensions["timestamp"] = DateTimeOffset.UtcNow;
+
+                context.HttpContext.Response.ContentType = ContentType;
+                context.ExceptionHandled = true;
+
+
+                return;
 
             default:
                 _logger.LogError(
@@ -55,6 +97,8 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
                     "An Internal Server Error Occurred",
                     context.Exception.Message
                 );
+
+
                 break;
         }
 
@@ -78,10 +122,10 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
             : "An unexpected error occurred. Please contact support.";
     }
 
-    private static ProblemDetails CreateBaseProblemDetails(HttpContext context) =>
+    private static ProblemDetails CreateBaseProblemDetails(HttpContext context, string type = ServerErrorUrl) =>
         new ProblemDetails
         {
-            Type = ServerErrorUrl,
+            Type = type,
             Instance = context.Request.Path.Value,
             /* Adction info traceIdIdentifier Important for tracking occurrences and investigating problems. */
             Extensions = { ["traceId"] = context.TraceIdentifier },
