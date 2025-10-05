@@ -1,3 +1,4 @@
+using BuberDinner.Api.Utils;
 using BuberDinner.Domain.Common.Errors;
 
 namespace BuberDinner.Api.Common.Errors;
@@ -8,14 +9,16 @@ public static class ErrorResults
     {
         var factory = httpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
 
-        var (statusCode, url, message, title) = ErrorMapper.ToError(error);
+
+        var (statusCode, url, message, title) =
+                 ErrorMapper.GetMapping(error) ?? (500, "/error", "Unknown error", null)!;
 
         var problem = factory.CreateProblemDetails(
             httpContext,
+            type: url,
             statusCode: statusCode,
-            title: title ?? null,
-            detail: message,
-            type: url
+            title: title,
+            detail: message
         );
 
         problem.Extensions["errorType"] = error.GetType().Name;

@@ -6,6 +6,7 @@ using BuberDinner.Domain.Entities;
 using MapsterMapper;
 using OneOf;
 using BuberDinner.Contracts.Authentication;
+using BuberDinner.Application.Authentication.Queries;
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -27,15 +28,15 @@ public class AuthenticationService : IAuthenticationService
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Login(
-        LoginRequest req
+        LoginQuery req
     )
     {
-        if (await _userRepository.GetByEmailAsync(req.Email) is not User user)
+        if (await _userRepository.GetByEmailAsync(req.email) is not User user)
         {
             return new UserNotFoundError();
         }
 
-        if (!BCrypt.Net.BCrypt.Verify(req.Password, user.PasswordHash))
+        if (!BCrypt.Net.BCrypt.Verify(req.password, user.PasswordHash))
             return new InvalidCredentialError();
 
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);

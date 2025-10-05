@@ -1,6 +1,7 @@
 using AspNetCoreRateLimit;
 using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
+using BuberDinner.Api.Common.Mapping;
 using BuberDinner.Api.Filters;
 using BuberDinner.Infrastructure.Authentication;
 using Microsoft.OpenApi.Models;
@@ -8,7 +9,6 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 {
-
 
     builder.Services.AddInfraStructureModule(builder.Configuration);
     builder.Services.AddJwtAuthentication(builder.Configuration);
