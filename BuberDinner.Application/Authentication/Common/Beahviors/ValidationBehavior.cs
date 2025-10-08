@@ -1,6 +1,8 @@
 using FluentValidation;
 using MediatR;
 
+namespace BuberDinner.Application.Authentication.Common.Beahviors;
+
 public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {

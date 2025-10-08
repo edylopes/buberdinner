@@ -1,6 +1,7 @@
+
+using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Common;
-using BuberDinner.Application.Authentication.Queries;
-using BuberDinner.Contracts.Authentication;
+using BuberDinner.Application.Authentication.Queries.Login;
 using BuberDinner.Domain.Common.Errors;
 using OneOf;
 
@@ -10,6 +11,6 @@ public interface IAuthenticationService
 {
     Task<OneOf<AuthenticationResult, AppError>> Login(LoginQuery req);
     Task<OneOf<AuthenticationResult, AppError>> Register(
-        RegisterRequest request
+        RegisterCommand request
     );
 }

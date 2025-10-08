@@ -1,4 +1,5 @@
-using BuberDinner.Domain.Entities;
+using System.Text.Json;
+using BuberDinner.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,19 +15,32 @@ namespace BuberDinner.Infrastructure.Configuration
 
             builder.Property(u => u.PasswordHash).IsRequired().HasMaxLength(70);
 
-            builder
-                .HasMany(u => u.RefreshTokens)
-                .WithOne(token => token.User)
-                .HasForeignKey(token => token.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             builder.Property(u => u.Email).IsRequired().HasMaxLength(256);
 
             builder.HasIndex(u => u.Email).IsUnique();
             builder.HasIndex(u => u.FirstName);
             builder.HasIndex(u => u.Id);
 
+            builder.HasMany<RefreshToken>("_refreshTokens") // <– referência ao campo privado
+              .WithOne(r => r.User)
+              .HasForeignKey(u => u.UserId)
+              .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Navigation("_refreshTokens")
+               .UsePropertyAccessMode(PropertyAccessMode.Field);
+
+
             // Additional configurations can be added here
+            builder.Property(u => u.Roles)
+                .HasConversion(UserRoleConverter.Converter)
+                .HasColumnType("TEXT");
+
+            builder.Property(u => u.RowVersion)
+               .IsRowVersion();
+
+
+            // ou "json" em bancos que suportam
+
         }
     }
 }

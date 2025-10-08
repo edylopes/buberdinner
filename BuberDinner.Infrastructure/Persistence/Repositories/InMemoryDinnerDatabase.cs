@@ -1,4 +1,4 @@
-using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities.Users;
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories
 {
@@ -14,6 +14,7 @@ namespace BuberDinner.Infrastructure.Persistence.Repositories
 
         public Task<List<Dinner>> ListUserDinnersAsync(Guid userId)
         {
+
             return Task.FromResult(_dinners.Where(dinner => dinner.Host.UserId == userId).ToList());
         }
 

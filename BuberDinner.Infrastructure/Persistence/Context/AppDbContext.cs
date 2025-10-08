@@ -1,18 +1,21 @@
-using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
-namespace BuberDinner.Infrastructure.Persistence;
+namespace BuberDinner.Infrastructure.Persistence.Context;
 
-public class BurberDinnerDbContext : DbContext
+public class AppDbContext : DbContext
 {
     public DbSet<Host> Hosts { get; set; }
     public DbSet<Dinner> Dinners { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 
+    public AppDbContext(DbContextOptions<AppDbContext> options)
+    : base(options) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(BurberDinnerDbContext).Assembly);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
 
         base.OnModelCreating(modelBuilder);
     }

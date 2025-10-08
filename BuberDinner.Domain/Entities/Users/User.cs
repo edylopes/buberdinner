@@ -1,8 +1,9 @@
+using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
 using BuberDinner.Domain.Exceptions;
 using BuberDinner.Domain.ValueObjects;
 
-namespace BuberDinner.Domain.Entities;
+namespace BuberDinner.Domain.Entities.Users;
 
 public class User
 {
@@ -13,8 +14,10 @@ public class User
           get => _role;
           private set => _role = UserRole.Create(value.ToString());
       } */
+    [Timestamp]
+    public byte[] RowVersion { get; set; }
     private readonly List<RefreshToken> _refreshTokens = new();
-    public IReadOnlyCollection<RefreshToken>? RefreshTokens => _refreshTokens.AsReadOnly();
+    public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
     public DateTime CreatedAt { get; private set; }
@@ -48,11 +51,12 @@ public class User
         if (refreshToken == null)
             throw new ArgumentNullException();
 
+        if (_refreshTokens.Any(r => r.Token.Trim() == refreshToken.Token.Trim()))
+            return;
+
         if (_refreshTokens.Count(rt => rt is { IsExpired: false, Revoked: false }) >= 5)
-            throw new RefreshTokenLimitExceededException("Refresh token limit has been exceeded.");
-        //Another role..
-        //var oldestToken = _refreshTokens.OrderBy(rt => rt.Created).First();
-        // _refreshTokens.Remove(oldestToken);
+            throw new RefreshTokenLimitExceededException("Refresh token quota reached.");
+
         _refreshTokens.Add(refreshToken);
     }
 

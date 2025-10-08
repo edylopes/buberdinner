@@ -1,4 +1,4 @@
-namespace BuberDinner.Application.Common.Interfaces.Persistence;
+namespace BuberDinner.Domain.Entities;
 
 public interface IRepository<Entity, TId>
     where Entity : class

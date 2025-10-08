@@ -9,9 +9,7 @@ public static class ErrorResults
     {
         var factory = httpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
 
-
-        var (statusCode, url, message, title) =
-                 ErrorMapper.GetMapping(error) ?? (500, "/error", "Unknown error", null)!;
+        var (statusCode, url, message, title) = error;
 
         var problem = factory.CreateProblemDetails(
             httpContext,

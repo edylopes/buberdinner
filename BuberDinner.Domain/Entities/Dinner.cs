@@ -1,4 +1,4 @@
-namespace BuberDinner.Domain.Entities
+namespace BuberDinner.Domain.Entities.Users
 {
     public class Dinner
     {
@@ -7,6 +7,8 @@ namespace BuberDinner.Domain.Entities
         public int MaxGuests { get; set; }
         public Guid HostId { get; set; }
         public Host Host { get; set; } // Navigation property to Host 
+
+        protected Dinner() { }
         public List<Guest> Guests { get; set; } = new List<Guest>();
         public int CurrentGuests { get; set; }
         public string ImageUrl { get; set; } = string.Empty; // URL to an image of the dinner

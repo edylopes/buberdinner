@@ -1,30 +1,30 @@
 using System.Text.Json.Serialization;
 
-namespace BuberDinner.Domain.Entities;
+namespace BuberDinner.Domain.Entities.Users;
 
 public class RefreshToken
 {
     public Guid Id { get; private set; }
     public string Token { get; init; } = string.Empty;
-    private DateTimeOffset Expires { get; }
+    public DateTimeOffset Expires { get; private set; }
     public Guid UserId { get; init; }
+    public User User { get; set; }
     public DateTime Created { get; private set; }
 
-    [JsonIgnore]
-    public User User { get; set; } = null!;
+    protected RefreshToken() { }
     public DateTime? RevokedAt { get; private set; }
 
     public bool IsActive => !Revoked && !IsExpired;
     public bool Revoked { get; private set; }
     public bool IsExpired => DateTime.UtcNow >= Expires;
 
-    public RefreshToken(string token, DateTime expires, Guid userId)
+    public RefreshToken(string token, DateTimeOffset expires, Guid userId)
     {
         Id = Guid.NewGuid();
-        UserId = userId;
         Token = token;
         Expires = expires;
         Created = DateTime.UtcNow;
+        UserId = userId;
     }
 
     public void Revoke()

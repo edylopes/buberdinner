@@ -1,4 +1,5 @@
 ﻿
+
 using BuberDinner.Api.Helpers;
 
 namespace BuberDinner.Api.Results;
@@ -78,23 +79,18 @@ public class ResponseResult<T> : IActionResult
         }
 
 
+        var result = CreateHttpResult(context);
+        await result.ExecuteResultAsync(context);
+    }
 
-        // 204 No Content - no body is sent, just return
-        if (_payload is null && _statusCode == StatusCodes.Status204NoContent)
-        {
-            response.StatusCode = StatusCodes.Status204NoContent;
-            return;
-        }
-        // 201 Created - use CreatedResult to set Location header
+    private IActionResult CreateHttpResult(ActionContext context)
+    {
+        if (_statusCode == 204 || _payload is null)
+            return new StatusCodeResult(StatusCodes.Status204NoContent);
+
         if (_isNewResource)
-        {
-            response.StatusCode = _statusCode!.Value;
-            var createdResult = new CreatedResult(_location ?? string.Empty, _payload);
-            await createdResult.ExecuteResultAsync(context);
-            return;
-        }
+            return new CreatedResult(_location ?? string.Empty, _payload);
 
-        var okResult = new ObjectResult(_payload) { StatusCode = _statusCode };
-        await okResult.ExecuteResultAsync(context);
+        return new ObjectResult(_payload) { StatusCode = _statusCode };
     }
 }

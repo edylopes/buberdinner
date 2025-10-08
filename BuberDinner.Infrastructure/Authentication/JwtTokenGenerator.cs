@@ -2,7 +2,7 @@
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
@@ -41,16 +41,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             new(JwtRegisteredClaimNames.Iat,
                     EpochTime.GetIntDate(_dateTimeProvider.UtcNow).ToString(),
                     ClaimValueTypes.Integer64 ),
-
              };
 
         foreach (var role in user.Roles)
             claims.Add(new(ClaimTypes.Role, role.ToString()));
-
-
-
-
-
 
         var creds = new SigningCredentials(
             key: new SymmetricSecurityKey(ConvertSecretToBytes(_options.SecretKey!)),
@@ -76,8 +70,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         return new RefreshToken(
             token: Convert.ToBase64String(randomBytes),
             expires: _dateTimeProvider.UtcNow.AddDays(7),
-            userId: user.Id
-        );
+            userId: user.Id);
     }
 
     private static byte[] ConvertSecretToBytes(string secret, bool secretIsBase32 = false) =>

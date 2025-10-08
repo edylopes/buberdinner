@@ -9,7 +9,6 @@ using MapsterMapper;
 using OneOf;
 
 namespace BuberDinner.Api.Extensions.Auth;
-
 /// <summary>
 /// Extension for converting OneOf results to IActionResult
 /// </summary>
@@ -31,20 +30,52 @@ public static class OneOfResponseExtension
     public static IActionResult ToAuthResponse(
         this OneOf<AuthenticationResult, AppError> result,
         IMapper mapper,
-        HttpContext httpContext)
+        HttpContext httpContext,
+        Func<AuthResponse, ResponseResult<AuthResponse>> responseFactory
+        )
     {
         return result.ToResponseResult(
             success =>
             {
+
                 var payload = mapper.Map<AuthResponse>(success);
-
-                return HttpResults.Created(payload, $"/api/v1/user/{payload.id}")
-                            .WithCookie("RefreshToken", success.refreshToken)
-                            .WithHeader("Authorization", success.accessToken);
-
-
+                var response = responseFactory(payload);
+                return response
+                     .WithCookie("RefreshToken", success.refreshToken)
+                     .WithHeader("Authorization", success.accessToken);
             },
             httpContext
         );
+
+
     }
+    public static IActionResult ToRegister(
+    this OneOf<AuthenticationResult, AppError> result,
+    IMapper mapper,
+    HttpContext httpContext)
+    {
+        return result.ToAuthResponse(
+            mapper,
+            httpContext,
+            payload => HttpResults.Created(payload, $"api/v1/users{payload.id}")
+        );
+    }
+
+    public static IActionResult ToLogin(
+    this OneOf<AuthenticationResult, AppError> result,
+    IMapper mapper,
+    HttpContext httpContext)
+    {
+        return result.ToAuthResponse(
+            mapper,
+            httpContext,
+            payload => HttpResults.Ok(payload)
+
+        );
+    }
+    public static IActionResult ToOk<TSuccess>(this OneOf<TSuccess, AppError> result,
+    HttpContext context)
+     => result.ToResponseResult(s => HttpResults.Ok(s), context);
+
+
 }

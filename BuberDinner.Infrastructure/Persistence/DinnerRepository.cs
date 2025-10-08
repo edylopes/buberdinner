@@ -1,13 +1,14 @@
-using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities.Users;
+using BuberDinner.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore;
 
 namespace BuberDinner.Infrastructure.Persistence
 {
     public class DinnerRepository : IDinnerRepository
     {
-        private readonly BurberDinnerDbContext _context;
+        private readonly AppDbContext _context;
 
-        public DinnerRepository(BurberDinnerDbContext context)
+        public DinnerRepository(AppDbContext context)
         {
             _context = context;
         }

@@ -51,9 +51,17 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
 
                 var modelState = new ModelStateDictionary();
 
-                foreach (var error in ex.Errors)
+                foreach (var group in ex.Errors.GroupBy(e => e.PropertyName))
                 {
-                    modelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    var distinctMessages = group
+                        .Select(e => e.ErrorMessage)
+                        .Distinct();  // evita duplicatas
+
+                    foreach (var message in distinctMessages)
+                    {
+                        modelState.AddModelError(group.Key, message);
+                    }
+                    _logger.LogWarning("Validation failed: {@Errors}", distinctMessages);
                 }
 
                 var validationProblem = new ValidationProblemDetails(modelState)
@@ -62,15 +70,8 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
                     Status = StatusCodes.Status400BadRequest,
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                     Instance = context.HttpContext.Request.Path,
-                    Detail = string.Join("\n", ex.Errors.Select(e => $"-- {e.PropertyName}: {e.ErrorMessage}"))
+                    Detail = "Validation failed"
                 };
-
-
-                _logger.LogWarning("Validation failed: {@Errors}", ex.Errors);
-
-
-                ConfigureProblemDetails(validationProblem, problemDetails.Title!, problemDetails.Detail!);
-
 
                 context.Result = new ObjectResult(validationProblem)
                 {
