@@ -1,54 +1,73 @@
-using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities.Users;
+using BuberDinner.Domain.Exceptions;
+using BuberDinner.Infrastructure.Persistence.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace BuberDinner.Infrastructure.Persistence;
 
 public class UserRepository : IUserRepository
 {
-    private static readonly List<User> _users = new();
+    private readonly AppDbContext _context;
 
-    public Task AddAsync(User user)
+    public UserRepository(AppDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task AddAsync(User user)
     {
         if (user == null)
             throw new ArgumentNullException("User is required", nameof(user));
 
-        if (_users.Any(u => u.Email == user.Email))
+        if (_context.Users.Any(u => u.Email == user.Email))
             throw new InvalidOperationException("User with this email already exists");
 
-        _users.Add(user);
+        await _context.Users.AddAsync(user);
 
-        return Task.CompletedTask;
     }
 
-    public Task<User?> GetByIdAsync(string email)
+    public async Task<User?> GetByIdAsync(string email)
     {
-        return Task.FromResult(_users.Find(u => u.Email == email));
+        return await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
     }
 
-    public Task DeleteAsync(Guid id)
+    public async Task DeleteAsync(User user)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(user, nameof(user));
+        _context.Users.Remove(user);
+
+        var existingUser = await _context.Users
+            .FirstOrDefaultAsync(u => u.Id == user.Id)
+            ?? throw new InvalidOperationException("User not found");
+
+        _context.Users.Remove(existingUser);
     }
 
-    public Task UpdateAsync(User user)
+    public async Task UpdateAsync(User user)
     {
-        if (user == null)
-            throw new ArgumentNullException(nameof(user), "User is required");
-
-        var existingUserIndex = _users.FindIndex(u => u.Id == user.Id);
-        if (existingUserIndex == -1)
-            throw new InvalidOperationException("User not found");
-
-        _users[existingUserIndex] = user;
-        return Task.CompletedTask;
+        ArgumentNullException.ThrowIfNull(user, nameof(user));
+        await _context.SaveChangesAsync();
     }
 
-    public Task<User> GetByEmailAsync(string email)
+    public async Task<User?> GetByEmailAsync(string email)
     {
-        return Task.FromResult(_users.FirstOrDefault(u => u.Email == email)!);
+        return await _context.Users
+        .Include(u => u.RefreshTokens)
+        .FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public Task<User> GetByIdAsync(Guid id)
     {
         throw new NotImplementedException();
+    }
+
+    public async Task AddRefreshTokenAsync(Guid userId, RefreshToken refreshToken)
+    {
+        var user = await _context.Users
+           .Include(u => u.RefreshTokens)
+           .FirstAsync(u => u.Id == userId);
+
+        user.AddRefreshToken(refreshToken);
+        _context.Entry(refreshToken).State = EntityState.Added;
     }
 }

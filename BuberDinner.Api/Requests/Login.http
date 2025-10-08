@@ -1,9 +1,11 @@
+
 # @env local
 @BaseUrl=https://localhost:7104/api/v1
+
 POST {{BaseUrl}}/auth/login
 Content-Type: application/json
-
+  
 {
-   "email": "someonegmail.com.br",
-  "password": ""
+  "email": "fenderlopes@gmail.com.br",
+  "password": "crypto"
 }

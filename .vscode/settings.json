@@ -27,5 +27,26 @@
     "csharp.implementationsCodeLens.enabled": true,
     "csharp.suggestNamespaces": true,
     "csharp.semanticHighlighting": true,
-    "dotnet.codeLens.enableReferencesCodeLens": true
+    "dotnet.codeLens.enableReferencesCodeLens": true,
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 15,
+            "mssqlOptions": {
+                "appName": "SQLTools",
+                "useUTC": true,
+                "encrypt": true,
+                "trustServerCertificate": true
+            },
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 1433,
+            "driver": "MSSQL",
+            "name": "Dinner",
+            "database": "BuberDinner",
+            "username": "sa",
+            "password": "crypto123"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
 }

@@ -14,18 +14,16 @@ public record UserRole
 {
     private RoleType Value { get; }
 
+    private UserRole() { }
+
     public bool IsAdmin => Value is RoleType.Admin;
     public bool IsPremium => Value is RoleType.Premium;
+
 
     private UserRole(RoleType value) => Value = value;
 
     public static UserRole Create(string value)
     {
-
-
-
-
-
 
         if (string.IsNullOrWhiteSpace(value))
             throw new ArgumentException("User role cannot be empty");

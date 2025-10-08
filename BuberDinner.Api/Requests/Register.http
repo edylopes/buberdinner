@@ -6,10 +6,11 @@ Content-Type: application/json
 
 { 
   "firstName": "Edy" ,
-  "lastName": "lopes",
-   "email": "someone@gmail.com.br",
+  "lastName": "Lopes",
+  "email": "fenderlopes@gmail.com.br",
   "password": "crypto"
 }  
+
 
 
 

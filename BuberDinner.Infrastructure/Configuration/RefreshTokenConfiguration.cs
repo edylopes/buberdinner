@@ -1,4 +1,5 @@
-using BuberDinner.Domain.Entities;
+
+using BuberDinner.Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,15 +11,16 @@ namespace BuberDinner.Infrastructure.Configuration
         {
             builder.ToTable("RefreshTokens");
 
+            builder.HasKey(rt => rt.Id);
             builder.Property(rt => rt.Id).IsRequired();
+            builder.Property(rt => rt.Token)
+                    .IsRequired()
+                    .HasMaxLength(256);
 
-            builder.Property(rt => rt.Token).IsRequired().HasMaxLength(256);
+            builder.Property(rt => rt.UserId)
+                   .IsRequired();
 
-            builder
-                .Metadata.FindNavigation(nameof(User.RefreshTokens))!
-                .SetPropertyAccessMode(PropertyAccessMode.Field);
-
-            builder.HasIndex(rt => rt.UserId);
+            builder.HasIndex(rt => rt.Id);
         }
     }
 }
