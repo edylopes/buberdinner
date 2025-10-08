@@ -19,14 +19,6 @@
     },
     "csharp.suppressDotnetRestoreNotification": true,
     "csharp.format.enable": true,
-    "csharp.format.indentationSize": 4,
-    "csharp.format.tabSize": 4,
-    "csharp.format.newLine": true,
-    "csharp.format.space": true,
-    "csharp.format.wrapping": true,
-    "csharp.implementationsCodeLens.enabled": true,
-    "csharp.suggestNamespaces": true,
-    "csharp.semanticHighlighting": true,
     "dotnet.codeLens.enableReferencesCodeLens": true,
     "sqltools.connections": [
         {
@@ -37,7 +29,7 @@
                 "encrypt": true,
                 "trustServerCertificate": true
             },
-            "ssh": "Disabled",
+            "ssh": "enable",
             "previewLimit": 50,
             "server": "localhost",
             "port": 1433,

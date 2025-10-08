@@ -12,6 +12,6 @@ public static class UserRoleConverter
     private static List<UserRole> ConvertJsonToRoles(string json)
     {
         var roles = JsonSerializer.Deserialize<List<string>>(json, (JsonSerializerOptions)null);
-        return roles?.Select(UserRole.Create).ToList() ?? new List<UserRole>();
+        return roles?.Select(v => UserRole.Create(v)).ToList() ?? new List<UserRole>();
     }
 }

@@ -1,6 +1,6 @@
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Common;
-using BuberDinner.Application.Authentication.Queries.Login;
+using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Entities.Users;
 using Mapster;
@@ -18,7 +18,7 @@ public class AuthRegisterMapping : IRegister
                 src.RefreshTokens!.Last().Token)
             );
 
-        config.NewConfig<LoginRequest, LoginQuery>()
+        config.NewConfig<LoginRequest, LoginCommand>()
                 .Map(dest => dest.email, src => src.email)
                 .Map(dest => dest.password, src => src.password)
                 .TwoWays();

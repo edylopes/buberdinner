@@ -4,7 +4,7 @@ using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Domain.Entities.Users;
 using MapsterMapper;
 using OneOf;
-using BuberDinner.Application.Authentication.Queries.Login;
+using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Register;
 
 namespace BuberDinner.Application.Services.Authentication;
@@ -26,7 +26,7 @@ public class AuthenticationService : IAuthenticationService
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Login(
-        LoginQuery req
+        LoginCommand req
     )
     {
         if (await _userRepository.GetByEmailAsync(req.email) is not User user)

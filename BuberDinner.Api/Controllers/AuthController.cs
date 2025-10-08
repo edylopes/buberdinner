@@ -4,7 +4,7 @@ using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Contracts.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using MapsterMapper;
-using BuberDinner.Application.Authentication.Queries.Login;
+using BuberDinner.Application.Authentication.Commands.Login;
 
 
 namespace BuberDinner.Api.Controllers;
@@ -35,7 +35,7 @@ public class AuthController : Controller
     public async Task<
     IActionResult> Login(LoginRequest req)
     {
-        var result = await _mediator.Send(_mapper.Map<LoginQuery>(req));
+        var result = await _mediator.Send(_mapper.Map<LoginCommand>(req));
         return result.ToLogin(_mapper, HttpContext);
 
     }
