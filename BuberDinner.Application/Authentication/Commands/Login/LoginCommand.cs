@@ -3,7 +3,7 @@ using BuberDinner.Domain.Common.Errors;
 using MediatR;
 using OneOf;
 
-namespace BuberDinner.Application.Authentication.Queries.Login;
+namespace BuberDinner.Application.Authentication.Commands.Login;
 
-public record LoginQuery(string email, string password)
+public record LoginCommand(string email, string password)
     : IRequest<OneOf<AuthenticationResult, AppError>>;

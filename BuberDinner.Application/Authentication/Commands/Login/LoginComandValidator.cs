@@ -1,11 +1,11 @@
 
 using FluentValidation;
 
-namespace BuberDinner.Application.Authentication.Queries.Login;
+namespace BuberDinner.Application.Authentication.Commands.Login;
 
-public class LoginQueryValidator : AbstractValidator<LoginQuery>
+public class LoginCommandValidator : AbstractValidator<LoginCommand>
 {
-    public LoginQueryValidator()
+    public LoginCommandValidator()
     {
 
         RuleFor(c => c.email)
