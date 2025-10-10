@@ -6,6 +6,7 @@ using MapsterMapper;
 using OneOf;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Register;
+using BuberDinner.Application.Common.Interfaces.Persistence;
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -13,16 +14,20 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
+
     private readonly IMapper _mapper;
+    private readonly IUnitOfWork _uow;
     public AuthenticationService(
         IJwtTokenGenerator jwtTokenGenerator,
         IUserRepository userRepository,
         IMapper mapper
-    )
+,
+        IUnitOfWork uow)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
         _mapper = mapper;
+        _uow = uow;
     }
 
     public async Task<OneOf<AuthenticationResult, AppError>> Login(
@@ -37,34 +42,30 @@ public class AuthenticationService : IAuthenticationService
 
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
-        await _userRepository.AddRefreshTokenAsync(user.Id, refreshToken);
+        user.AddRefreshToken(refreshToken);
+
+        await _userRepository.Add(refreshToken);
 
         return _mapper.Map<AuthenticationResult>(user) with { accessToken = accessToken };
 
     }
-
     public async Task<OneOf<AuthenticationResult, AppError>> Register(RegisterCommand req)
 
     {
 
         var hashPassword = BCrypt.Net.BCrypt.HashPassword(req.password);
         var user = new User(req.firstName, req.lastName, hashPassword, req.email);
-        // user.AddRole(UserRole.Create(RoleType.Admin.ToString()));
-        try
-        {
 
-            var (token, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
-
-            user.AddRefreshToken(refreshToken);
-
-            await _userRepository.AddAsync(user);
-
-            return _mapper.Map<AuthenticationResult>(user) with { accessToken = token };
-        }
-        catch (Exception ex) when (ex is InvalidOperationException && ex.Message.Contains("email"))
-        {
+        if (await _userRepository.ExistsAsync(u => u.Email == req.email))
             return new DuplicatedEmailError();
-        }
+
+        var (token, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
+
+        user.AddRefreshToken(refreshToken);
+
+        await _userRepository.AddAsync(user);
+
+        return _mapper.Map<AuthenticationResult>(user) with { accessToken = token };
 
     }
 }

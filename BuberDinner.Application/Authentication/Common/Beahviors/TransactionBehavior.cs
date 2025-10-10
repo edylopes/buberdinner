@@ -7,10 +7,12 @@ using Polly.Retry;
 namespace BuberDinner.Application.Authentication.Common.Beahviors;
 
 using Microsoft.EntityFrameworkCore;
+using OneOf;
 using Polly;
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : IRequest<TResponse>
+where TResponse : IOneOf
 {
     private readonly IUnitOfWork _uow;
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
@@ -33,14 +35,13 @@ where TRequest : IRequest<TResponse>
 
         await _uow.BeginTransactionAsync(cancellationToken); // Abre transação ANTES do handler
 
-
         try
         {
-            var response = await next(); // Executa o handler dentro da transação
+            var response = await next(); // Executa o handler dentro da transação (loggin neste caso)
 
             await GetRetryPolicy().ExecuteAsync(async () =>
            {
-               await _uow.CommitAsync(cancellationToken, detectChange: true); // Retry apenas aqui
+               await _uow.CommitAsync(cancellationToken); // Retry apenas aqui
            });
 
             _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);

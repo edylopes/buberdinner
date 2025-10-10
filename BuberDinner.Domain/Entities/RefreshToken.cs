@@ -1,14 +1,20 @@
-using System.Text.Json.Serialization;
 
-namespace BuberDinner.Domain.Entities.Users;
+using System.Text.Json.Serialization;
+using BuberDinner.Domain.Entities.Users;
+namespace BuberDinner.Domain.Entities;
+
 
 public class RefreshToken
 {
     public Guid Id { get; private set; }
     public string Token { get; init; } = string.Empty;
     public DateTimeOffset Expires { get; private set; }
-    public Guid UserId { get; init; }
-    public User User { get; set; }
+
+    //public Guid UserId { get; init; } gera erro de concorrência, shadown prop
+    public Guid UserId { get; private set; }
+
+    [JsonIgnore]
+    public User? User { get; set; } //for navigation 
     public DateTime Created { get; private set; }
 
     protected RefreshToken() { }

@@ -13,7 +13,6 @@ namespace BuberDinner.Infrastructure.Configuration
             builder.Property(u => u.Id)
                   .IsRequired();
 
-
             builder.Property(u => u.PasswordHash)
                  .IsRequired()
                  .HasMaxLength(70);
@@ -26,21 +25,18 @@ namespace BuberDinner.Infrastructure.Configuration
             builder.HasIndex(u => u.Id);
             builder.HasIndex(u => u.Email).IsUnique();
 
+            builder.HasMany(u => u.RefreshTokens)
+                   .WithOne("User")
+                   .HasForeignKey(r => r.UserId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasMany<RefreshToken>("_refreshTokens") // <– referência ao campo privado
-                .WithOne(r => r.User)
-                .HasForeignKey(u => u.UserId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            builder.Navigation("_refreshTokens")
-               .UsePropertyAccessMode(PropertyAccessMode.Field);
+            builder.Navigation(nameof(User.RefreshTokens))
+              .UsePropertyAccessMode(PropertyAccessMode.Field);
 
             builder.Property(u => u.Roles)
                 .HasConversion(UserRoleConverter.Converter)
                 .HasColumnType("TEXT");
-
-            builder.Property(u => u.RowVersion)
-                 .IsRowVersion();
 
 
         }

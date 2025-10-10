@@ -1,6 +1,6 @@
 using BuberDinner.Domain.Entities.Users;
 
-namespace BuberDinner.Infrastructure.Persistence.Repositories
+namespace BuberDinner.Infrastructure.Persistence.Repositories.Repositories
 {
     public class InMemoryDinnerDatabase : IDinnerRepository
     {
@@ -35,6 +35,16 @@ namespace BuberDinner.Infrastructure.Persistence.Repositories
         }
 
         public Task<Dinner> GetUserByEmail(string email)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task Added(Dinner entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task DeleteAsync(Dinner entity)
         {
             throw new NotImplementedException();
         }

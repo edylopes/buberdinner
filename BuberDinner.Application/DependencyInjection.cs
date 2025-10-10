@@ -13,7 +13,6 @@ public static class DependencyInjection
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
 
-
         // 1. Serviços da aplicação
 
         // 2. FluentValidation: registra todos os IValidator<T>

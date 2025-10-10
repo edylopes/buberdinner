@@ -3,10 +3,8 @@ using BuberDinner.Domain.Entities.Users;
 
 namespace BuberDinner.Application.Common.Interfaces.Persistence;
 
-public interface IUserRepository : IRepository<User, Guid>
+public interface IUserRepository : IRepository<User>
 {
     Task<User?> GetByEmailAsync(string email);
-    Task UpdateAsync(User user);
-    Task DeleteAsync(User user);
     Task AddRefreshTokenAsync(Guid userId, RefreshToken refreshToken);
 }
