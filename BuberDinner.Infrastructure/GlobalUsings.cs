@@ -6,6 +6,6 @@ global using BuberDinner.Infrastructure.Persistence.Repositories;
 global using BuberDinner.Infrastructure.Services;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
-
+global using Microsoft.EntityFrameworkCore;
 //Token
 

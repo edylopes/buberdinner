@@ -1,6 +1,9 @@
 
 
+using BuberDinner.Domain.Common;
+using BuberDinner.Domain.Common.Interfaces;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories;
@@ -8,8 +11,9 @@ namespace BuberDinner.Infrastructure.Persistence.Repositories;
 public class EfUnitOfWork : IUnitOfWork
 {
     private readonly AppDbContext _context;
+    private readonly List<IDomainEvent> _collectedEvents = new();
     private IDbContextTransaction? _transaction;
-
+    public ChangeTracker ChangeTracker => _context.ChangeTracker;
     public EfUnitOfWork(AppDbContext context)
     {
         _context = context;
@@ -20,6 +24,7 @@ public class EfUnitOfWork : IUnitOfWork
 
         await _context.SaveChangesAsync(cancellationToken);
         await _transaction?.CommitAsync(cancellationToken)!;
+
     }
 
     public async Task RollbackAsync(CancellationToken cancellationToken = default)
@@ -33,5 +38,25 @@ public class EfUnitOfWork : IUnitOfWork
         _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
     }
 
+
     public void Dispose() => _transaction?.Dispose();
+
+    public IReadOnlyCollection<IDomainEvent> CollectDomainEvents()
+    {
+        // Junta eventos do contexto e os coletados manualmente
+        var trackedEvents = _context.ChangeTracker
+              .Entries<Entity>()
+              .SelectMany(e => e.Entity.DomainEvents)
+              .ToList();
+
+        var allEvents = _collectedEvents.Concat(trackedEvents).ToList();
+
+        // Limpa eventos do contexto para não republicar depois
+        foreach (var entity in _context.ChangeTracker.Entries<Entity>())
+            entity.Entity.ClearDomainEvents();
+
+        _collectedEvents.Clear();
+
+        return allEvents;
+    }
 }

@@ -6,6 +6,8 @@ using Microsoft.Extensions.Logging;
 using Polly.Retry;
 namespace BuberDinner.Application.Authentication.Common.Beahviors;
 
+using BuberDinner.Domain.Common;
+
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Polly;
@@ -16,11 +18,15 @@ where TResponse : IOneOf
 {
     private readonly IUnitOfWork _uow;
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
-
-    public TransactionBehavior(IUnitOfWork uow, ILogger<TransactionBehavior<TRequest, TResponse>> logger)
+    private readonly IPublisher _publisher;
+    public TransactionBehavior(IUnitOfWork uow,
+    ILogger<TransactionBehavior<TRequest, TResponse>> logger,
+    IPublisher _publisher
+    )
     {
-        _uow = uow;
-        _logger = logger;
+        this._uow = uow;
+        this._logger = logger;
+        this._publisher = _publisher;
     }
 
     public async Task<TResponse> Handle(
@@ -42,6 +48,12 @@ where TResponse : IOneOf
             await GetRetryPolicy().ExecuteAsync(async () =>
            {
                await _uow.CommitAsync(cancellationToken); // Retry apenas aqui
+
+               var domainEvents = _uow.CollectDomainEvents();
+
+               foreach (var domainEvent in domainEvents)
+                   await _publisher.Publish(domainEvent, cancellationToken);
+
            });
 
             _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
@@ -73,5 +85,28 @@ where TResponse : IOneOf
                 {
                     _logger.LogWarning("Retry {Attempt} due to concurrency conflict. Waiting {Delay}ms", attempt, delay.TotalMilliseconds);
                 });
+    }
+
+    private async Task PublishEventsHandler(CancellationToken ct)
+    {
+        var entitiesWithEvents = _uow.ChangeTracker
+             .Entries<Entity>()
+             .Where(entity => entity.Entity.DomainEvents.Any())
+             .Select(e => e.Entity)
+             .ToList();
+
+        var domainEvents = entitiesWithEvents.
+               SelectMany(e => e.DomainEvents)
+              .ToList();
+
+        foreach (var entity in entitiesWithEvents)
+            entity.ClearDomainEvents();
+
+        _logger.LogInformation("Publishing {Count} domain events", domainEvents.Count);
+
+        foreach (var domainEvent in domainEvents)
+            await _publisher.Publish(domainEvent, ct);
+
+
     }
 }

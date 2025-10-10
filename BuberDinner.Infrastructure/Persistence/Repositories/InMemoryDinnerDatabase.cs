@@ -1,4 +1,5 @@
-using BuberDinner.Domain.Entities.Users;
+using System.Linq.Expressions;
+using BuberDinner.Domain.Entities;
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories.Repositories
 {
@@ -39,12 +40,18 @@ namespace BuberDinner.Infrastructure.Persistence.Repositories.Repositories
             throw new NotImplementedException();
         }
 
-        public Task Added(Dinner entity)
+
+        public Task DeleteAsync(Dinner entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task DeleteAsync(Dinner entity)
+        public Task Added<TE>(TE entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> ExistsAsync(Expression<Func<Dinner, bool>> predicate)
         {
             throw new NotImplementedException();
         }

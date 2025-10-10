@@ -1,4 +1,5 @@
-﻿using AspNetCoreRateLimit;
+﻿
+using AspNetCoreRateLimit;
 using BuberDinner.Api.Common.Mapping;
 using BuberDinner.Application;
 using BuberDinner.Infrastructure.Authentication;
