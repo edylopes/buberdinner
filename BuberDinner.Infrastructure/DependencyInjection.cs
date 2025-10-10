@@ -1,7 +1,5 @@
-using BuberDinner.Domain.Entities;
+using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace BurberDinner.Infrastructure;
 

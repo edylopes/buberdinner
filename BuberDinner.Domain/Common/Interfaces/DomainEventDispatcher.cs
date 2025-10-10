@@ -1,6 +1,7 @@
 
 
 using System.Collections;
+using BuberDinner.Domain.Common.Interfaces;
 
 namespace BuberDinner.Domain.Events.Interfaces;
 

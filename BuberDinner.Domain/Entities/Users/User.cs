@@ -1,29 +1,22 @@
 using System.Net.Mail;
-using BuberDinner.Domain.Events;
-using BuberDinner.Domain.Events.Interfaces;
+using BuberDinner.Domain.Common;
 using BuberDinner.Domain.Exceptions;
+using BuberDinner.Domain.users.Events;
 using BuberDinner.Domain.ValueObjects;
 
-namespace BuberDinner.Domain.Entities.Users;
+namespace BuberDinner.Domain.Entities;
 
-public class User : IHasDomainEvents
+public class User : AggregateRoot
 {
-    public Guid Id { get; private set; }
     public List<UserRole> Roles { get; private set; } = new();
-
-    private readonly List<IDomainEvent> _domainEvents = new();
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     private readonly List<RefreshToken> _refreshTokens = new();
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
-    public DateTime CreatedAt { get; private set; }
-    public DateTime UpdatedAt { get; private set; }
+
     public string Email { get; private set; } = string.Empty;
     public string PasswordHash { get; private set; } = string.Empty;
     public bool EmailConfirmed { get; private set; }
-
-    public IReadOnlyList<IDomainEvent> domainEvents => throw new NotImplementedException();
 
     // For EF Core
     protected User() { }
@@ -43,6 +36,7 @@ public class User : IHasDomainEvents
         Roles = new List<UserRole> { UserRole.Create(nameof(RoleType.User)) };
         EmailConfirmed = false;
         CreatedAt = DateTime.UtcNow;
+        AddDomainEvent(new UserRegisteredDomainEvent(this.Id, this.Email));
     }
 
     public void AddRefreshToken(RefreshToken refreshToken)
@@ -59,7 +53,6 @@ public class User : IHasDomainEvents
         if (!_refreshTokens.Any(t => t.Id == refreshToken.Id))
             _refreshTokens.Add(refreshToken);
     }
-
     public void RevokeRefreshToken(Guid refreshTokenId)
     {
         var refreshToken = _refreshTokens.FirstOrDefault(rt => rt.Id == refreshTokenId);
@@ -89,7 +82,6 @@ public class User : IHasDomainEvents
         LastName = lastName;
         Email = email;
     }
-
     public void ChangePassword(string newPassword)
     {
         if (string.IsNullOrWhiteSpace(newPassword))
@@ -101,17 +93,10 @@ public class User : IHasDomainEvents
     public static User CreateAdmin(string firstName, string lastName, string passwordHash, string email)
          => new User(firstName, lastName, passwordHash, email) { Roles = new List<UserRole> { UserRole.Create(nameof(RoleType.Admin)) } };
     public void AddRole(UserRole newRole)
+
     {
         Roles.Add(newRole);
         UpdatedAt = DateTime.UtcNow;
     }
-
-    //Domain Event
-    public void Login()
-    {
-        AddDomainEvent(new UserLoggedInEvent(this.Id));
-    }
-    public void ClearDomainEvents() => _domainEvents.Clear();
-    public void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
 }

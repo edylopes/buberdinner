@@ -1,10 +1,12 @@
 
 
+
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
+using BuberDinner.Domain.users.Events;
 using MapsterMapper;
 using OneOf;
 
@@ -46,7 +48,6 @@ public static class OneOfResponseExtension
             },
             httpContext
         );
-
 
     }
     public static IActionResult ToRegister(

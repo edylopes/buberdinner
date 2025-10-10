@@ -1,4 +1,4 @@
-namespace BuberDinner.Domain.Entities.Users
+namespace BuberDinner.Domain.Entities
 {
     public class Host
     {

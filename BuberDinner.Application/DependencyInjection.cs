@@ -23,7 +23,6 @@ public static class DependencyInjection
         services.AddMediatR(typeof(DependencyInjection).Assembly);
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
-
         // 4. Behaviors MediatR (a ordem importa!)
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));

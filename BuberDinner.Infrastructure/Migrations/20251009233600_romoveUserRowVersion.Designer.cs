@@ -25,7 +25,7 @@ namespace BuberDinner.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Dinner", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Dinner", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -75,7 +75,7 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.ToTable("Dinners");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Guest", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Guest", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -104,7 +104,7 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.ToTable("Guest");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Host", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Host", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.ToTable("Hosts");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.RefreshToken", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -166,7 +166,7 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.ToTable("RefreshTokens", (string)null);
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.User", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,9 +215,9 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.ToTable("Users", (string)null);
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Dinner", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Dinner", b =>
                 {
-                    b.HasOne("BuberDinner.Domain.Entities.Users.Host", "Host")
+                    b.HasOne("BuberDinner.Domain.Entities.Host", "Host")
                         .WithMany("Dinners")
                         .HasForeignKey("HostId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -226,16 +226,16 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.Navigation("Host");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Guest", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Guest", b =>
                 {
-                    b.HasOne("BuberDinner.Domain.Entities.Users.Dinner", null)
+                    b.HasOne("BuberDinner.Domain.Entities.Dinner", null)
                         .WithMany("Guests")
                         .HasForeignKey("DinnerId");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Host", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Host", b =>
                 {
-                    b.HasOne("BuberDinner.Domain.Entities.Users.User", "User")
+                    b.HasOne("BuberDinner.Domain.Entities.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -244,9 +244,9 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.RefreshToken", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.RefreshToken", b =>
                 {
-                    b.HasOne("BuberDinner.Domain.Entities.Users.User", "User")
+                    b.HasOne("BuberDinner.Domain.Entities.User", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -255,17 +255,17 @@ namespace BuberDinner.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Dinner", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Dinner", b =>
                 {
                     b.Navigation("Guests");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.Host", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.Host", b =>
                 {
                     b.Navigation("Dinners");
                 });
 
-            modelBuilder.Entity("BuberDinner.Domain.Entities.Users.User", b =>
+            modelBuilder.Entity("BuberDinner.Domain.Entities.User", b =>
                 {
                     b.Navigation("RefreshTokens");
                 });

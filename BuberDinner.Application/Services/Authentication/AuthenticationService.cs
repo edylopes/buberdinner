@@ -1,12 +1,13 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Domain.Common.Errors;
-using BuberDinner.Domain.Entities.Users;
+using BuberDinner.Domain.Entities;
 using MapsterMapper;
 using OneOf;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Common.Interfaces.Persistence;
+using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -34,6 +35,7 @@ public class AuthenticationService : IAuthenticationService
         LoginCommand req
     )
     {
+        //Error First 
         if (await _userRepository.GetByEmailAsync(req.email) is not User user)
             return new UserNotFoundError();
 
@@ -43,9 +45,7 @@ public class AuthenticationService : IAuthenticationService
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
         user.AddRefreshToken(refreshToken);
-
-        await _userRepository.Add(refreshToken);
-
+        await _userRepository.Added(refreshToken);
         return _mapper.Map<AuthenticationResult>(user) with { accessToken = accessToken };
 
     }
