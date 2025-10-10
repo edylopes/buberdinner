@@ -1,8 +1,11 @@
 namespace BuberDinner.Domain.Entities;
 
-public interface IRepository<Entity, TId>
-    where Entity : class
+public interface IRepository<T> where T : class
+
 {
-    public Task AddAsync(Entity user);
-    public Task<Entity> GetByIdAsync(TId id);
+    public Task Added(T entity);
+    Task UpdateAsync(T entity);
+    Task DeleteAsync(T entity);
+    Task AddAsync(T entity);
 }
+

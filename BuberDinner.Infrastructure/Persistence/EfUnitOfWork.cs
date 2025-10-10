@@ -1,9 +1,9 @@
 
 
-using BuberDinner.Infrastructure.Persistence.Context;
+using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace BuberDinner.Infrastructure.Persistence;
+namespace BuberDinner.Infrastructure.Persistence.Repositories;
 
 public class EfUnitOfWork : IUnitOfWork
 {
@@ -14,13 +14,10 @@ public class EfUnitOfWork : IUnitOfWork
     {
         _context = context;
     }
-
-    public async Task CommitAsync(CancellationToken cancellationToken = default, bool detectChange = true)
+    public async Task CommitAsync(CancellationToken cancellationToken = default, bool detectChange = false)
     {
-        if (detectChange)
-        {
-            _context.ChangeTracker.DetectChanges();
-        }
+
+
         await _context.SaveChangesAsync(cancellationToken);
         await _transaction?.CommitAsync(cancellationToken)!;
     }

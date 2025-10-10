@@ -4,13 +4,16 @@
 
 namespace BuberDinner.Infrastructure.Migrations
 {
-    public partial class addRefreshTokenBackFields : Migration
+    /// <inheritdoc />
+    public partial class romoveUserRowVersion : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
 
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
 

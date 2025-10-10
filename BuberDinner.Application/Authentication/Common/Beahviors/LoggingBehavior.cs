@@ -9,6 +9,7 @@ namespace BuberDinner.Application.Authentication.Common.Beahviors;
 
 public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
+    where TResponse : IOneOf
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
     public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)

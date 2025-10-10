@@ -1,5 +1,5 @@
 
-using BuberDinner.Domain.Entities.Users;
+using BuberDinner.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,9 +18,10 @@ namespace BuberDinner.Infrastructure.Configuration
                     .HasMaxLength(256);
 
             builder.Property(rt => rt.UserId)
-                   .IsRequired();
+                    .IsRequired();
 
             builder.HasIndex(rt => rt.Id);
+            builder.HasIndex(u => u.Token).IsUnique();
         }
     }
 }

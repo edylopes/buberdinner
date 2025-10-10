@@ -1,4 +1,5 @@
-using BuberDinner.Infrastructure.Persistence.Context;
+using BuberDinner.Domain.Entities;
+using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -7,19 +8,20 @@ namespace BurberDinner.Infrastructure;
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(
-        this IServiceCollection services,
+        this IServiceCollection serviceCollection,
         IConfiguration configuration)
 
     {
 
-        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        serviceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-        services.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!));
+        serviceCollection.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!));
+        serviceCollection.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
+        //serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+        serviceCollection.AddScoped<IUserRepository, UserRepository>();
+        serviceCollection.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IUnitOfWork, EfUnitOfWork>();
 
-
-        return services;
+        return serviceCollection;
     }
 }

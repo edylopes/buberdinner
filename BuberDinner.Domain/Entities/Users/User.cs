@@ -1,21 +1,18 @@
-using System.ComponentModel.DataAnnotations;
 using System.Net.Mail;
+using BuberDinner.Domain.Events;
+using BuberDinner.Domain.Events.Interfaces;
 using BuberDinner.Domain.Exceptions;
 using BuberDinner.Domain.ValueObjects;
 
 namespace BuberDinner.Domain.Entities.Users;
 
-public class User
+public class User : IHasDomainEvents
 {
     public Guid Id { get; private set; }
     public List<UserRole> Roles { get; private set; } = new();
-    /*   public UserRole Role
-      {
-          get => _role;
-          private set => _role = UserRole.Create(value.ToString());
-      } */
-    [Timestamp]
-    public byte[] RowVersion { get; set; }
+
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     private readonly List<RefreshToken> _refreshTokens = new();
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
     public string FirstName { get; private set; } = string.Empty;
@@ -25,6 +22,8 @@ public class User
     public string Email { get; private set; } = string.Empty;
     public string PasswordHash { get; private set; } = string.Empty;
     public bool EmailConfirmed { get; private set; }
+
+    public IReadOnlyList<IDomainEvent> domainEvents => throw new NotImplementedException();
 
     // For EF Core
     protected User() { }
@@ -52,12 +51,13 @@ public class User
             throw new ArgumentNullException();
 
         if (_refreshTokens.Any(r => r.Token.Trim() == refreshToken.Token.Trim()))
-            return;
+            throw new InvalidOperationException("RefreshToken already exist"); ;
 
         if (_refreshTokens.Count(rt => rt is { IsExpired: false, Revoked: false }) >= 5)
             throw new RefreshTokenLimitExceededException("Refresh token quota reached.");
 
-        _refreshTokens.Add(refreshToken);
+        if (!_refreshTokens.Any(t => t.Id == refreshToken.Id))
+            _refreshTokens.Add(refreshToken);
     }
 
     public void RevokeRefreshToken(Guid refreshTokenId)
@@ -105,5 +105,13 @@ public class User
         Roles.Add(newRole);
         UpdatedAt = DateTime.UtcNow;
     }
+
+    //Domain Event
+    public void Login()
+    {
+        AddDomainEvent(new UserLoggedInEvent(this.Id));
+    }
+    public void ClearDomainEvents() => _domainEvents.Clear();
+    public void AddDomainEvent(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
 }
