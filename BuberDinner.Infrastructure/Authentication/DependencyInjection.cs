@@ -12,6 +12,15 @@ namespace BuberDinner.Infrastructure.Authentication
         {
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            services.ToAuth(configuration);
+
+            return services;
+        }
+
+        public static IServiceCollection ToAuth(
+            this IServiceCollection services,
+            IConfiguration configuration)
+        {
             var section = configuration.GetSection(JwtSettings.JWT);
 
             var key = section["SecretKey"]!;

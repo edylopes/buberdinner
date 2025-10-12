@@ -15,20 +15,18 @@ public class RepositoryBase<T> : IRepository<T> where T : class
     }
     // Add (EF marca como Added automaticamente)
     public virtual async Task AddAsync(T entity)
-
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
         await _dbSet.AddAsync(entity);
     }
     // Força o estado Added (útil se a entidade já tem Id preenchido)
-    public virtual Task Added<TE>(TE entity)
+    public void MarkAsAdded<TE>(TE entity)
     {
         var entry = _context.Entry(entity);
         entry.State = EntityState.Added;
-        return Task.CompletedTask;
     }
-    public virtual Task UpdateAsync(T entity)
+    public void Update(T entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
@@ -37,9 +35,8 @@ public class RepositoryBase<T> : IRepository<T> where T : class
             _dbSet.Attach(entity);
 
         entry.State = EntityState.Modified;
-        return Task.CompletedTask;
     }
-    public virtual Task DeleteAsync(T entity)
+    public void Delete(T entity)
     {
         if (entity == null)
             throw new ArgumentNullException($"{entity?.GetType().Name} is required", nameof(entity));
@@ -49,7 +46,7 @@ public class RepositoryBase<T> : IRepository<T> where T : class
             _dbSet.Attach(entity);
 
         _dbSet.Remove(entity);
-        return Task.CompletedTask;
+
     }
     public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
     {

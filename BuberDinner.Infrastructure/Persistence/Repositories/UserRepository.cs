@@ -7,7 +7,6 @@ namespace BuberDinner.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : RepositoryBase<User>, IUserRepository
 {
-
     public UserRepository(AppDbContext context) : base(context) { }
     public async Task<User?> GetByIdAsync(Guid id)
     => await _context.Users.FirstOrDefaultAsync(u => u.Id == id);

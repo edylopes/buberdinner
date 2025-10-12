@@ -1,5 +1,8 @@
 
 
+
+using System.Text.Json.Serialization;
+
 namespace BuberDinner.Domain.Entities
 {
     public class Dinner
@@ -8,9 +11,10 @@ namespace BuberDinner.Domain.Entities
         public string Name { get; set; } = string.Empty;
         public int MaxGuests { get; set; }
         public Guid HostId { get; set; }
-        public Host Host { get; set; } // Navigation property to Host 
 
-        protected Dinner() { }
+        [JsonIgnore]
+        public Host Host { get; set; } // Navigation property to Host 
+        public Dinner() { }
         public List<Guest> Guests { get; set; } = new List<Guest>();
         public int CurrentGuests { get; set; }
         public string ImageUrl { get; set; } = string.Empty; // URL to an image of the dinner

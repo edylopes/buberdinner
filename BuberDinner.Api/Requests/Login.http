@@ -1,11 +1,11 @@
 
 # @env local
-@BaseUrl=https://localhost:7104/api/v1
-
-POST {{BaseUrl}}/auth/login
+@Port=7104
+@BaseUrl=https://localhost
+POST {{BaseUrl}}:{{Port}}/api/v1/auth/login
 Content-Type: application/json
-  
+
 {
-  "email": "mauroPitter@gmail.com",
+  "email": "mauropitter@gmail.com",
   "password": "crypto"
 }

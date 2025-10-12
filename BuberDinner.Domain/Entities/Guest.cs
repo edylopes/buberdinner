@@ -1,5 +1,6 @@
 ﻿
 
+
 namespace BuberDinner.Domain.Entities;
 
 public class Guest

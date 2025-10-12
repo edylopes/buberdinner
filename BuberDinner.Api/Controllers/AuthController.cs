@@ -32,18 +32,16 @@ public class AuthController : Controller
     }
 
     [HttpPost(template: "login")]
-    public async Task<
-    IActionResult> Login(LoginRequest req)
+    public async Task<IActionResult> Login(LoginRequest req)
     {
         var result = await _mediator.Send(_mapper.Map<LoginCommand>(req));
         return result.ToLogin(_mapper, HttpContext);
-
     }
 
     [HttpGet("me"), Authorize(Roles = "User")]
     public IActionResult Me()
     {
-        var name = User.Identity?.Name;
+        var name = User?.Identity?.Name;
 
         return Ok(new { Name = name });
     }

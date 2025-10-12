@@ -45,7 +45,8 @@ public class AuthenticationService : IAuthenticationService
         var (accessToken, refreshToken) = _jwtTokenGenerator.GenerateTokens(user);
 
         user.AddRefreshToken(refreshToken);
-        await _userRepository.Added(refreshToken);
+
+        _userRepository.MarkAsAdded(refreshToken);
         return _mapper.Map<AuthenticationResult>(user) with { accessToken = accessToken };
 
     }

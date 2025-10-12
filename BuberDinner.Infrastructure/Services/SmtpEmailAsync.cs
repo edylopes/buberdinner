@@ -19,7 +19,7 @@ public class SmtpEmailService : IEmailService
     public async Task SendAsync(string to, string subject, string body)
     {
 
-        /*  var mail = new MailMessage("noreply@domain.com", to, subject, body);
-         await _smtpClient.SendMailAsync(mail); */
+        var mail = new MailMessage("noreply@domain.com", to, subject, body);
+        await _smtpClient.SendMailAsync(mail);
     }
 }

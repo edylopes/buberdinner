@@ -30,7 +30,6 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
             _ => response
         };
     }
-
     private TResponse LogAuthResponse(TResponse response, string email, string operation)
     {
 

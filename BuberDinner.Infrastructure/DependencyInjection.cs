@@ -1,3 +1,4 @@
+using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 
@@ -14,6 +15,7 @@ public static class DependencyInjection
         serviceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
         serviceCollection.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!));
+        serviceCollection.AddScoped<IDinnerRepository, DinnerRepository>();
         serviceCollection.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
         //serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();

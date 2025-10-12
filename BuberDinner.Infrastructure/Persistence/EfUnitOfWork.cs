@@ -43,13 +43,16 @@ public class EfUnitOfWork : IUnitOfWork
 
     public IReadOnlyCollection<IDomainEvent> CollectDomainEvents()
     {
-        // Junta eventos do contexto e os coletados manualmente
+
         var trackedEvents = _context.ChangeTracker
               .Entries<Entity>()
               .SelectMany(e => e.Entity.DomainEvents)
               .ToList();
 
-        var allEvents = _collectedEvents.Concat(trackedEvents).ToList();
+        // Junta eventos do contexto e os coletados manualmente
+        var allEvents = _collectedEvents
+            .Concat(trackedEvents)
+            .ToList();
 
         // Limpa eventos do contexto para não republicar depois
         foreach (var entity in _context.ChangeTracker.Entries<Entity>())
