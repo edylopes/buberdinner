@@ -1,13 +1,11 @@
 ## Burbder Dinner API
 
-Table Content (up to date)
-
 -   [Bubder Dinner API](#burbder-dinner-api)
     -   [Auth](#auth)
         -   [Register](#register)
             -   [Register Resquest](#register-request)
-            -   [Register Response](#register-response)
-        -   [Login](#login)\*\*\*\*
+            -   [Register Response](#registe r-response)
+        -   [Login](#login)
             -   [Login Resquest](#login-request)
             -   [Login Response](#login-response)
 
@@ -21,9 +19,9 @@ POST {{host}}/auth/register
 
 ```json
 {
-    "firstName": "Amichai",
+    "firstName": "Mauro",
     "LastName": "Mantinband",
-    "email": "amichai@mantinband.com",
+    "email": "mauto@mantinband.com",
     "passowrd": "454546541f"
 }
 ```
@@ -31,33 +29,33 @@ POST {{host}}/auth/register
 ### Register Response
 
 ```js
-200;
-OK;
+OK 200;
 ```
 
 ```json
 {
     "id": "1917ba0-a4b5-793b-a915-1caeceb5843e",
-    "firstName": "Amichai",
+    "firstName": "Mauro",
     "LastName": "Mantinband",
-    "email": "amichai@mantinband.com"
+    "email": "mauro@mantinband.com"
+    "Roles": ["User"]
 }
 ```
 
-#### Hedears
+### Hedears
 
 ```c#
 Response.Headers["Authorization"] = $"Bearer eyahqyd....";
 Response.Cookies.Append("refreshToken", authResult.RefreshToken, new CookieOptions{})
 ```
 
-### Login
+### Log
 
 ```js
 POST {{host}}/auth/login
 ```
 
-### Login Resquest
+## Login Resquest
 
 ```json
 {
@@ -66,23 +64,22 @@ POST {{host}}/auth/login
 }
 ```
 
-### Login Response
+## Login Response
 
 ```json
 {
     "id": "1917ba0-a4b5-793b-a915-1caeceb5843e",
     "firstName": "edy",
     "LastName": "lopes",
-    "email": "amichai@mantinband.com",
-    "Role": "User"
+    "email": "ednei@hotmail.com",
+    "Roles": ["User"]
 }
 ```
 
 ### Hedears
 
 ```cs
-
- Response.Headers["Authorization"]
+Response.Headers["Authorization"]
  Response.Cookies.Append("refreshToken", authResult.RefreshToken, new CookieOptions{})
 ```
 
@@ -90,12 +87,11 @@ POST {{host}}/auth/login
 
 > Middleware intercepta erros e retorna respostas amigáveis e padronizadas à API
 
-​**Exceções específicas de domínio**​, como:
+**Exceções específicas de domínio**, como:
 
 -   `BusinessRuleValidationException`
 -   `RefreshTokenLimitExceededException`
 -   `RefreshTokenRequiredException`
-
     ```cs
     public class BusinessRuleValidationException : DomainException
     {
@@ -103,3 +99,11 @@ POST {{host}}/auth/login
             : base(message) { }
     }
     ```
+    ## **Fluxo execução Pipeline Behaviors MediatR**
+
+| Etapa | Componente              | Responsabilidade                                           |
+| ----- | ----------------------- | ---------------------------------------------------------- |
+| 1️⃣    | **LoggingBehavior**     | Marca início e fim da requisição (tempo, sucesso, exceção) |
+| 2️⃣    | **ValidationBehavior**  | Valida o comando (FluentValidation) — fail-fast            |
+| 3️⃣    | **TransactionBehavior** | Abre transação, executa handler, comita/rollback           |
+| 4️⃣    | **RequestHandler**      | Executa a lógica de negócio real                           |

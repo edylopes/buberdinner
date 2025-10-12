@@ -4,13 +4,16 @@ using BuberDinner.Application.Common.Interfaces.Persistence;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Polly.Retry;
-namespace BuberDinner.Application.Authentication.Common.Beahviors;
 
 using BuberDinner.Domain.Common;
 
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Polly;
+using BuberDinner.Application.Common.Extensions;
+
+
+namespace BuberDinner.Application.Authentication.Common.Beahviors;
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : IRequest<TResponse>
@@ -43,20 +46,33 @@ where TResponse : IOneOf
 
         try
         {
-            var response = await next(); // Executa o handler dentro da transação (loggin neste caso)
+            var response = await next(); // Executa o handler dentro da transação ou o proximo pipeline (logger)
 
-            await GetRetryPolicy().ExecuteAsync(async () =>
+            await GetRetryPolicy().ExecuteAsync(async () => // Retry apenas aqui
+
            {
-               await _uow.CommitAsync(cancellationToken); // Retry apenas aqui
+               if (response.IsSuccess())
+               {
+                   //tenta commit depois que handler for executado
+                   await _uow.CommitAsync(cancellationToken);
 
-               var domainEvents = _uow.CollectDomainEvents();
+                   var domainEvents = _uow.CollectDomainEvents();
+                   if (domainEvents.Any())
+                       foreach (var domainEvent in domainEvents)
+                       {
 
-               foreach (var domainEvent in domainEvents)
-                   await _publisher.Publish(domainEvent, cancellationToken);
+                           await _publisher.Publish(domainEvent, cancellationToken);
+                       }
+
+                   _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
+               }
+               else
+               {
+                   _logger.LogInformation("Skipping commit: response not successful or not OneOf for {RequestName}", typeof(TRequest).Name);
+               }
+
 
            });
-
-            _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
 
             return response;
         }
@@ -106,7 +122,6 @@ where TResponse : IOneOf
 
         foreach (var domainEvent in domainEvents)
             await _publisher.Publish(domainEvent, ct);
-
 
     }
 }

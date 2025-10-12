@@ -78,7 +78,6 @@ public class ResponseResult<T> : IActionResult
             response.Headers[kvp.Key] = kvp.Value;
         }
 
-
         var result = CreateHttpResult(context);
         await result.ExecuteResultAsync(context);
     }

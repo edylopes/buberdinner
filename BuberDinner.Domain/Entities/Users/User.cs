@@ -13,7 +13,6 @@ public class User : AggregateRoot
     public IReadOnlyCollection<RefreshToken> RefreshTokens => _refreshTokens.AsReadOnly();
     public string FirstName { get; private set; } = string.Empty;
     public string LastName { get; private set; } = string.Empty;
-
     public string Email { get; private set; } = string.Empty;
     public string PasswordHash { get; private set; } = string.Empty;
     public bool EmailConfirmed { get; private set; }
@@ -81,6 +80,8 @@ public class User : AggregateRoot
         FirstName = firstName;
         LastName = lastName;
         Email = email;
+
+        MarkUpdated();
     }
     public void ChangePassword(string newPassword)
     {
@@ -88,7 +89,7 @@ public class User : AggregateRoot
             throw new ArgumentException("Password cannot be empty");
 
         PasswordHash = newPassword;
-        UpdatedAt = DateTime.UtcNow;
+        MarkUpdated();
     }
     public static User CreateAdmin(string firstName, string lastName, string passwordHash, string email)
          => new User(firstName, lastName, passwordHash, email) { Roles = new List<UserRole> { UserRole.Create(nameof(RoleType.Admin)) } };
@@ -96,7 +97,7 @@ public class User : AggregateRoot
 
     {
         Roles.Add(newRole);
-        UpdatedAt = DateTime.UtcNow;
+        MarkUpdated();
     }
 
 }
