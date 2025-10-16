@@ -9,13 +9,9 @@ namespace BuberDinner.Domain.Common;
 public abstract class Entity
 {
     public Guid Id { get; protected set; }
-
-    protected readonly List<IDomainEvent> _domainEvents = new();
-    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
-
-    public void AddDomainEvent(IDomainEvent domainEvent)
-        => _domainEvents.Add(domainEvent);
-    public void ClearDomainEvents() => _domainEvents.Clear();
+    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; protected set; }
+    protected void MarkUpdated() => UpdatedAt = DateTime.UtcNow;
 
     public static bool operator ==(Entity a, Entity b)
     {

@@ -60,9 +60,7 @@ public class User : AggregateRoot
 
         refreshToken.Revoke();
     }
-
     public void ConfirmEmail() => EmailConfirmed = true;
-
     public void UpdateProfile(string firstName, string lastName, string email)
     {
         if (string.IsNullOrWhiteSpace(firstName))

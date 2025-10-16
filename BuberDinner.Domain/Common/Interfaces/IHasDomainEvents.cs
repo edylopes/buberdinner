@@ -6,7 +6,7 @@ namespace BuberDinner.Domain.Events.Interfaces;
 
 public interface IHasDomainEvents
 {
-    IReadOnlyList<IDomainEvent> domainEvents { get; }
+    public IReadOnlyCollection<IDomainEvent> DomainEvents { get; }
     void AddDomainEvent(IDomainEvent domainEvent);
     void ClearDomainEvents();
 

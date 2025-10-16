@@ -11,7 +11,6 @@ namespace BuberDinner.Application.Events.Handlers.Users
 {
     public class SendWelcomeEmailHandler : INotificationHandler<UserRegisteredDomainEvent>
     {
-        // private readonly IEmailService _emailService; //TODO  do this implementarion
         private readonly ILogger<SendWelcomeEmailHandler> _logger;
         public SendWelcomeEmailHandler(ILogger<SendWelcomeEmailHandler> logger)
         {

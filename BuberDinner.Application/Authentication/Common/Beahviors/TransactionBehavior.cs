@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Polly;
 using BuberDinner.Application.Common.Extensions;
+using BuberDinner.Domain.Events.Interfaces;
 
 
 namespace BuberDinner.Application.Authentication.Common.Beahviors;
@@ -57,10 +58,9 @@ where TResponse : IOneOf
                    await _uow.CommitAsync(cancellationToken);
 
                    var domainEvents = _uow.CollectDomainEvents();
-                   if (domainEvents.Any())
+                   if (domainEvents.Count != 0)
                        foreach (var domainEvent in domainEvents)
                        {
-
                            await _publisher.Publish(domainEvent, cancellationToken);
                        }
 
@@ -70,7 +70,6 @@ where TResponse : IOneOf
                {
                    _logger.LogInformation("Skipping commit: response not successful or not OneOf for {RequestName}", typeof(TRequest).Name);
                }
-
 
            });
 
@@ -106,7 +105,7 @@ where TResponse : IOneOf
     private async Task PublishEventsHandler(CancellationToken ct)
     {
         var entitiesWithEvents = _uow.ChangeTracker
-             .Entries<Entity>()
+             .Entries<IHasDomainEvents>()
              .Where(entity => entity.Entity.DomainEvents.Any())
              .Select(e => e.Entity)
              .ToList();
