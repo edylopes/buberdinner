@@ -20,7 +20,6 @@ namespace BuberDinner.Application.Common.Extensions
                : false;
 
         }
-
         public static bool IsTOSuccess(this object response)
         {
             var prop = response.GetType().GetProperty("IsT0");

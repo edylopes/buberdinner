@@ -1,12 +1,15 @@
 
+using BuberDinner.Domain.Common.Interfaces;
+using BuberDinner.Domain.Events.Interfaces;
+
 namespace BuberDinner.Domain.Common;
 
-public abstract class AggregateRoot : Entity
+public abstract class AggregateRoot : Entity, IHasDomainEvents
 {
-    // Você pode adicionar propriedades relacionadas a versionamento ou controle de persistência aqui.
-    // Exemplo:
-    public DateTime CreatedAt { get; protected set; } = DateTime.UtcNow;
-    public DateTime UpdatedAt { get; protected set; }
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+    public void AddDomainEvent(IDomainEvent domainEvent)
+        => _domainEvents.Add(domainEvent);
+    public void ClearDomainEvents() => _domainEvents.Clear();
 
-    protected void MarkUpdated() => UpdatedAt = DateTime.UtcNow;
 }

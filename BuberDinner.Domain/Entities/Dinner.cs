@@ -2,12 +2,12 @@
 
 
 using System.Text.Json.Serialization;
+using BuberDinner.Domain.Common;
 
 namespace BuberDinner.Domain.Entities
 {
-    public class Dinner
+    public class Dinner : AggregateRoot
     {
-        public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;
         public int MaxGuests { get; set; }
         public Guid HostId { get; set; }
@@ -22,7 +22,6 @@ namespace BuberDinner.Domain.Entities
         public string Description { get; set; } = string.Empty;
         public decimal Price { get; set; } // Price per guest
         public bool IsActive { get; set; } = true; // Indicates if the dinner is currently active
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // When the dinner was created
         public DateTime Date { get; set; }
     }
 }

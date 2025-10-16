@@ -2,6 +2,7 @@
 
 using BuberDinner.Domain.Common;
 using BuberDinner.Domain.Common.Interfaces;
+using BuberDinner.Domain.Events.Interfaces;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -45,7 +46,7 @@ public class EfUnitOfWork : IUnitOfWork
     {
 
         var trackedEvents = _context.ChangeTracker
-              .Entries<Entity>()
+              .Entries<IHasDomainEvents>()
               .SelectMany(e => e.Entity.DomainEvents)
               .ToList();
 
@@ -55,7 +56,7 @@ public class EfUnitOfWork : IUnitOfWork
             .ToList();
 
         // Limpa eventos do contexto para não republicar depois
-        foreach (var entity in _context.ChangeTracker.Entries<Entity>())
+        foreach (var entity in _context.ChangeTracker.Entries<IHasDomainEvents>())
             entity.Entity.ClearDomainEvents();
 
         _collectedEvents.Clear();

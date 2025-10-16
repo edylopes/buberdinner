@@ -1,6 +1,4 @@
 
-
-
 using BuberDinner.Domain.Common.Interfaces;
 
 namespace BuberDinner.Domain.users.Events;
