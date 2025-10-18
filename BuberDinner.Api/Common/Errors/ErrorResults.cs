@@ -5,23 +5,32 @@ namespace BuberDinner.Api.Common.Errors;
 
 public static class ErrorResults
 {
-    public static IActionResult FromError(AppError error, HttpContext httpContext)
+    public static IActionResult FromError(AppError error)
     {
-        var factory = httpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
-
+        // var factory = httpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
         var (statusCode, url, message, title) = error;
 
-        var problem = factory.CreateProblemDetails(
-            httpContext,
-            type: url,
-            statusCode: statusCode,
-            title: title,
-            detail: message
-        );
+        var problem = new ProblemDetails
+        {
+
+            Type = url,
+            Status = statusCode,
+            Title = title,
+            Detail = message
+        };
+
+        /*       var problemDetails = factory.CreateProblemDetails(
+                 httpContext,
+                 type: url,
+                 statusCode: statusCode,
+                 title: title,
+                 detail: message
+             ); */
 
         problem.Extensions["errorType"] = error.GetType().Name;
+        problem.Extensions["traceId"] = System.Diagnostics.Activity.Current?.Id ?? Guid.NewGuid().ToString();
 
-        return new ObjectResult(problem) { StatusCode = statusCode };
+        return new ObjectResult(problem) { StatusCode = statusCode, ContentTypes = { "application/problem+json" } };
     }
 }
 

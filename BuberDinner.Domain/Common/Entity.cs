@@ -1,9 +1,4 @@
 
-
-
-
-using BuberDinner.Domain.Common.Interfaces;
-
 namespace BuberDinner.Domain.Common;
 
 public abstract class Entity

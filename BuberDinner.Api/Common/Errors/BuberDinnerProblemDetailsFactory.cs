@@ -45,7 +45,6 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
 
         return problemDetails;
     }
-
     /// <inheritdoc />
     public override ValidationProblemDetails CreateValidationProblemDetails(
         HttpContext httpContext,

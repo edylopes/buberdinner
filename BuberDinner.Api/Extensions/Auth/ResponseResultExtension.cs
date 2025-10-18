@@ -20,19 +20,17 @@ public static class OneOfResponseExtension
 {
     public static IActionResult ToResponseResult<TSuccess>(
         this OneOf<TSuccess, AppError> result,
-        Func<TSuccess, IActionResult> onSuccess,
-        HttpContext httpContext)
+        Func<TSuccess, IActionResult> onSuccess)
     {
         return result.Match(
             success => onSuccess(success),
-            error => ErrorResults.FromError(error, httpContext)
+            error => ErrorResults.FromError(error)
         );
     }
 
     public static IActionResult ToAuthResponse(
         this OneOf<AuthenticationResult, AppError> result,
         IMapper mapper,
-        HttpContext httpContext,
         Func<AuthResponse, ResponseResult<AuthResponse>> responseFactory
         )
     {
@@ -45,38 +43,33 @@ public static class OneOfResponseExtension
                 return response
                      .WithCookie("RefreshToken", success.refreshToken)
                      .WithHeader("Authorization", success.accessToken);
-            },
-            httpContext
+            }
         );
 
     }
     public static IActionResult ToRegister(
     this OneOf<AuthenticationResult, AppError> result,
-    IMapper mapper,
-    HttpContext httpContext)
+    IMapper mapper)
     {
         return result.ToAuthResponse(
             mapper,
-            httpContext,
+
             payload => HttpResults.Created(payload, $"api/v1/users{payload.id}")
         );
     }
 
     public static IActionResult ToLogin(
     this OneOf<AuthenticationResult, AppError> result,
-    IMapper mapper,
-    HttpContext httpContext)
+    IMapper mapper)
     {
         return result.ToAuthResponse(
             mapper,
-            httpContext,
             payload => HttpResults.Ok(payload)
 
         );
     }
-    public static IActionResult ToOk<TSuccess>(this OneOf<TSuccess, AppError> result,
-    HttpContext context)
-     => result.ToResponseResult(s => HttpResults.Ok(s), context);
+    public static IActionResult ToOk<TSuccess>(this OneOf<TSuccess, AppError> result)
+     => result.ToResponseResult(s => HttpResults.Ok(s));
 
 
 }

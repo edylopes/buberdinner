@@ -18,7 +18,6 @@ public static class DependencyInjection
         // 2. FluentValidation: registra todos os IValidator<T>
         services.AddValidatorsFromAssemblyContaining<LoginCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
-
         // 3. MediatR 
         services.AddMediatR(typeof(DependencyInjection).Assembly);
 

@@ -1,7 +1,5 @@
 
-
 using System.Security.Cryptography;
-using BuberDinner.Domain.Entities;
 using BuberDinner.Domain.Events.Interfaces;
 namespace BuberDinner.Domain.Users.Events
 {
@@ -25,6 +23,7 @@ namespace BuberDinner.Domain.Users.Events
 
         public Task Handle(UserLoggedInEvent domainEvent)
         {
+
             throw new NotImplementedException();
         }
     }

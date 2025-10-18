@@ -1,6 +1,4 @@
 
-
-using BuberDinner.Domain.Common;
 using BuberDinner.Domain.Common.Interfaces;
 using BuberDinner.Domain.Events.Interfaces;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
@@ -22,9 +20,30 @@ public class EfUnitOfWork : IUnitOfWork
     public async Task CommitAsync(CancellationToken cancellationToken = default, bool detectChange = false)
     {
 
+        if (detectChange)
+            _context.ChangeTracker.DetectChanges();
 
-        await _context.SaveChangesAsync(cancellationToken);
-        await _transaction?.CommitAsync(cancellationToken)!;
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+
+            if (_transaction != null)
+            {
+                await _transaction.CommitAsync(cancellationToken);
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
+        }
+        catch
+        {
+            if (_transaction != null)
+            {
+                await _transaction.RollbackAsync(cancellationToken);
+                await _transaction.DisposeAsync();
+                _transaction = null;
+            }
+            throw;
+        }
 
     }
 

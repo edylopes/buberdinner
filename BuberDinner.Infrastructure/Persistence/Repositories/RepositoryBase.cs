@@ -1,18 +1,21 @@
-
-
 using System.Linq.Expressions;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 
+namespace BuberDinner.Infrastructure.Persistence.Repositories;
+
 public class RepositoryBase<T> : IRepository<T> where T : class
 {
     protected readonly AppDbContext _context;
+
     protected readonly DbSet<T> _dbSet;
+
     public RepositoryBase(AppDbContext context)
     {
         _context = context;
         _dbSet = context.Set<T>();
     }
+
     // Add (EF marca como Added automaticamente)
     public virtual async Task AddAsync(T entity)
     {
@@ -20,6 +23,7 @@ public class RepositoryBase<T> : IRepository<T> where T : class
             throw new ArgumentNullException(nameof(entity));
         await _dbSet.AddAsync(entity);
     }
+
     // Força o estado Added (útil se a entidade já tem Id preenchido)
     public void MarkAsAdded<TE>(TE entity)
     {

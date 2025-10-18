@@ -57,12 +57,7 @@ where TResponse : IOneOf
                    //tenta commit depois que handler for executado
                    await _uow.CommitAsync(cancellationToken);
 
-                   var domainEvents = _uow.CollectDomainEvents();
-                   if (domainEvents.Count != 0)
-                       foreach (var domainEvent in domainEvents)
-                       {
-                           await _publisher.Publish(domainEvent, cancellationToken);
-                       }
+                   await PublishEventsHandler(cancellationToken);
 
                    _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
                }

@@ -3,6 +3,7 @@ using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Domain.Entities;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 
+
 namespace BuberDinner.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : RepositoryBase<User>, IUserRepository
@@ -18,6 +19,13 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     public Task AddRefreshTokenAsync(RefreshToken refreshToken)
     {
         throw new NotImplementedException();
+    }
+
+    public void UpdateEmailConfirmed(User user)
+    {
+        _context.Attach(user);
+        _context.Entry(user).Property(u => u.EmailConfirmed).IsModified = true;
+        _context.Entry(user).Property(u => u.UpdatedAt).IsModified = true;
     }
 
 }

@@ -6,6 +6,8 @@
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <NoWarn>NETSDK1138</NoWarn>
     <UserSecretsId>c171b9c7-e159-4916-929e-5775a47a138f</UserSecretsId>
+    <PreserveCompilationContext>true</PreserveCompilationContext>
+
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />
@@ -14,6 +16,9 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AspNetCoreRateLimit" Version="5.0.0" />
+    <PackageReference Include="FluentEmail.Core" Version="3.0.2" />
+    <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
+    <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageReference Include="Mapster" Version="7.4.1-pre01" />
     <PackageReference Include="Mapster.DependencyInjection" Version="1.0.2-pre01" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
@@ -28,6 +33,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.3" />
     <PackageReference Include="System.Linq.Async" Version="6.0.3" />
     <PackageReference Include="OneOf" Version="3.0.271" />
-  </ItemGroup> 
+  </ItemGroup>
 
 </Project>

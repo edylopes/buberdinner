@@ -1,0 +1,5 @@
+# @env local
+@BaseUrl=https://localhost:7104/api/v1
+
+@Token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+POST {{BaseUrl}}/auth/confirm-email?userId=516FC201-A838-460D-888F-2BC4901C99EC

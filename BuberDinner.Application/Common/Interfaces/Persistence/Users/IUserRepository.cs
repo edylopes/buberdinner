@@ -7,4 +7,5 @@ public interface IUserRepository : IRepository<User>
     Task<User?> GetByEmailAsync(string email);
     Task AddRefreshTokenAsync(RefreshToken refreshToken);
     Task<User?> GetByIdAsync(Guid id);
+    void UpdateEmailConfirmed(User user);
 }
