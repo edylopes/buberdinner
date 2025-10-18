@@ -21,7 +21,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
       RequestHandlerDelegate<TResponse> next,
       CancellationToken cancellationToken)
     {
-        var response = await next(); // Chama o próximo da cadeia (ou o handler)
+        var response = await next(); //Chama o próximo da cadeia (ou o handler)
 
         return request switch
         {
@@ -36,7 +36,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         if (response is OneOf<AuthenticationResult, AppError> oneOfResponse)
         {
             oneOfResponse.Switch(
-                auth => _logger.LogInformation("✅ {Operation} succeeded for {Email}", operation, email),
+                success => _logger.LogInformation("✅ {Operation} succeeded for {Email}", operation, email),
                 error => _logger.LogWarning("❌ {Operation} failed for email: {Email}: {Error}", operation, email, error.message)
             );
         }

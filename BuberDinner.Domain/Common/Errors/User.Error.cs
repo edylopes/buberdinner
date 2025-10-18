@@ -26,4 +26,7 @@ public record UserRoleNotAllowedError(string url = TypeUrl.UnauthorizedUrl)
 public record UserNotFoundError(string url = TypeUrl.NotFoundUrl)
     : AppError(404, url, "User notfound");
 
+public record EmailNotConfirmedError(string url = TypeUrl.BadRequestUrl)
+    : AppError(400, url, "Email is not confirmed");
+
 

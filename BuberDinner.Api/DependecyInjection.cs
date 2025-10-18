@@ -1,10 +1,13 @@
 ﻿
+using System.Net;
+using System.Net.Mail;
 using AspNetCoreRateLimit;
 using BuberDinner.Api.Common.Mapping;
 using BuberDinner.Application;
+using BuberDinner.Infrastructure;
 using BuberDinner.Infrastructure.Authentication;
-using BurberDinner.Infrastructure;
-
+using BuberDinner.Infrastructure.Services.SMTP;
+using FluentEmail.Smtp;
 
 
 namespace BuberDinner.Api;
@@ -19,13 +22,13 @@ public static class DependencyInjection
 
         //Add Mapping 
         services.AddMappings();
+
+        services.AddInfrastructureServices(configuration);
+
         services.AddApplicationServices();
 
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
-
         //Add Modules
-        services.AddInfrastructureServices(configuration);
-
 
         // Rate limit counter and rules store
         services.Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"));
@@ -35,6 +38,16 @@ public static class DependencyInjection
         services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
         services.AddInMemoryRateLimiting();
 
+
+        //Smtp Email Service Configuration
+        services
+          .AddFluentEmail(configuration["SmtpOptions:FromEmail"], configuration["SmtpOptions:FromName"])
+          .AddSmtpSender(
+              configuration["SmtpOptions:Host"],
+              int.Parse(configuration["SmtpOptions:Port"]!),
+              configuration["SmtpOptions:Username"],
+              configuration["SmtpOptions:Password"])
+        .AddRazorRenderer();
         return services;
     }
 }

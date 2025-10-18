@@ -34,8 +34,7 @@ public class User : AggregateRoot
         Email = email;
         Roles = new List<UserRole> { UserRole.Create(nameof(RoleType.User)) };
         EmailConfirmed = false;
-        CreatedAt = DateTime.UtcNow;
-        AddDomainEvent(new UserRegisteredDomainEvent(this.Id, this.Email));
+        AddDomainEvent(new UserRegisteredDomainEvent(Id, Email, FirstName));
     }
 
     public void AddRefreshToken(RefreshToken refreshToken)
@@ -60,7 +59,11 @@ public class User : AggregateRoot
 
         refreshToken.Revoke();
     }
-    public void ConfirmEmail() => EmailConfirmed = true;
+    public void ConfirmEmail()
+    {
+        EmailConfirmed = true;
+        MarkUpdated();
+    }
     public void UpdateProfile(string firstName, string lastName, string email)
     {
         if (string.IsNullOrWhiteSpace(firstName))

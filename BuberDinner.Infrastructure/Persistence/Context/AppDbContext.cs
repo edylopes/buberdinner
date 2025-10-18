@@ -1,7 +1,6 @@
 using BuberDinner.Domain.Entities;
 
 
-
 namespace BuberDinner.Infrastructure.Persistence.Repositories.Context;
 
 public class AppDbContext : DbContext

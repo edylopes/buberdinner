@@ -8,6 +8,9 @@ using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
+using OneOf.Types;
+using BuberDinner.Contracts.Authentication;
+using BuberDinner.Application.Common.Errors;
 
 namespace BuberDinner.Application.Services.Authentication;
 
@@ -15,14 +18,12 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
-
-    private readonly IMapper _mapper;
     private readonly IUnitOfWork _uow;
+    private readonly IMapper _mapper;
     public AuthenticationService(
         IJwtTokenGenerator jwtTokenGenerator,
         IUserRepository userRepository,
-        IMapper mapper
-,
+        IMapper mapper,
         IUnitOfWork uow)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
@@ -31,6 +32,7 @@ public class AuthenticationService : IAuthenticationService
         _uow = uow;
     }
 
+
     public async Task<OneOf<AuthenticationResult, AppError>> Login(
         LoginCommand req
     )
@@ -38,6 +40,9 @@ public class AuthenticationService : IAuthenticationService
         //Error First 
         if (await _userRepository.GetByEmailAsync(req.email) is not User user)
             return new UserNotFoundError();
+
+        if (!user.EmailConfirmed)
+            return new EmailNotConfirmedError();
 
         if (!BCrypt.Net.BCrypt.Verify(req.password, user.PasswordHash))
             return new InvalidCredentialError();
@@ -67,6 +72,23 @@ public class AuthenticationService : IAuthenticationService
         await _userRepository.AddAsync(user);
 
         return _mapper.Map<AuthenticationResult>(user) with { accessToken = token };
+
+    }
+    public async Task<OneOf<EmailConfimed, AppError>> ConfirmEmailAsync(Guid userId, CancellationToken ct)
+    {
+
+        var user = await _userRepository.GetByIdAsync(userId);
+
+        if (user is null)
+            return new EmailConfirmationFailed();
+        if (user.EmailConfirmed)
+            return new EmailAlreadyConfirmed();
+
+        user.ConfirmEmail();
+
+        _userRepository.Update(user);
+        await _uow.CommitAsync(ct);
+        return new EmailConfimed();
 
     }
 }

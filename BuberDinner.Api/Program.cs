@@ -1,8 +1,10 @@
+using System.Net;
 using AspNetCoreRateLimit;
 using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
 using BuberDinner.Infrastructure.Authentication;
+using FluentEmail.Core;
 using Microsoft.OpenApi.Models;
 
 
@@ -16,6 +18,9 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
 }
+
+
+
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -49,4 +54,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 // middleware endpoints
 app.MapControllers();
+
+
 app.Run();

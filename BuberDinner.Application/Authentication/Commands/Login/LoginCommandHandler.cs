@@ -9,6 +9,7 @@ namespace BuberDinner.Application.Authentication.Commands.Login;
 public class LoginCommandHandler : IRequestHandler<LoginCommand, OneOf<AuthenticationResult, AppError>>
 {
     private readonly IAuthenticationService _authService;
+
     public LoginCommandHandler(IAuthenticationService authService)
     {
         _authService = authService;

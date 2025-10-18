@@ -20,6 +20,9 @@ public class RegisterCommandHandler
         RegisterCommand command,
         CancellationToken cancellationToken
     )
-     => await _authenticationService.Register(command);
+    {
+
+        return await _authenticationService.Register(command);
+    }
 
 }

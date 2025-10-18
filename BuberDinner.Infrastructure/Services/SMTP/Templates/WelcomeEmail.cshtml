@@ -1,0 +1,220 @@
+@using BuberDinner.Infrastructure.Services.SMTP.Model
+@using System
+
+@model WelcomeEmail
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmação de E-mail e Boas-vindas</title>
+    <style type="text/css">
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.5;
+            color: #333333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 20px auto;
+            padding: 0;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            padding: 25px 0;
+            text-align: center;
+            color: white;
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+            letter-spacing: 1px;
+        }
+
+        .header h1 {
+            margin: 15px 0 0;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            color: #3a7bd5;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+
+        .instructions {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3a7bd5;
+            margin-bottom: 25px;
+        }
+
+        .confirmation-box {
+            background-color: #e8f4fc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        .confirmation-button {
+            display: inline-block;
+            background: linear-gradient(45deg, #3a7bd5, #00d2ff);
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-weight: 600;
+            margin: 15px 0;
+            font-size: 16px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 130, 230, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .confirmation-button:hover {
+            box-shadow: 0 6px 15px rgba(0, 130, 230, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .link-fallback {
+            font-size: 14px;
+            color: #777;
+            margin-top: 15px;
+        }
+
+        .contact-info {
+            margin-top: 30px;
+            border-top: 1px solid #eaeaea;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .footer-links a {
+            color: #3a7bd5;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        @@media only screen and (max-width: 600px) {
+            .card {
+                margin: 10px;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="logo">@Model.CompanyName</div>
+                <h1>Bem-vindo à sua conta!</h1>
+            </div>
+
+            <div class="content">
+                <div class="welcome-message">
+                    <div class="welcome-icon">🎉</div>
+                    <h2>Olá, @Model.UserName!</h2>
+                    <p>Estamos muito felizes por você ter se juntado a nós!</p>
+                </div>
+
+                <p>Obrigado por se cadastrar na nossa plataforma. Para começar a aproveitar todos os benefícios,
+                    precisamos verificar o seu endereço de e-mail.</p>
+
+                <div class="instructions">
+                    <p><strong>Atenção:</strong> Você deve confirmar seu e-mail antes de fazer login pela primeira vez.
+                        Este passo é necessário para garantir sua segurança e para que possamos manter contato com você.
+                    </p>
+                </div>
+
+                <div class="confirmation-box">
+                    <p>Por favor, confirme seu endereço de e-mail clicando no botão abaixo:</p>
+                    <a href="@Model.ConfirmLink" class="confirmation-button">Confirmar meu e-mail</a>
+
+                    <p class="link-fallback">
+                        Se o botão não funcionar, copie e cole este link em seu navegador:<br>
+                        <a href="@Model.ConfirmLink"
+                            style="color: #3a7bd5; word-break: break-all;">@Model.ConfirmLink</a>
+                    </p>
+                </div>
+
+                <p>Depois de confirmar seu e-mail, você terá acesso completo a todos os recursos da sua conta. Caso
+                    tenha alguma dúvida ou precise de ajuda, não hesite em nos contatar.</p>
+
+                <div class="contact-info">
+                    <strong>Atenciosamente,</strong><br>
+                    Equipe @Model.CompanyName<br>
+                    <a href="mailto:@Model.SupportEmail">@Model.SupportEmail</a><br>
+                    @Model.SupportPhone
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Este é um e-mail automático, por favor não responda diretamente a esta mensagem.</p>
+
+            <div class="footer-links">
+                <a href="@Model.TermsUrl">Termos de Uso</a> |
+                <a href="@Model.PrivacyUrl">Política de Privacidade</a> |
+                <a href="@Model.HelpUrl">Ajuda</a> |
+                <a href="@Model.SupportUrl">Suporte</a>
+            </div>
+
+            <p>&copy; @DateTime.Now.Year @Model.CompanyName. Todos os direitos reservados.</p>
+            <p>@Model.CompanyAddress</p>
+        </div>
+    </div>
+</body>
+
+</html>
