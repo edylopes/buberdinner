@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -6,8 +6,8 @@
     <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
     <UserSecretsId>ec1b9da2-6a7a-461a-a589-1ed316fea8ef</UserSecretsId>
     <PreserveCompilationContext>true</PreserveCompilationContext>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentEmail.Core" Version="3.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.25" />
@@ -30,17 +30,13 @@
  -->
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.9.0" />
   </ItemGroup>
-
   <ItemGroup>
     <Content Include="Services/SMTP/Templates/*.cshtml" CopyToOutputDirectory="Always" />
   </ItemGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="Services/SMTP/Templates/*.cshtml" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\BuberDinner.Application\BuberDinner.Application.csproj" />
   </ItemGroup>
-
 </Project>

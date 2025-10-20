@@ -4,14 +4,16 @@
     "files.exclude": {
         "**/.git": true,
         "**/.gitignore": true,
-        "**/.github": true,
+        "**/.github": false,
         "**/.svn": true,
         "**/.hg": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
         "**/bin": true,
         "**/obj": true,
-        "**/.config": true
+        "**/.config": true,
+        "**/.idea": true,
+        "**/assets": false
     },
     "files.watcherExclude": {
         "**/bin/**": true,

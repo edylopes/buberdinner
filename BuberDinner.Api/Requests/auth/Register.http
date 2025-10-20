@@ -4,8 +4,8 @@ POST {{Host}}/auth/register
 Content-Type: application/json
 
 { 
-  "firstName": "Ednei",
-  "lastName": "Lopes",
-  "email": "edneyyyyhotmail.com",
+  "firstName": "wesley",
+  "lastName": "Paulo",
+  "email": "t_wesley.paulo@hapvida.com.br",
   "password": "crypto" 
 }

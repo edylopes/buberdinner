@@ -1,14 +1,12 @@
 
 using BuberDinner.Api.Extensions.Auth;
 using BuberDinner.Application.Authentication.Commands.Register;
+using BuberDinner.Application.Authentication.Commands.Login;
+using BuberDinner.Application.Authentication.Commands.Email;
 using BuberDinner.Contracts.Authentication;
-
-using Microsoft.AspNetCore.Authorization;
+using BuberDinner.Api.Extensions;
 using MapsterMapper;
 
-using BuberDinner.Application.Authentication.Commands.Login;
-using BuberDinner.Application.Services.Authentication;
-using BuberDinner.Api.Common.Errors;
 namespace BuberDinner.Api.Controllers;
 
 
@@ -42,26 +40,13 @@ public class AuthController : Controller
         return result.ToLogin(_mapper);
     }
 
-    [HttpGet("me"), Authorize(Roles = "User")]
-    public IActionResult Me()
-    {
-        var name = User?.Identity?.Name;
-        return Ok(new { name });
-    }
     [HttpPost("confirm-email")]
-
-    public async Task<IActionResult> ConfirmEmail(
-        [FromQuery] string userId,
-        [FromServices] IAuthenticationService service,
-        CancellationToken ct)
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, CancellationToken ct)
     {
         if (!Guid.TryParse(userId, out var uid))
             return Problem(title: "Invalid userId", statusCode: 400);
 
-        var result = await service.ConfirmEmailAsync(uid, ct);
-        return result.Match(
-            success => Ok(success),
-            error => ErrorResults.FromError(error)
-        );
+        var result = await _mediator.Send(new ConfirmEmailCommand(uid), ct);
+        return result.ToActionResponse();
     }
 }

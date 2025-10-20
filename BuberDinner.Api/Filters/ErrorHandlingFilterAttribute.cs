@@ -33,7 +33,7 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
     public override void OnException(ExceptionContext context)
     {
         var problemDetails = CreateBaseProblemDetails(context.HttpContext);
-        problemDetails.Status = StatusCodes.Status500InternalServerError;
+        context.HttpContext.Response.ContentType = ContentType;
 
         switch (context.Exception)
         {
@@ -79,9 +79,6 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
                 };
 
                 validationProblem.Extensions["exceptionType"] = context.Exception.GetType().Name;
-                validationProblem.Extensions["timestamp"] = DateTimeOffset.UtcNow;
-
-                context.HttpContext.Response.ContentType = ContentType;
                 context.ExceptionHandled = true;
 
 
@@ -130,6 +127,7 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
             Instance = context.Request.Path.Value,
             /* Adction info traceIdIdentifier Important for tracking occurrences and investigating problems. */
             Extensions = { ["traceId"] = context.TraceIdentifier },
+            Status = StatusCodes.Status500InternalServerError
 
         };
 }

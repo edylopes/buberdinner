@@ -32,7 +32,7 @@
 ## Integration Points
 
 -   **External Packages**: MediatR, Mapster, OneOf, BCrypt.Net, AspNetCoreRateLimit, EntityFrameworkCore.
--   **EF Core**: See `Infrastructure/Persistence/BurberDinnerDbContext.cs` and related configuration for DB context and entity setup.
+-   **EF Core**: See `Infrastructure/Persistence/AppDbContext.cs` and related configuration for DB context and entity setup.
 -   **JWT**: Configured in `Infrastructure/Authentication/JwtTokenGenerator.cs` and DI.
 
 ## Examples
@@ -49,7 +49,5 @@
 -   **Mapping Config**: `BuberDinner.Api/Common/Mapping/`, `BuberDinner.Application/Common/Mapping/`
 -   **Error Handling**: `BuberDinner.Api/Filters/`, `BuberDinner.Api/Common/Errors/`
 -   **Persistence**: `BuberDinner.Infrastructure/Persistence/`
-
----
 
 For new features, follow the CQRS pattern, add new commands/queries in `Application`, map results in `Api`, and update DI as needed. Use provided `.http` files for endpoint testing.

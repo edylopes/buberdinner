@@ -102,8 +102,9 @@ public class BuberDinnerProblemDetailsFactory : ProblemDetailsFactory
         {
             problemDetails.Extensions["traceId"] = traceId;
         }
-
+        problemDetails.Extensions["traceId"] = Activity.Current?.Id ?? Guid.NewGuid().ToString();
         problemDetails.Extensions["timestamp"] = DateTimeOffset.UtcNow;
-        //  problemDetails.Extensions["exceptionType"] = exception?.GetType().Name;
+        if (exception is not null)
+            problemDetails.Extensions["exceptionType"] = exception?.GetType().Name;
     }
 }

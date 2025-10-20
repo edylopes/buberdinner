@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <ItemGroup>
-    <ProjectReference Include="..\BuberDinner.Domain\BuberDinner.Domain.csproj" />
-    <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />
-  </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="FluentValidation" Version="8.6.3" />
@@ -21,10 +24,10 @@
     <PackageReference Include="Polly" Version="8.6.4" />
     <PackageReference Include="Scrutor" Version="6.1.0" />
   </ItemGroup>
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
-  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BuberDinner.Domain\BuberDinner.Domain.csproj" />
+    <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

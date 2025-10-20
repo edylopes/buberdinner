@@ -1,6 +1,5 @@
 
 using System.Text;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,7 +7,7 @@ namespace BuberDinner.Infrastructure.Authentication
 {
     public static class JwtDepencyInjection
     {
-        public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
@@ -47,7 +46,6 @@ namespace BuberDinner.Infrastructure.Authentication
                     ValidIssuer = issuer,
 
                 };
-
 
             });
 

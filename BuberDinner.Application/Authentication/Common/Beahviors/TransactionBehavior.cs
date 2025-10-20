@@ -32,68 +32,57 @@ where TResponse : IOneOf
         this._logger = logger;
         this._publisher = _publisher;
     }
-
     public async Task<TResponse> Handle(
     TRequest request,
     RequestHandlerDelegate<TResponse> next,
     CancellationToken cancellationToken)
     {
         if (request is IQuery<TResponse>)
-            return await next(); // Pula transação
-
-        _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
-
-        await _uow.BeginTransactionAsync(cancellationToken); // Abre transação ANTES do handler
+            return await next(); // Skip transaction for queries
 
         try
         {
-            var response = await next(); // Executa o handler dentro da transação ou o proximo pipeline (logger)
+            // First try without transaction to validate
+            var response = await next();
+            // Only open transaction if success
+            if (response.IsSuccess())
+            {
+                _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
+                await _uow.BeginTransactionAsync(cancellationToken);
 
-            await GetRetryPolicy().ExecuteAsync(async () => // Retry apenas aqui
+                await GetRetryPolicy().ExecuteAsync(async () => //Retry
+                {
+                    await _uow.CommitAsync(cancellationToken);
+                    await PublishEventsHandler(cancellationToken);
+                    _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
+                });
 
-           {
-               if (response.IsSuccess())
-               {
-                   //tenta commit depois que handler for executado
-                   await _uow.CommitAsync(cancellationToken);
-
-                   await PublishEventsHandler(cancellationToken);
-
-                   _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
-               }
-               else
-               {
-                   _logger.LogInformation("Skipping commit: response not successful or not OneOf for {RequestName}", typeof(TRequest).Name);
-               }
-
-           });
+            }
+            else
+            {
+                _logger.LogInformation("Skipping transaction: response not successful for {RequestName}", typeof(TRequest).Name);
+            }
 
             return response;
         }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            _logger.LogWarning(ex, "Concurrency exception on {RequestName}, rolling back", typeof(TRequest).Name);
-            await _uow.RollbackAsync(cancellationToken);
-            throw; //trown to filter/middleware
-        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Unhandled error on {RequestName}, rolling back", typeof(TRequest).Name);
             await _uow.RollbackAsync(cancellationToken);
+            _logger.LogInformation("Rolling back transaction: response not successful for {RequestName}", typeof(TRequest).Name);
+            _logger.LogError(ex, "Unhandled error on {RequestName}", typeof(TRequest).Name);
             throw;
         }
     }
-
     private AsyncRetryPolicy GetRetryPolicy()
     {
         return Policy
-            .Handle<DbUpdateConcurrencyException>()
+            .Handle<Exception>()
             .WaitAndRetryAsync(
                 retryCount: 3,
                 sleepDurationProvider: attempt => TimeSpan.FromMilliseconds(200 * attempt),
                 onRetry: (ex, delay, attempt, context) =>
                 {
-                    _logger.LogWarning("Retry {Attempt} due to concurrency conflict. Waiting {Delay}ms", attempt, delay.TotalMilliseconds);
+                    _logger.LogWarning("Retry {Attempt}:  Waiting {Delay}ms", attempt, delay.TotalMilliseconds);
                 });
     }
 

@@ -3,11 +3,13 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
+    <SuppressTfmSupportBuildWarnings>
+      true</SuppressTfmSupportBuildWarnings>
     <NoWarn>NETSDK1138</NoWarn>
-    <UserSecretsId>c171b9c7-e159-4916-929e-5775a47a138f</UserSecretsId>
+    <UserSecretsId>
+      c171b9c7-e159-4916-929e-5775a47a138f</UserSecretsId>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-
+    <SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />
@@ -26,11 +28,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.14.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.18" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.2.3" />
-    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="6.5.0" />
     <PackageReference Include="System.Linq.Async" Version="6.0.3" />
     <PackageReference Include="OneOf" Version="3.0.271" />
   </ItemGroup>

@@ -15,14 +15,12 @@ public class SmtpClientFactory
     {
         _options = options.Value;
     }
-
-    public IOptions<SmtpOptions> Options { get; }
-
+    public SmtpClient SmtpClient => Create();
     public SmtpClient Create()
     {
         var client = new SmtpClient(_options.Host, _options.Port)
         {
-            Credentials = new NetworkCredential(_options.User, _options.Password),
+            Credentials = new NetworkCredential(_options.Username, _options.Password),
             EnableSsl = _options.UseSsl
         };
 

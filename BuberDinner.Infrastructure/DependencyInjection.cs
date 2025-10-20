@@ -1,5 +1,6 @@
 using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
+using BuberDinner.Infrastructure.Authentication;
 using BuberDinner.Infrastructure.Persistence.Repositories.Context;
 using BuberDinner.Infrastructure.Services.SMTP;
 
@@ -12,17 +13,18 @@ public static class DependencyInjection
         IConfiguration configuration)
 
     {
+        serviceCollection.AddDbContext<AppDbContext>(opt
+                    => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!));
 
+        serviceCollection.AddAuthentication(configuration);
         serviceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-        serviceCollection.AddDbContext<AppDbContext>(opt => opt.UseSqlServer(configuration.GetConnectionString("DefaultConnection")!));
+        serviceCollection.AddSMTPService(configuration);
+
         serviceCollection.AddScoped<IUnitOfWork, EfUnitOfWork>();
         serviceCollection.AddScoped<IDinnerRepository, DinnerRepository>();
         //serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
-
-
-        serviceCollection.AddSMTPService(configuration);
 
 
         return serviceCollection;

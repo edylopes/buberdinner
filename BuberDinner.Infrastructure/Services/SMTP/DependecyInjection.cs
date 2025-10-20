@@ -13,11 +13,13 @@ namespace BuberDinner.Infrastructure.Services.SMTP
         public static IServiceCollection AddSMTPService(this IServiceCollection services, IConfiguration configuration)
         {
 
-            services.AddTransient<IEmailService, SmtpEmailService>();
-            services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
             services.AddTransient<SmtpClientFactory>();
+            services.AddTransient<IEmailService, SmtpEmailService>();
 
-            services.AddTransient<SmtpClient>(sp =>
+
+            services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
+
+            services.AddTransient(sp =>
              {
                  var factory = sp.GetRequiredService<SmtpClientFactory>();
                  return factory.Create();
