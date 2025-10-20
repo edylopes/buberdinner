@@ -1,3 +1,10 @@
+## Project Overview
+
+-   **BuberDinner** is a modular .NET 6 API for dinner event management, with DDD-inspired structure: `Domain`, `Application`, `Infrastructure`, `Contracts`, and `Api` layers.
+-   **Authentication** is a primary feature, using JWT and refresh tokens, with endpoints for register/login under `api/v1/auth`.
+-   **CQRS** and **MediatR** are used for command/query separation and request handling.
+-   **Mapster** is used for object mapping between layers and DTOs.
+
 ## Burbder Dinner API
 
 -   [Bubder Dinner API](#burbder-dinner-api)
@@ -92,6 +99,7 @@ Response.Headers["Authorization"]
 -   `BusinessRuleValidationException`
 -   `RefreshTokenLimitExceededException`
 -   `RefreshTokenRequiredException`
+
     ```cs
     public class BusinessRuleValidationException : DomainException
     {
@@ -99,6 +107,7 @@ Response.Headers["Authorization"]
             : base(message) { }
     }
     ```
+
     ## **Fluxo execução Pipeline Behaviors MediatR**
 
 | Etapa | Componente              | Responsabilidade                                           |
