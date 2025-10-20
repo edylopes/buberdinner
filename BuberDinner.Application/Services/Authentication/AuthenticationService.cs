@@ -74,21 +74,5 @@ public class AuthenticationService : IAuthenticationService
         return _mapper.Map<AuthenticationResult>(user) with { accessToken = token };
 
     }
-    public async Task<OneOf<EmailConfimed, AppError>> ConfirmEmailAsync(Guid userId, CancellationToken ct)
-    {
-
-        var user = await _userRepository.GetByIdAsync(userId);
-
-        if (user is null)
-            return new EmailConfirmationFailed();
-        if (user.EmailConfirmed)
-            return new EmailAlreadyConfirmed();
-
-        user.ConfirmEmail();
-
-        _userRepository.Update(user);
-        await _uow.CommitAsync(ct);
-        return new EmailConfimed();
-
-    }
 }
+

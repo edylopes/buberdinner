@@ -19,10 +19,10 @@ public static class TypeUrl
 
 public abstract record AppError(int statusCode, string url, string message, string? title = null);
 
-public record DuplicatedEmailError(string url = TypeUrl.ConflictUrl)
-    : AppError(409, url, "User with email already exist");
-public record UserRoleNotAllowedError(string url = TypeUrl.UnauthorizedUrl)
-    : AppError(400, url, "User Role not allowed");
+public record DuplicatedEmailError(string url = TypeUrl.ConflictUrl, string title = "Conflict Error")
+    : AppError(409, url, "User with email already exist", title);
+public record UserRoleNotAllowedError(string url = TypeUrl.UnauthorizedUrl, string title = "Unauthorized Error")
+    : AppError(400, url, "User Role not allowed", title);
 public record UserNotFoundError(string url = TypeUrl.NotFoundUrl)
     : AppError(404, url, "User notfound");
 

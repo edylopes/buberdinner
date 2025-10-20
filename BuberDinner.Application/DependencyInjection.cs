@@ -5,6 +5,7 @@ using BuberDinner.Application.Services.Authentication;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace BuberDinner.Application;
 
@@ -16,8 +17,10 @@ public static class DependencyInjection
         // 1. Serviços da aplicação
 
         // 2. FluentValidation: registra todos os IValidator<T>
-        services.AddValidatorsFromAssemblyContaining<LoginCommandValidator>();
-        services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
+        //services.AddValidatorsFromAssemblyContaining<LoginCommandValidator>();
+        // services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+
         // 3. MediatR 
         services.AddMediatR(typeof(DependencyInjection).Assembly);
 

@@ -1,36 +1,35 @@
-using BuberDinner.Api.Utils;
+using System.Diagnostics;
 using BuberDinner.Domain.Common.Errors;
 
 namespace BuberDinner.Api.Common.Errors;
 
 public static class ErrorResults
 {
+    private static IHttpContextAccessor? _httpContextAccessor;
+    private static HttpContext _httpContext => _httpContextAccessor?.HttpContext!;
+
+    public static void Configure(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
     public static IActionResult FromError(AppError error)
     {
-        // var factory = httpContext.RequestServices.GetRequiredService<ProblemDetailsFactory>();
-        var (statusCode, url, message, title) = error;
+        var factory = _httpContext?.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+        var (statusCode, url, message, _) = error;
 
-        var problem = new ProblemDetails
-        {
+        var problemDetails = factory!.CreateProblemDetails(
 
-            Type = url,
-            Status = statusCode,
-            Title = title,
-            Detail = message
-        };
+            type: url,
+            statusCode: statusCode,
+            detail: message,
+            instance: _httpContext?.Request.Path.Value,
+            httpContext: _httpContext!
+        )
+        ;
 
-        /*       var problemDetails = factory.CreateProblemDetails(
-                 httpContext,
-                 type: url,
-                 statusCode: statusCode,
-                 title: title,
-                 detail: message
-             ); */
+        problemDetails.Extensions["errorType"] = error.GetType().Name;
 
-        problem.Extensions["errorType"] = error.GetType().Name;
-        problem.Extensions["traceId"] = System.Diagnostics.Activity.Current?.Id ?? Guid.NewGuid().ToString();
-
-        return new ObjectResult(problem) { StatusCode = statusCode, ContentTypes = { "application/problem+json" } };
+        return new ObjectResult(problemDetails) { StatusCode = statusCode, ContentTypes = { "application/problem+json" } };
     }
 }
 

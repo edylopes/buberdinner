@@ -9,19 +9,13 @@ namespace BuberDinner.Infrastructure.Services.SMTP;
 
 public class SmtpEmailService : IEmailService
 {
-
     private readonly SmtpOptions _options;
-
     private readonly IFluentEmail _fluentEmail;
-
     public SmtpEmailService(IOptions<SmtpOptions> options, IFluentEmail fluentEmail)
     {
-
         _options = options.Value;
         _fluentEmail = fluentEmail;
-
     }
-
     public async Task SendAsync(string to, string subject, string templateName, string name, Guid userId)
     {
         var model = new WelcomeEmail
@@ -31,7 +25,6 @@ public class SmtpEmailService : IEmailService
         };
         var templatePath = Path.Combine(AppContext.BaseDirectory, "Services/SMTP/Templates", $"{templateName}");
 
-        // Envia email
         await _fluentEmail
             .To(to)
             .SetFrom(_options.FromEmail, _options.FromName)

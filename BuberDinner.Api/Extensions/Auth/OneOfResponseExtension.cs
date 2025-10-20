@@ -37,7 +37,6 @@ public static class OneOfResponseExtension
         return result.ToResponseResult(
             success =>
             {
-
                 var payload = mapper.Map<AuthResponse>(success);
                 var response = responseFactory(payload);
                 return response
@@ -53,7 +52,6 @@ public static class OneOfResponseExtension
     {
         return result.ToAuthResponse(
             mapper,
-
             payload => HttpResults.Created(payload, $"api/v1/users{payload.id}")
         );
     }
@@ -65,7 +63,6 @@ public static class OneOfResponseExtension
         return result.ToAuthResponse(
             mapper,
             payload => HttpResults.Ok(payload)
-
         );
     }
     public static IActionResult ToOk<TSuccess>(this OneOf<TSuccess, AppError> result)

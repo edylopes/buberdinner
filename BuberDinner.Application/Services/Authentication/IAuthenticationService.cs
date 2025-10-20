@@ -15,5 +15,4 @@ public interface IAuthenticationService
     Task<OneOf<AuthenticationResult, AppError>> Register(
         RegisterCommand request
     );
-    Task<OneOf<EmailConfimed, AppError>> ConfirmEmailAsync(Guid userId, CancellationToken ct);
 }

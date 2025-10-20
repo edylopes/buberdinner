@@ -27,7 +27,7 @@ public class RepositoryBase<T> : IRepository<T> where T : class
     // Força o estado Added (útil se a entidade já tem Id preenchido)
     public void MarkAsAdded<TE>(TE entity)
     {
-        var entry = _context.Entry(entity);
+        var entry = _context.Entry(entity!);
         entry.State = EntityState.Added;
     }
     public void Update(T entity)

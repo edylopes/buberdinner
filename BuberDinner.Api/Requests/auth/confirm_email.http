@@ -1,0 +1,7 @@
+@Port=7104
+@BaseUrl=https://localhost
+
+# @name confirmEmail
+
+POST {{BaseUrl}}:{{Port}}/api/v1/auth/confirm-email?userId=99df258e-409b-44c5-9c57-93c43ff50daf
+Content-Type: application/json

@@ -4,7 +4,6 @@ using OneOf;
 
 namespace BuberDinner.Application.Common.Extensions
 {
-
     public static class OneOfExtensiopns
     {
         public static bool IsSuccess(this object response)
@@ -18,7 +17,6 @@ namespace BuberDinner.Application.Common.Extensions
              type.GetGenericTypeDefinition() == typeof(OneOf<,>)
                ? isT0Prop != null && (bool)isT0Prop.GetValue(response)!
                : false;
-
         }
         public static bool IsTOSuccess(this object response)
         {
@@ -27,6 +25,4 @@ namespace BuberDinner.Application.Common.Extensions
         }
 
     }
-
-
 }

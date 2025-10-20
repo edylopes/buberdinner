@@ -15,7 +15,7 @@ namespace BuberDinner.Domain.Entities
         [JsonIgnore]
         public Host Host { get; private set; } = new();
         protected Dinner() { }
-        public List<Guest> Guests { get; private set; } = new List<Guest>();
+        public List<Guest> Guests { get; private set; } = new();
         public int CurrentGuests { get; private set; }
         public string ImageUrl { get; private set; } = string.Empty;
         public string Address { get; private set; } = string.Empty; // Address where the dinner
