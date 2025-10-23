@@ -1,7 +1,8 @@
 using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Infrastructure.Authentication;
-using BuberDinner.Infrastructure.Persistence.Repositories.Context;
+using BuberDinner.Infrastructure.Persistence;
+using BuberDinner.Infrastructure.Persistence.Context;
 using BuberDinner.Infrastructure.Services.SMTP;
 
 namespace BuberDinner.Infrastructure;
@@ -19,7 +20,7 @@ public static class DependencyInjection
         serviceCollection.AddAuthentication(configuration);
         serviceCollection.AddSingleton<IDateTimeProvider, DateTimeProvider>();
 
-        serviceCollection.AddSMTPService(configuration);
+        serviceCollection.AddSmtpService(configuration);
 
         serviceCollection.AddScoped<IUnitOfWork, EfUnitOfWork>();
         serviceCollection.AddScoped<IDinnerRepository, DinnerRepository>();

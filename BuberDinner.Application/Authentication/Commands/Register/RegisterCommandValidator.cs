@@ -7,40 +7,38 @@ namespace BuberDinner.Application.Authentication.Commands.Register
   {
     public RegisterCommandValidator()
     {
-      RuleFor(c => c.email)
+      RuleFor(c => c.Email)
       .NotEmpty()
       .WithMessage("Email is required");
 
 
-      RuleFor(c => c.email)
+      RuleFor(c => c.Email)
         .EmailAddress()
-        .WithMessage("Given email is not valid")
-        .When(c => !string.IsNullOrWhiteSpace(c.email)); ;
+        .WithMessage("Given email is not valid");
 
 
-      RuleFor(c => c.password)
+      RuleFor(c => c.Password)
         .NotEmpty()
         .WithMessage("Password is required");
 
-      RuleFor(c => c.password)
+      RuleFor(c => c.Password)
         .MinimumLength(6)
-        .WithMessage("Passoword must pelo at least 6 characteres")
-        .When(c => !string.IsNullOrWhiteSpace(c.password));
+        .WithMessage("Passoword must pelo at least 6 characteres");
 
-      RuleFor(c => c.firstName)
+      RuleFor(c => c.FirstName)
         .NotEmpty()
         .WithMessage("Name is required");
 
-      RuleFor(c => c.firstName)
+      RuleFor(c => c.FirstName)
         .MinimumLength(3)
         .WithMessage("First name must be at least 3 characters");
 
 
-      RuleFor(c => c.lastName)
+      RuleFor(c => c.LastName)
      .NotEmpty()
      .WithMessage("Name is required");
 
-      RuleFor(c => c.lastName)
+      RuleFor(c => c.LastName)
      .MinimumLength(3)
      .WithMessage("First name must be at least 3 characters");
 

@@ -6,7 +6,7 @@ namespace BuberDinner.Api.Common.Errors;
 public static class ErrorResults
 {
     private static IHttpContextAccessor? _httpContextAccessor;
-    private static HttpContext _httpContext => _httpContextAccessor?.HttpContext!;
+    private static HttpContext HttpContext => _httpContextAccessor?.HttpContext!;
 
     public static void Configure(IHttpContextAccessor httpContextAccessor)
     {
@@ -14,7 +14,7 @@ public static class ErrorResults
     }
     public static IActionResult FromError(AppError error)
     {
-        var factory = _httpContext?.RequestServices.GetRequiredService<ProblemDetailsFactory>();
+        var factory = HttpContext?.RequestServices.GetRequiredService<ProblemDetailsFactory>();
         var (statusCode, url, message, _) = error;
 
         var problemDetails = factory!.CreateProblemDetails(
@@ -22,8 +22,8 @@ public static class ErrorResults
             type: url,
             statusCode: statusCode,
             detail: message,
-            instance: _httpContext?.Request.Path.Value,
-            httpContext: _httpContext!
+            instance: HttpContext?.Request.Path.Value,
+            httpContext: HttpContext!
         )
         ;
 

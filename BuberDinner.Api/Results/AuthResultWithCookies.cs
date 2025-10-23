@@ -28,7 +28,7 @@ internal class AuthResultWithCookies : IActionResult
 
         response.Cookies.Append(
             "refreshToken",
-            _result.refreshToken,
+            _result.RefreshToken,
             new CookieOptions
             {
                 HttpOnly = true,
@@ -38,16 +38,16 @@ internal class AuthResultWithCookies : IActionResult
             }
         );
 
-        response.Headers["Authorization"] = $"Bearer {_result.user}";
+        response.Headers["Authorization"] = $"Bearer {_result.User}";
 
         var result = _mapper.Map<AuthResponse>(_result);
 
-        var createdResult = new CreatedResult($"user/{result.id}", result);
+        var createdResult = new CreatedResult($"user/{result.Id}", result);
 
-        var OkResult = new OkObjectResult(result);
+        var okResult = new OkObjectResult(result);
 
         return _isNewResource
             ? createdResult.ExecuteResultAsync(context)
-            : OkResult.ExecuteResultAsync(context);
+            : okResult.ExecuteResultAsync(context);
     }
 }

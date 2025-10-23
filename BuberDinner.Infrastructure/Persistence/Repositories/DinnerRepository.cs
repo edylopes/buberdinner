@@ -1,45 +1,40 @@
-
+using BuberDinner.Application.Common.Dto.Dinners;
 using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
 using BuberDinner.Domain.Entities;
-using BuberDinner.Infrastructure.Persistence.Repositories.Context;
+using BuberDinner.Infrastructure.Persistence.Context;
+using MapsterMapper;
 
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories;
 
 public class DinnerRepository : RepositoryBase<Dinner>, IDinnerRepository
 {
-    public DinnerRepository(AppDbContext context) : base(context) { }
+    public DinnerRepository(AppDbContext context, IMapper mapper) :
+          base(context, mapper) { }
 
-    public async Task<Dinner?> GetByIdAsync(Guid id)
+    public async Task<DinnerDto?> GetByIdAsync(Guid id)
     {
-        return await _context.Dinners
+        var dinner =  await Context.Dinners
             .Include(u => u.Host)
-            .FirstOrDefaultAsync(u => u.Id == id);
-    }
+            .Where(d => d.Id == id)
+            .Select(d => Mapper.Map<DinnerDto>(d))
+            .FirstOrDefaultAsync();
 
-
-    public List<Dinner> ListDinnersAsync()
-    {
-        return _context.Dinners
-          .Include(d => d.Host)
-          .ToList();
+        return dinner;
     }
-    public async Task<List<Dinner>> ListUserDinnersAsync(Guid id, bool active)
+    
+    public async Task<List<DinnerDto>> ListUserDinnersAsync(Guid userId, bool active = true)
     {
-        var dinners = _context.Dinners
+        var dinnersDto = await  Context.Dinners
                        .AsNoTracking()
                        .Include(d => d.Guests)
                        .Include(d => d.Host)
-                       .Where(d => active ? d.HostId == id && d.IsActive : d.HostId == id)
-                       .ToList();
+                       .Where(d => active ? d.HostId == userId && d.IsActive : d.HostId == userId)
+                       .Select(dinners =>  Mapper.Map<DinnerDto>(dinners))
+                       .ToListAsync(); //add-hoc query
 
-        return dinners;
+        return  dinnersDto;
     }
-    public async Task<Dinner> GetDinnersActiveAsync()
-    {
-
-        throw new NotImplementedException();
-    }
-
 }
+
 

@@ -1,5 +1,6 @@
 
 using System.Text.Json.Serialization;
+using BuberDinner.Domain.Entities.Users;
 
 
 namespace BuberDinner.Domain.Entities;

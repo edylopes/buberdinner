@@ -3,7 +3,7 @@ using AspNetCoreRateLimit;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Common.Mapping;
 using BuberDinner.Application;
-using BuberDinner.Application.Common.Services;
+using BuberDinner.Application.Common.Interfaces.Services;
 using BuberDinner.Infrastructure;
 using BuberDinner.Infrastructure.Authentication;
 using BuberDinner.Infrastructure.Services.SMTP.Configurations;
@@ -17,30 +17,22 @@ public static class DependencyInjection
         IConfiguration configuration
     )
     {
-        //Add Mapping 
         services.AddMappings();
+        services.AddInfrastructureServices(configuration);
+        services.AddApplicationServices();
         services.AddHttpContextAccessor();
 
-        services.AddInfrastructureServices(configuration);
-
-        services.AddApplicationServices();
         // JWT Configuration
-        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Jwt));
+        services.AddRateLimiting(configuration);
 
-        // Rate limit counter and rules store
-        services.Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"));
-        services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
-        services.AddMemoryCache();
-        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
-        services.AddInMemoryRateLimiting();
-
-        //Smtp Email Service Configuration (errado) cria container Paralelo
+        // Email Service Configuration
+        //(errado) cria container Paralelo
         /*    using var serviceProvider = services.BuildServiceProvider();
               using var smtpClient = serviceProvider
-                                   .GetRequiredService<SmtpClientFactory>()
-                                   .Create(); 
-        */
+                                    .GetRequiredService<SmtpClientFactory>()
+                                    .Create(); */
+
         var smtpConfig = configuration.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>()!;
 
         services
@@ -66,7 +58,19 @@ public static class DependencyInjection
         // await email.SendAsync("fenderlopes@gmail.com", "Test Email Buber Dinner", "WelcomeEmail.cshtml", "Ednei", Guid.NewGuid());
         // logger.LogInformation("✅ E-mail de teste enviado com sucesso!");
 
-
         return app;
+    }
+
+    public static IServiceCollection AddRateLimiting(this IServiceCollection services, IConfiguration configuration)
+    {
+        // Rate limit counter and rules store
+        services.Configure<IpRateLimitPolicies>(configuration.GetSection("IpRateLimitPolicies"));
+        services.Configure<IpRateLimitOptions>(configuration.GetSection("IpRateLimiting"));
+        services.AddMemoryCache();
+        services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+        services.AddSingleton<IProcessingStrategy, AsyncKeyLockProcessingStrategy>();
+        services.AddInMemoryRateLimiting();
+
+        return services;
     }
 }

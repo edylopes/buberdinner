@@ -1,4 +1,5 @@
-using BuberDinner.Application.Authentication.Dto;
+using BuberDinner.Application.Authentication.Common.Dto;
+using BuberDinner.Application.Common.Dto;
 using BuberDinner.Application.Common.Errors;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;

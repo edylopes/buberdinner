@@ -1,6 +1,8 @@
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Text.Json;
 using BuberDinner.Domain.ValueObjects;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
+namespace BuberDinner.Infrastructure.Configuration;
 
 public static class UserRoleConverter
 {

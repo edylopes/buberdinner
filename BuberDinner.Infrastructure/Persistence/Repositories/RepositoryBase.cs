@@ -1,19 +1,22 @@
 using System.Linq.Expressions;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
-using BuberDinner.Infrastructure.Persistence.Repositories.Context;
+using BuberDinner.Infrastructure.Persistence.Context;
+using MapsterMapper;
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories;
 
 public class RepositoryBase<T> : IRepository<T> where T : class
 {
-    protected readonly AppDbContext _context;
+    protected readonly AppDbContext Context;
+    protected readonly IMapper Mapper;
 
-    protected readonly DbSet<T> _dbSet;
+    protected readonly DbSet<T> DbSet;
 
-    public RepositoryBase(AppDbContext context)
+    public RepositoryBase(AppDbContext context, IMapper mapper)
     {
-        _context = context;
-        _dbSet = context.Set<T>();
+        Context = context;
+        Mapper = mapper;
+        DbSet = context.Set<T>();
     }
 
     // Add (EF marca como Added automaticamente)
@@ -21,22 +24,22 @@ public class RepositoryBase<T> : IRepository<T> where T : class
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
-        await _dbSet.AddAsync(entity);
+        await DbSet.AddAsync(entity);
     }
 
     // Força o estado Added (útil se a entidade já tem Id preenchido)
     public void MarkAsAdded<TE>(TE entity)
     {
-        var entry = _context.Entry(entity!);
+        var entry = Context.Entry(entity!);
         entry.State = EntityState.Added;
     }
     public void Update(T entity)
     {
         if (entity == null)
             throw new ArgumentNullException(nameof(entity));
-        var entry = _context.Entry(entity);
+        var entry = Context.Entry(entity);
         if (entry.State == EntityState.Detached)
-            _dbSet.Attach(entity);
+            DbSet.Attach(entity);
 
         entry.State = EntityState.Modified;
     }
@@ -44,18 +47,19 @@ public class RepositoryBase<T> : IRepository<T> where T : class
     {
         if (entity == null)
             throw new ArgumentNullException($"{entity?.GetType().Name} is required", nameof(entity));
-        var entry = _context.Entry(entity);
+        var entry = Context.Entry(entity);
 
         if (entry.State == EntityState.Detached)
-            _dbSet.Attach(entity);
+            DbSet.Attach(entity);
 
-        _dbSet.Remove(entity);
+        DbSet.Remove(entity);
 
     }
     public virtual async Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate)
     {
         if (predicate == null)
             throw new ArgumentNullException(nameof(predicate));
-        return await _dbSet.AnyAsync(predicate);
+        return await DbSet.AnyAsync(predicate);
     }
+    
 }

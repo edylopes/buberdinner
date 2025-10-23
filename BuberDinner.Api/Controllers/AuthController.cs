@@ -6,13 +6,14 @@ using BuberDinner.Application.Authentication.Commands.Email;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Api.Extensions;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BuberDinner.Api.Controllers;
 
 
 [ApiController]
 [Route("api/v1/auth")]
-
+[AllowAnonymous]
 public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;

@@ -4,12 +4,12 @@ namespace BuberDinner.Api.Common.Errors;
 
 internal static class ErrorMapper
 {
-    private static readonly Dictionary<Type, AppError> _mappings = new();
+    private static readonly Dictionary<Type, AppError> Mappings = new();
     public static void Register(AppError error)
 
     {
         var type = error.GetType();
-        _mappings[type] = error;
+        Mappings[type] = error;
 
     }
 
@@ -17,7 +17,7 @@ internal static class ErrorMapper
     {
         Register(error);
         var type = error.GetType();
-        return _mappings.TryGetValue(type, out var mapping) ? mapping : null;
+        return Mappings.TryGetValue(type, out var mapping) ? mapping : null;
     }
 
 }

@@ -6,7 +6,6 @@ using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
-using BuberDinner.Domain.users.Events;
 using MapsterMapper;
 using OneOf;
 
@@ -40,8 +39,8 @@ public static class OneOfResponseExtension
                 var payload = mapper.Map<AuthResponse>(success);
                 var response = responseFactory(payload);
                 return response
-                     .WithCookie("RefreshToken", success.refreshToken)
-                     .WithHeader("Authorization", success.accessToken);
+                     .WithCookie("RefreshToken", success.RefreshToken)
+                     .WithHeader("Authorization", success.AccessToken);
             }
         );
 
@@ -52,7 +51,7 @@ public static class OneOfResponseExtension
     {
         return result.ToAuthResponse(
             mapper,
-            payload => HttpResults.Created(payload, $"api/v1/users{payload.id}")
+            payload => HttpResults.Created(payload, $"api/v1/users{payload.Id}")
         );
     }
 

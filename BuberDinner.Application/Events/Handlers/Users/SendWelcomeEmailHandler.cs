@@ -1,6 +1,5 @@
-
-using BuberDinner.Application.Common.Services;
-using BuberDinner.Domain.users.Events;
+using BuberDinner.Application.Common.Interfaces.Services;
+using BuberDinner.Domain.Entities.Users.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -20,8 +19,8 @@ namespace BuberDinner.Application.Events.Handlers.Users
         }
         public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
         {
-            await _emailService.SendAsync(notification.email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.name, notification.userId);
-            _logger.LogInformation("Sending welcome email to {Email}", notification.email);
+            await _emailService.SendAsync(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name, notification.UserId);
+            _logger.LogInformation("Sending welcome email to {Email}", notification.Email);
         }
     }
 }

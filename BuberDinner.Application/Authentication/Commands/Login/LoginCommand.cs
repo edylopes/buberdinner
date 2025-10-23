@@ -5,5 +5,5 @@ using OneOf;
 
 namespace BuberDinner.Application.Authentication.Commands.Login;
 
-public record LoginCommand(string email, string password)
+public record LoginCommand(string Email, string Password)
     : IRequest<OneOf<AuthenticationResult, AppError>>;

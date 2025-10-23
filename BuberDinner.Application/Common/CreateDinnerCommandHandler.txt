@@ -1,0 +1,40 @@
+Application/
+├── Dinners/
+│   ├── Commands/
+│   │   ├── CreateDinner/
+│   │   │   ├── CreateDinnerCommand.cs
+│   │   │   ├── CreateDinnerCommandHandler.cs
+│   │   │   └── CreateDinnerCommandValidator.cs
+│   │   ├── UpdateDinner/
+│   │   │   ├── UpdateDinnerCommand.cs
+│   │   │   ├── UpdateDinnerCommandHandler.cs
+│   │   │   └── UpdateDinnerCommandValidator.cs
+│   │   └── DeleteDinner/
+│   │       ├── DeleteDinnerCommand.cs
+│   │       └── DeleteDinnerCommandHandler.cs
+│   └── Queries/
+│       ├── GetDinner/
+│       │   ├── GetDinnerQuery.cs
+│       │   └── GetDinnerQueryHandler.cs
+│       └── ListUserDinners/
+│           ├── ListUserDinnersQuery.cs
+│           └── ListUserDinnersQueryHandler.cs
+├── Authentication/
+│   ├── Commands/
+│   │   ├── Register/
+│   │   │   ├── RegisterCommand.cs
+│   │   │   ├── RegisterCommandHandler.cs
+│   │   │   └── RegisterCommandValidator.cs
+│   │   └── Login/
+│   │       ├── LoginCommand.cs
+│   │       ├── LoginCommandHandler.cs
+│   │       └── LoginCommandValidator.cs
+│   └── Queries/
+│       └── ... (se houver)
+├── Menus/
+│   ├── Commands/
+│   └── Queries/
+└── Common/
+    ├── Behaviors/
+    ├── Interfaces/
+    └── Dto/

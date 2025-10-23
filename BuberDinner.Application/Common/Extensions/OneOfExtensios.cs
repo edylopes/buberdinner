@@ -18,7 +18,7 @@ namespace BuberDinner.Application.Common.Extensions
                ? isT0Prop != null && (bool)isT0Prop.GetValue(response)!
                : false;
         }
-        public static bool IsTOSuccess(this object response)
+        public static bool IsToSuccess(this object response)
         {
             var prop = response.GetType().GetProperty("IsT0");
             return prop != null && (bool)prop.GetValue(response)!;

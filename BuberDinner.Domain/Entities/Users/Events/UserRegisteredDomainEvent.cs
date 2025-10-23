@@ -1,9 +1,9 @@
 
 using BuberDinner.Domain.Common.Interfaces;
 
-namespace BuberDinner.Domain.users.Events;
+namespace BuberDinner.Domain.Entities.Users.Events;
 
-public record UserRegisteredDomainEvent(Guid userId, string email, string name) : IDomainEvent
+public record UserRegisteredDomainEvent(Guid UserId, string Email, string Name) : IDomainEvent
 {
     public DateTime OccurredOn => DateTime.UtcNow;
 }

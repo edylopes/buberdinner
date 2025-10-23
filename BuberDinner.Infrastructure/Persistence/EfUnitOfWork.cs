@@ -1,11 +1,9 @@
-
 using BuberDinner.Domain.Common.Interfaces;
-using BuberDinner.Domain.Events.Interfaces;
-using BuberDinner.Infrastructure.Persistence.Repositories.Context;
+using BuberDinner.Infrastructure.Persistence.Context;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace BuberDinner.Infrastructure.Persistence.Repositories;
+namespace BuberDinner.Infrastructure.Persistence;
 
 public class EfUnitOfWork : IUnitOfWork
 {

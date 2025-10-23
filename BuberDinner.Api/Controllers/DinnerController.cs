@@ -1,5 +1,5 @@
-
 using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
+using BuberDinner.Contracts.Dinners;
 using Microsoft.AspNetCore.Authorization;
 
 
@@ -18,14 +18,14 @@ public class DinnerController : Controller
         _logger = logger;
         _dinnerRepository = dinnerRepository;
     }
-
+    
     [HttpGet("privacy")]
     public IActionResult Privacy()
     {
         return Ok();
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetById([FromRoute] Guid id)
     {
         var dinner = await _dinnerRepository.GetByIdAsync(id);
@@ -33,12 +33,18 @@ public class DinnerController : Controller
             NotFound() : Ok(dinner);
     }
 
-    [HttpGet("list/{id}")]
-    public async Task<IActionResult> List(
-        [FromRoute] Guid id,
+    [HttpPost("create")]
+
+    public ActionResult Create([FromBody] DinnerRequest dinner)
+    {
+        return Ok();
+    }
+    [HttpGet("list/{id:guid}")]
+    public IActionResult List(
+        [FromRoute] Guid userId,
         [FromQuery] bool onlyActives = false)
     {
-        var result = await _dinnerRepository.ListUserDinnersAsync(id, onlyActives);
+        var result =  _dinnerRepository.ListUserDinnersAsync(userId);
         return Ok(result);
     }
 }
