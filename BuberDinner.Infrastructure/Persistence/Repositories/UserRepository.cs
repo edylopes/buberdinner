@@ -1,19 +1,21 @@
 
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Domain.Entities;
-using BuberDinner.Infrastructure.Persistence.Repositories.Context;
+using BuberDinner.Domain.Entities.Users;
+using BuberDinner.Infrastructure.Persistence.Context;
+using MapsterMapper;
 
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories;
 
 public class UserRepository : RepositoryBase<User>, IUserRepository
 {
-    public UserRepository(AppDbContext context) : base(context) { }
+    public UserRepository(AppDbContext context, IMapper mapper) : base(context, mapper) { }
     public async Task<User?> GetByIdAsync(Guid id)
-    => await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+    => await Context.Users.FirstOrDefaultAsync(u => u.Id == id);
 
     public async Task<User?> GetByEmailAsync(string email)
-    => await _context.Users
+    => await Context.Users
             .Include(u => u.RefreshTokens)
             .FirstOrDefaultAsync(u => u.Email == email);
     public Task AddRefreshTokenAsync(RefreshToken refreshToken)
@@ -23,9 +25,9 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
 
     public void UpdateEmailConfirmed(User user)
     {
-        _context.Attach(user);
-        _context.Entry(user).Property(u => u.EmailConfirmed).IsModified = true;
-        _context.Entry(user).Property(u => u.UpdatedAt).IsModified = true;
+        Context.Attach(user);
+        Context.Entry(user).Property(u => u.EmailConfirmed).IsModified = true;
+        Context.Entry(user).Property(u => u.UpdatedAt).IsModified = true;
     }
 
 }

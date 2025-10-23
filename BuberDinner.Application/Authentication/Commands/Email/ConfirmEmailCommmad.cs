@@ -1,5 +1,5 @@
-
-using BuberDinner.Application.Authentication.Dto;
+using BuberDinner.Application.Authentication.Common.Dto;
+using BuberDinner.Application.Common.Dto;
 using BuberDinner.Domain.Common.Errors;
 using MediatR;
 using OneOf;

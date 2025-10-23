@@ -1,10 +1,10 @@
 using System.Net.Mail;
 using BuberDinner.Domain.Common;
+using BuberDinner.Domain.Entities.Users.Events;
 using BuberDinner.Domain.Exceptions;
-using BuberDinner.Domain.users.Events;
 using BuberDinner.Domain.ValueObjects;
 
-namespace BuberDinner.Domain.Entities;
+namespace BuberDinner.Domain.Entities.Users;
 
 public class User : AggregateRoot
 {
@@ -43,14 +43,14 @@ public class User : AggregateRoot
             throw new ArgumentNullException();
 
         if (_refreshTokens.Any(r => r.Token.Trim() == refreshToken.Token.Trim()))
-            throw new InvalidOperationException("RefreshToken already exist"); ;
+            throw new InvalidOperationException("RefreshToken already exist"); 
 
         if (_refreshTokens.Count(rt => rt is { IsExpired: false, Revoked: false }) >= 5)
             throw new RefreshTokenLimitExceededException("Refresh token quota reached.");
 
-        if (!_refreshTokens.Any(t => t.Id == refreshToken.Id))
-            _refreshTokens.Add(refreshToken);
-    }
+        if (_refreshTokens.All(t => t.Id != refreshToken.Id))
+             _refreshTokens.Add(refreshToken);
+    }  
     public void RevokeRefreshToken(Guid refreshTokenId)
     {
         var refreshToken = _refreshTokens.FirstOrDefault(rt => rt.Id == refreshTokenId);

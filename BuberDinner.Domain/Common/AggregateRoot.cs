@@ -1,6 +1,5 @@
 
 using BuberDinner.Domain.Common.Interfaces;
-using BuberDinner.Domain.Events.Interfaces;
 
 namespace BuberDinner.Domain.Common;
 

@@ -3,6 +3,7 @@ using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Entities;
+using BuberDinner.Domain.Entities.Users;
 using Mapster;
 
 namespace BuberDinner.Application.Common.Mapping;
@@ -19,13 +20,13 @@ public class AuthRegisterMapping : IRegister
             );
 
         config.NewConfig<LoginRequest, LoginCommand>()
-                .Map(dest => dest.email, src => src.email)
-                .Map(dest => dest.password, src => src.password)
+                .Map(dest => dest.Email, src => src.Email)
+                .Map(dest => dest.Password, src => src.Password)
                 .TwoWays();
 
         config.NewConfig<RegisterRequest, RegisterCommand>()
                .ConstructUsing(src =>
-               new RegisterCommand(src.firstName, src.lastName, src.email, src.password));
+               new RegisterCommand(src.FirstName, src.LastName, src.Email, src.Password));
 
     }
 }

@@ -1,3 +1,5 @@
+using BuberDinner.Domain.Entities.Users;
+
 namespace BuberDinner.Domain.Entities
 {
     public class Host
@@ -7,6 +9,6 @@ namespace BuberDinner.Domain.Entities
         public string Email { get; set; } = string.Empty;
         public Guid UserId { get; set; }
         public User? User { get; set; } // Navigation property to User entity
-        public List<Dinner> Dinners { get; set; } = new List<Dinner>();
+        public List<Dinner> Dinners { get; set; } = new();
     }
 }

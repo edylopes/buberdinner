@@ -1,7 +1,7 @@
-
 using System.Security.Cryptography;
-using BuberDinner.Domain.Events.Interfaces;
-namespace BuberDinner.Domain.Users.Events
+using BuberDinner.Domain.Common.Interfaces;
+
+namespace BuberDinner.Domain.Entities.Users.Events
 {
     public class UserLoggedInHandler : IDomainEventHandler<UserLoggedInEvent>
     {

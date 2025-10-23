@@ -7,9 +7,11 @@ namespace BuberDinner.Infrastructure.Authentication
 {
     public static class JwtDepencyInjection
     {
-        public static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAuthentication(
+          this IServiceCollection services,
+          IConfiguration configuration)
         {
-            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.JWT));
+            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Jwt));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             services.ToAuth(configuration);
 
@@ -20,7 +22,7 @@ namespace BuberDinner.Infrastructure.Authentication
             this IServiceCollection services,
             IConfiguration configuration)
         {
-            var section = configuration.GetSection(JwtSettings.JWT);
+            var section = configuration.GetSection(JwtSettings.Jwt);
 
             var key = section["SecretKey"]!;
             var aud = section["Audience"]!;

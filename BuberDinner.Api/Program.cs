@@ -2,7 +2,6 @@ using AspNetCoreRateLimit;
 using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
-using BuberDinner.Application.Common.Services;
 using BuberDinner.Infrastructure.Authentication;
 using BuberDinner.Infrastructure.Services.SMTP;
 using Microsoft.OpenApi.Models;

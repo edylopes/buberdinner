@@ -26,7 +26,6 @@ namespace BuberDinner.Domain.Entities
 
         private Dinner(string name, string description, DateTime date, decimal price, string address)
         {
-            //Validarions
             Name = name;
             Description = description;
             Date = date;
@@ -37,11 +36,11 @@ namespace BuberDinner.Domain.Entities
 
         public Dinner Create(string name, string description, DateTime date, decimal price, string address)
           => new(name, description, date, price, address);
-
-
+        
         public void Desactive()
         {
             IsActive = false;
+            MarkUpdated(); 
         }
 
 

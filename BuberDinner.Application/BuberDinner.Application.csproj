@@ -30,4 +30,10 @@
     <ProjectReference Include="..\BuberDinner.Contracts\BuberDinner.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Dinners\Commands\" />
+    <Folder Include="Dinners\Queries\" />
+    <Folder Include="Menus\" />
+  </ItemGroup>
+
 </Project>

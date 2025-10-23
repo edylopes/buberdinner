@@ -1,4 +1,3 @@
-using BuberDinner.Application.Common.Services;
 using BuberDinner.Infrastructure.Services.SMTP.Configurations;
 using Microsoft.Extensions.Options;
 using FluentEmail.Core;

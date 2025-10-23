@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Polly;
 using BuberDinner.Application.Common.Extensions;
-using BuberDinner.Domain.Events.Interfaces;
+using BuberDinner.Domain.Common.Interfaces;
 
 
 namespace BuberDinner.Application.Authentication.Common.Beahviors;
@@ -25,12 +25,12 @@ where TResponse : IOneOf
     private readonly IPublisher _publisher;
     public TransactionBehavior(IUnitOfWork uow,
     ILogger<TransactionBehavior<TRequest, TResponse>> logger,
-    IPublisher _publisher
+    IPublisher publisher
     )
     {
         this._uow = uow;
         this._logger = logger;
-        this._publisher = _publisher;
+        this._publisher = publisher;
     }
     public async Task<TResponse> Handle(
     TRequest request,

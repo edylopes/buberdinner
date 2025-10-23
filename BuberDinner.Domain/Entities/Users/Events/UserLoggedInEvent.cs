@@ -2,7 +2,7 @@
 
 using BuberDinner.Domain.Common.Interfaces;
 
-namespace BuberDinner.Domain.Users.Events;
+namespace BuberDinner.Domain.Entities.Users.Events;
 
 public class UserLoggedInEvent : IDomainEvent
 {

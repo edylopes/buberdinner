@@ -1,9 +1,6 @@
-
-
 using System.Collections;
-using BuberDinner.Domain.Common.Interfaces;
 
-namespace BuberDinner.Domain.Events.Interfaces;
+namespace BuberDinner.Domain.Common.Interfaces;
 
 public class DomainEventDispatcher : IDomainEventDispatcher
 {
