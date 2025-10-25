@@ -1,4 +1,3 @@
-using BuberDinner.Application.Authentication.Common.Beahviors;
 using BuberDinner.Application.Services.Authentication;
 using FluentValidation;
 using MediatR;

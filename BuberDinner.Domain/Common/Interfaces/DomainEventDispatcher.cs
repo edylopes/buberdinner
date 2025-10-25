@@ -1,5 +1,6 @@
 using System.Collections;
 
+
 namespace BuberDinner.Domain.Common.Interfaces;
 
 public class DomainEventDispatcher : IDomainEventDispatcher
@@ -19,4 +20,8 @@ public class DomainEventDispatcher : IDomainEventDispatcher
         foreach (dynamic handler in handlers)
             await handler.Handle((dynamic)domainEvent);
     }
+}
+public interface IDomainEventDispatcher
+{
+    Task Dispatch(IDomainEvent domainEvent);
 }

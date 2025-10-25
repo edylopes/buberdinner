@@ -1,0 +1,54 @@
+﻿services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: buberdinner-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${DB_PASSWORD}
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    networks:
+      - buberdinner-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pidof sqlservr || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  buberdinner.api:
+    image: buberdinner.api
+    container_name: buberdinner-api
+    build:
+      context: .
+      dockerfile: BuberDinner.Api/Dockerfile
+    ports:
+      - "5000:80"
+      - "5001:443"
+    env_file:
+      - .env
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - ConnectionStrings__DefaultConnection=${CONNECTION_STRING}
+      - JwtSettings__SecretKey=${JWT_SECRET}
+      - SmtpOptions__Host=${SMTP__Host}
+      - SmtpOptions__UserName=${SMTP__UserName}
+      - SmtpOptions__Password=${SMTP__Password}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - buberdinner-network
+
+volumes:
+  sqlserver-data:
+    driver: local
+
+networks:
+  buberdinner-network:
+    driver: bridge

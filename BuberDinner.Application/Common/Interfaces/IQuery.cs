@@ -1,9 +1,9 @@
 
 using MediatR;
 
-namespace BuberDinner.Application.Authentication.Queries;
+namespace BuberDinner.Application.Common.Interfaces;
 
-public interface IQuery<TResponse> : IRequest<TResponse>
+public interface IQuery<out TResponse> : IRequest<TResponse>
 {
     
 }

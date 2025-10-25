@@ -1,5 +1,7 @@
+
 using BuberDinner.Domain.Entities;
 using BuberDinner.Domain.Entities.Users;
+using Host = BuberDinner.Domain.Entities.Hosts.Host;
 
 namespace BuberDinner.Infrastructure.Persistence.Context;
 

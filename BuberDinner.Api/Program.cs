@@ -3,7 +3,10 @@ using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
 using BuberDinner.Infrastructure.Authentication;
+using BuberDinner.Infrastructure.Persistence;
+using BuberDinner.Infrastructure.Persistence.Context;
 using BuberDinner.Infrastructure.Services.SMTP;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 
@@ -27,10 +30,17 @@ builder.Services.AddSwaggerGen(c =>
         Description = "BuberDinner API",
     });
 });
+
+//Aplly MIGRATIONS
+builder.Services.AddHostedService<MigrationHostedService>();
+
 // builder.Services.AddEndpointsApiExplorer();
 
 
 var app = builder.Build();
+
+
+
 
 
 app.UseApiConfigurations();

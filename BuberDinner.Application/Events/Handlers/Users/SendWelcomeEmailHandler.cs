@@ -1,6 +1,5 @@
 using BuberDinner.Application.Common.Interfaces.Services;
 using BuberDinner.Domain.Entities.Users.Events;
-using MediatR;
 using Microsoft.Extensions.Logging;
 
 

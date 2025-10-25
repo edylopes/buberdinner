@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using BuberDinner.Domain.Common.Errors;
 
 namespace BuberDinner.Api.Common.Errors;
@@ -24,12 +23,10 @@ public static class ErrorResults
             detail: message,
             instance: HttpContext?.Request.Path.Value,
             httpContext: HttpContext!
-        )
-        ;
+        );
 
         problemDetails.Extensions["errorType"] = error.GetType().Name;
 
         return new ObjectResult(problemDetails) { StatusCode = statusCode, ContentTypes = { "application/problem+json" } };
     }
 }
-

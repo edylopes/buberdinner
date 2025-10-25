@@ -1,11 +1,11 @@
-@Host=https://localhost:7104/api/v1
+@Host=http://localhost:5000/api/v1
 
 POST {{Host}}/auth/register
 Content-Type: application/json
 
 { 
-  "firstName": "wesley",
-  "lastName": "Paulo",
-  "email": "t_wesley.paulo@hapvida.com.br",
+  "firstName": "Ednei",
+  "lastName": "Lopes",
+  "email": "fenderlopes@gmail.com",
   "password": "crypto" 
 }

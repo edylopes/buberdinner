@@ -15,5 +15,4 @@ public class WelcomeEmail
     public string HelpUrl { get; set; } = "#";
     public string SupportUrl { get; set; } = "#";
 
-
 }

@@ -1,8 +1,6 @@
-
-
-
 using System.Text.Json.Serialization;
 using BuberDinner.Domain.Common;
+using BuberDinner.Domain.Entities.Hosts;
 
 namespace BuberDinner.Domain.Entities
 {

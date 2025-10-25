@@ -31,8 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dinners\Commands\" />
-    <Folder Include="Dinners\Queries\" />
+    <Folder Include="Authentication\Queries\" />
+    <Folder Include="Dinners\Commands\CreateDinner\" />
+    <Folder Include="Dinners\Queries\GetDinner\" />
     <Folder Include="Menus\" />
   </ItemGroup>
 

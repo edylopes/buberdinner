@@ -33,6 +33,11 @@
   <ItemGroup>
     <Content Include="Services/SMTP/Templates/*.cshtml" CopyToOutputDirectory="Always" />
   </ItemGroup>
+    <ItemGroup>
+        <None Update="Services\SMTP\Templates\*.cshtml">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Services/SMTP/Templates/*.cshtml" />
   </ItemGroup>

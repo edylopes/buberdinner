@@ -2,7 +2,7 @@ using BuberDinner.Domain.Entities.Users;
 
 namespace BuberDinner.Domain.Entities.Hosts;
 
-    public class Hosts
+    public class Host
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = string.Empty;

@@ -2,9 +2,8 @@ using BuberDinner.Application.Common.Dto.Dinners;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
 using MapsterMapper;
-using MediatR;
 
-namespace BuberDinner.Application.Dinners.Queries;
+namespace BuberDinner.Application.Dinners.Queries.ListUserDinners;
 
 public class ListUserDinnersQueryHandler : IRequestHandler<ListUserDinnersQuery, List<DinnerDto>>
 {
@@ -16,10 +15,9 @@ public class ListUserDinnersQueryHandler : IRequestHandler<ListUserDinnersQuery,
         _mapper = mapper;
         _dinnerRepository = dinnerRepository;
     }
-    public Task<List<DinnerDto>> Handle(ListUserDinnersQuery request, CancellationToken cancellationToken)
+    public async Task<List<DinnerDto>> Handle(ListUserDinnersQuery request, CancellationToken cancellationToken)
     {
-        var dinners = _dinnerRepository.ListUserDinnersAsync(request.UserId, active: true);
-         var result =  _mapper.Map<List<DinnerDto>>(dinners);
-         return  Task.FromResult(result);
+        var dinners =  await _dinnerRepository.ListUserDinnersAsync(request.UserId, active: true);
+        return dinners;
     }
 }  

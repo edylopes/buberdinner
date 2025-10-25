@@ -1,7 +1,5 @@
 using BuberDinner.Api.Common.Mapping.Authentication;
-using BuberDinner.Application.Authentication.Queries;
 using BuberDinner.Application.Common.Mapping;
-using BuberDinner.Contracts.Authentication;
 using Mapster;
 using MapsterMapper;
 

@@ -1,7 +1,7 @@
-using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
+
+using BuberDinner.Application.Dinners.Queries.ListUserDinners;
 using BuberDinner.Contracts.Dinners;
 using Microsoft.AspNetCore.Authorization;
-
 
 namespace BuberDinner.Api.Controllers;
 
@@ -11,12 +11,12 @@ namespace BuberDinner.Api.Controllers;
 public class DinnerController : Controller
 {
     private readonly ILogger<DinnerController> _logger;
-    private readonly IDinnerRepository _dinnerRepository;
+    private readonly ISender _mediator;
 
-    public DinnerController(ILogger<DinnerController> logger, IDinnerRepository dinnerRepository)
+    public DinnerController(ILogger<DinnerController> logger, ISender mediator)
     {
         _logger = logger;
-        _dinnerRepository = dinnerRepository;
+        _mediator = mediator;
     }
     
     [HttpGet("privacy")]
@@ -26,25 +26,23 @@ public class DinnerController : Controller
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetById([FromRoute] Guid id)
+    public IActionResult GetById([FromRoute] Guid id)
     {
-        var dinner = await _dinnerRepository.GetByIdAsync(id);
-        return dinner is null ?
-            NotFound() : Ok(dinner);
+        return  Ok();
     }
-
     [HttpPost("create")]
 
     public ActionResult Create([FromBody] DinnerRequest dinner)
-    {
+    {  
+        _logger.LogInformation("Dinner creation sucesfully");
         return Ok();
     }
     [HttpGet("list/{id:guid}")]
-    public IActionResult List(
+    public async Task<IActionResult> List(
         [FromRoute] Guid userId,
-        [FromQuery] bool onlyActives = false)
+        [FromQuery] bool active = true)
     {
-        var result =  _dinnerRepository.ListUserDinnersAsync(userId);
-        return Ok(result);
+        var dinners  = await _mediator.Send(new ListUserDinnersQuery(userId, active));
+        return Ok(dinners);
     }
 }

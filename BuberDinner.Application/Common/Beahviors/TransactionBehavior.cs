@@ -1,20 +1,14 @@
-
-using BuberDinner.Application.Authentication.Queries;
+using BuberDinner.Application.Common.Extensions;
+using BuberDinner.Application.Common.Interfaces;
 using BuberDinner.Application.Common.Interfaces.Persistence;
+using BuberDinner.Domain.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Polly.Retry;
-
-using BuberDinner.Domain.Common;
-
-using Microsoft.EntityFrameworkCore;
 using OneOf;
 using Polly;
-using BuberDinner.Application.Common.Extensions;
-using BuberDinner.Domain.Common.Interfaces;
+using Polly.Retry;
 
-
-namespace BuberDinner.Application.Authentication.Common.Beahviors;
+namespace BuberDinner.Application.Common.Beahviors;
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : IRequest<TResponse>
@@ -42,18 +36,24 @@ where TResponse : IOneOf
 
         try
         {
+            _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
+            await _uow.BeginTransactionAsync(cancellationToken);
             // First try without transaction to validate
             var response = await next();
             // Only open transaction if success
             if (response.IsSuccess())
             {
-                _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
-                await _uow.BeginTransactionAsync(cancellationToken);
+
 
                 await GetRetryPolicy().ExecuteAsync(async () => //Retry
                 {
                     await _uow.CommitAsync(cancellationToken);
-                    await PublishEventsHandler(cancellationToken);
+
+                    var domainEvents = _uow.CollectDomainEvents();
+
+                    foreach (var domainEvent in domainEvents)
+                        await _publisher.Publish(domainEvent, cancellationToken);
+
                     _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
                 });
 

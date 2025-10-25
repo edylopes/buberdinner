@@ -12,7 +12,9 @@ COPY ["BuberDinner.Application/BuberDinner.Application.csproj", "BuberDinner.App
 COPY ["BuberDinner.Domain/BuberDinner.Domain.csproj", "BuberDinner.Domain/"]
 COPY ["BuberDinner.Infrastructure/BuberDinner.Infrastructure.csproj", "BuberDinner.Infrastructure/"]
 RUN dotnet restore "BuberDinner.Api/BuberDinner.Api.csproj"
+
 COPY . .
+
 WORKDIR "/src/BuberDinner.Api"
 RUN dotnet build "./BuberDinner.Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
@@ -22,5 +24,17 @@ RUN dotnet publish "./BuberDinner.Api.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 
 FROM base AS final
 WORKDIR /app
+
+# ENV PATH="${PATH}:/opt/mssql-tools/bin"
+
+# Copia os arquivos publicados
 COPY --from=publish /app/publish .
+
+# Copia o script de entrypoint
+# COPY BuberDinner.Api/entrypoint.sh .
+
+# permissions 
+# RUN chmod +x entrypoint.sh
+
+# ENTRYPOINT ["./entrypoint.sh"]
 ENTRYPOINT ["dotnet", "BuberDinner.Api.dll"]
