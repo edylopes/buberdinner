@@ -1,6 +1,6 @@
 using BuberDinner.Application.Common.Dto.Dinners;
-using BuberDinner.Domain.Entities;
+using BuberDinner.Application.Common.Interfaces;
 
-namespace BuberDinner.Application.Authentication.Queries.Dinners;
+namespace BuberDinner.Application.Dinners.Queries;
 
 public record ListUserDinnersQuery(Guid UserId ) : IQuery<List<DinnerDto>>;

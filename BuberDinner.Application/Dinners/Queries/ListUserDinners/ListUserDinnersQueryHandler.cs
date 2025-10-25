@@ -1,11 +1,10 @@
 using BuberDinner.Application.Common.Dto.Dinners;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Dinners;
-using BuberDinner.Domain.Entities;
 using MapsterMapper;
 using MediatR;
 
-namespace BuberDinner.Application.Authentication.Queries.Dinners;
+namespace BuberDinner.Application.Dinners.Queries;
 
 public class ListUserDinnersQueryHandler : IRequestHandler<ListUserDinnersQuery, List<DinnerDto>>
 {
