@@ -18,8 +18,15 @@ namespace BuberDinner.Application.Events.Handlers.Users
         }
         public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
         {
-            await _emailService.SendAsync(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name, notification.UserId);
-            _logger.LogInformation("Sending welcome email to {Email}", notification.Email);
+            try
+            {
+                _logger.LogInformation("Sending welcome email to {Email}", notification.Email);
+                await _emailService.SendAsync(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name, notification.UserId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("An error ocurred while attempt send email for new user {Email}:{ErrorMessage}", notification.Email, ex.Message);
+            }
         }
     }
 }

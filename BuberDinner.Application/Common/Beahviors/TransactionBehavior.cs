@@ -51,8 +51,9 @@ where TResponse : IOneOf
 
                     var domainEvents = _uow.CollectDomainEvents();
 
-                    foreach (var domainEvent in domainEvents)
-                        await _publisher.Publish(domainEvent, cancellationToken);
+                    if (domainEvents.Any())
+                        foreach (var domainEvent in domainEvents)
+                            await _publisher.Publish(domainEvent, cancellationToken);
 
                     _logger.LogInformation("Transaction committed for {RequestName}", typeof(TRequest).Name);
                 });

@@ -10,17 +10,23 @@ public class SmtpEmailService : IEmailService
 {
     private readonly SmtpOptions _options;
     private readonly IFluentEmail _fluentEmail;
-    public SmtpEmailService(IOptions<SmtpOptions> options, IFluentEmail fluentEmail)
+
+    private readonly IJwtTokenGenerator jwtTokenGenerator;
+    public SmtpEmailService(IOptions<SmtpOptions> options, IFluentEmail fluentEmail, IJwtTokenGenerator jwtTokenGenerator)
     {
-        _options = options.Value;
-        _fluentEmail = fluentEmail;
+        this._options = options.Value;
+        this._fluentEmail = fluentEmail;
+        this.jwtTokenGenerator = jwtTokenGenerator;
     }
     public async Task SendAsync(string to, string subject, string templateName, string name, Guid userId)
     {
+
+        string token = jwtTokenGenerator.GenerateEmailConfirmationToken(userId.ToString());
         var model = new WelcomeEmail
         {
+
             UserName = name,
-            ConfirmLink = $"https://localhost:7104/api/v1/confirm?token={userId}"
+            ConfirmLink = $"https://frontend:7104/api/v1/confirm-email?token={token}"
         };
         var templatePath = Path.Combine(AppContext.BaseDirectory, "Services/SMTP/Templates", $"{templateName}");
 

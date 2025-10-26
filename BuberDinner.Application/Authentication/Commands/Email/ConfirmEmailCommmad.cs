@@ -1,8 +1,5 @@
-using BuberDinner.Application.Common.Dto;
-using BuberDinner.Domain.Common.Errors;
-using MediatR;
-using OneOf;
+using BuberDinner.Application.Common.Dto.Email.Enums;
 
 namespace BuberDinner.Application.Authentication.Commands.Email;
 
-public record ConfirmEmailCommand(Guid UserId) : IRequest<OneOf<EmailConfirmed, AppError>>;
+public record ConfirmEmailCommand(string Token) : IRequest<OneOf<string, EmailConfirmationError>>;

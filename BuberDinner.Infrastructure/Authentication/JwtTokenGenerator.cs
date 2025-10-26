@@ -75,6 +75,23 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             userId: user.Id);
     }
 
+    public string GenerateEmailConfirmationToken(string userId)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var claims = new List<Claim> { new Claim("userId", userId) };
+
+        var creds = new SigningCredentials(
+            new SymmetricSecurityKey(ConvertSecretToBytes(_options.SecretKey!)), SecurityAlgorithms.HmacSha256Signature);
+
+        var token = new JwtSecurityToken(
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(2),
+            signingCredentials: creds
+        );
+
+        return tokenHandler.WriteToken(token);
+    }
+
     private static byte[] ConvertSecretToBytes(string secret, bool secretIsBase32 = false) =>
         Encoding.UTF8.GetBytes(secret);
 

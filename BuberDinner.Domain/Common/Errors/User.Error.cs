@@ -30,3 +30,5 @@ public record EmailNotConfirmedError(string Url = TypeUrl.BadRequestUrl)
     : AppError(400, Url, "Email is not confirmed");
 
 
+
+

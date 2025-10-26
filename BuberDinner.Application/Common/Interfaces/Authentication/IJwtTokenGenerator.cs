@@ -6,5 +6,6 @@ namespace BuberDinner.Application.Common.Interfaces.Authentication;
 public interface IJwtTokenGenerator
 {
     public (string Token, RefreshToken refreshToken) GenerateTokens(User user);
+    public string GenerateEmailConfirmationToken(string userId);
 
 }

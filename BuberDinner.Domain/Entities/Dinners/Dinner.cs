@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using BuberDinner.Domain.Common;
 using BuberDinner.Domain.Entities.Hosts;
 
-namespace BuberDinner.Domain.Entities
+namespace BuberDinner.Domain.Entities.Dinners
 {
     public class Dinner : AggregateRoot
     {
@@ -16,7 +16,7 @@ namespace BuberDinner.Domain.Entities
         public List<Guest> Guests { get; private set; } = new();
         public int CurrentGuests { get; private set; }
         public string ImageUrl { get; private set; } = string.Empty;
-        public string Address { get; private set; } = string.Empty; // Address where the dinner
+        public string Address { get; private set; } = string.Empty;
         public string Description { get; private set; } = string.Empty;
         public decimal Price { get; private set; }
         public bool IsActive { get; private set; } = true;
@@ -34,11 +34,11 @@ namespace BuberDinner.Domain.Entities
 
         public Dinner Create(string name, string description, DateTime date, decimal price, string address)
           => new(name, description, date, price, address);
-        
+
         public void Desactive()
         {
             IsActive = false;
-            MarkUpdated(); 
+            MarkUpdated();
         }
 
 

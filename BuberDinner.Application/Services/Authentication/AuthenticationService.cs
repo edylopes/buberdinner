@@ -1,12 +1,9 @@
 using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Domain.Common.Errors;
-using BuberDinner.Domain.Entities;
 using MapsterMapper;
-using OneOf;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Register;
-using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Domain.Entities.Users;
 
@@ -16,18 +13,15 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _uow;
     private readonly IMapper _mapper;
     public AuthenticationService(
         IJwtTokenGenerator jwtTokenGenerator,
         IUserRepository userRepository,
-        IMapper mapper,
-        IUnitOfWork uow)
+        IMapper mapper)
     {
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
         _mapper = mapper;
-        _uow = uow;
     }
 
 

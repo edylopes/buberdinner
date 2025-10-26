@@ -7,6 +7,10 @@ using BuberDinner.Contracts.Authentication;
 using BuberDinner.Api.Extensions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
+using FluentEmail.Core;
+using BuberDinner.Application.Common.Dto;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
+using System.Net;
 
 namespace BuberDinner.Api.Controllers;
 
@@ -42,12 +46,12 @@ public class AuthController : Controller
     }
 
     [HttpPost("confirm-email")]
-    public async Task<IActionResult> ConfirmEmail([FromQuery] string userId, CancellationToken ct)
+    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, CancellationToken ct)
     {
-        if (!Guid.TryParse(userId, out var uid))
-            return Problem(title: "Invalid userId", statusCode: 400);
-
-        var result = await _mediator.Send(new ConfirmEmailCommand(uid), ct);
-        return result.ToActionResponse();
+        var result = await _mediator.Send(new ConfirmEmailCommand(token), ct);
+        return result.Match(
+            sucess => Ok(new EmailConfirmed()),
+            error => Problem(title: "Validation Error", detail: error.ToString(), statusCode: 400)
+        );
     }
 }

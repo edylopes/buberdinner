@@ -1,4 +1,4 @@
-@Host=http://localhost:5000/api/v1
+@Host=https://localhost:7104/api/v1
 
 POST {{Host}}/auth/register
 Content-Type: application/json

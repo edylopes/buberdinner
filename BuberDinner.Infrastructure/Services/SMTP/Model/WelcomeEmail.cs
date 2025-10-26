@@ -1,5 +1,4 @@
 
-
 namespace BuberDinner.Infrastructure.Services.SMTP.Model;
 
 public class WelcomeEmail
@@ -14,5 +13,4 @@ public class WelcomeEmail
     public string PrivacyUrl { get; set; } = "#";
     public string HelpUrl { get; set; } = "#";
     public string SupportUrl { get; set; } = "#";
-
 }
