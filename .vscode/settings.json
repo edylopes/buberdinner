@@ -21,5 +21,9 @@
     },
     "csharp.suppressDotnetRestoreNotification": true,
     "csharp.format.enable": true,
-    "dotnet.codeLens.enableReferencesCodeLens": true
+    "dotnet.codeLens.enableReferencesCodeLens": true,
+    "dotnet.defaultSolution": "BuberDinner.sln",
+    "docwriter.language": "English",
+    "docwriter.progress.trackMethods": false,
+    "docwriter.progress.trackFunctions": false
 }

@@ -1,19 +1,20 @@
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
-using BuberDinner.Application.Common.Dto.Email.Enums;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using Microsoft.Extensions.Configuration;
-using System.Text;
 using BuberDinner.Application.Common.Interfaces.Authentication;
+using BuberDinner.Domain.Common.Errors;
+using BuberDinner.Application.Common.Dto;
+using BuberDinner.Application.Common.Errors;
+using System.Text;
 
 
 namespace BuberDinner.Application.Authentication.Commands.Email;
 
-public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, OneOf<string, EmailConfirmationError>>
+public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, OneOf<EmailConfirmed, AppError>>
 {
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
     private readonly IConfiguration _configuration;
     public ConfirmEmailCommandHandler(
     IUserRepository userRepository,
@@ -21,17 +22,13 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, O
     IConfiguration configuration)
     {
         _userRepository = userRepository;
-        _unitOfWork = unitOfWork;
         _configuration = configuration;
     }
 
-    public async Task<OneOf<string, EmailConfirmationError>> Handle(
-        ConfirmEmailCommand command,
-        CancellationToken cancellationToken)
+    public async Task<OneOf<EmailConfirmed, AppError>> Handle(ConfirmEmailCommand command, CancellationToken ct)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var secretkey = _configuration.GetSection("JwtSettings")["SecretKey"]!;
-
         try
 
         {
@@ -48,26 +45,27 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, O
             string userId = principal.FindFirst("userId")!.Value;
 
             if (!Guid.TryParse(userId, out var id))
-                return EmailConfirmationError.InvalidToken;
+            {
+                return new InvalidToken();
+            }
 
             var user = await _userRepository.GetByIdAsync(id);
 
             if (user is null)
-                return EmailConfirmationError.UserNotFound;
+                return new EmailConfirmationFailed();
 
             if (user.EmailConfirmed)
-                return EmailConfirmationError.EmailAlreadyConfirmed;
+                return new EmailAlreadyConfirmed();
 
             user.ConfirmEmail();
 
             _userRepository.Update(user);
-            // await _unitOfWork.CommitAsync(cancellationToken);
 
-            return user.Id.ToString();
+            return new EmailConfirmed(email: user.Email);
         }
         catch (Exception)
         {
-            return EmailConfirmationError.InvalidToken; ;
+            throw;
         }
 
     }

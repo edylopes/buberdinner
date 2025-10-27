@@ -46,11 +46,12 @@ public class AuthController : Controller
     }
 
     [HttpPost("confirm-email")]
-    public async Task<IActionResult> ConfirmEmail([FromQuery] string token, CancellationToken ct)
+    public async Task<IActionResult> ConfirmEmail(
+    [FromQuery] string token, CancellationToken ct)
     {
         var result = await _mediator.Send(new ConfirmEmailCommand(token), ct);
         return result.Match(
-            sucess => Ok(new EmailConfirmed()),
+            success => Ok(new EmailConfirmed(success.email)),
             error => Problem(title: "Validation Error", detail: error.ToString(), statusCode: 400)
         );
     }

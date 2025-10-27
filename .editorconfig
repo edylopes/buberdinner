@@ -1,0 +1,108 @@
+# Top-level EditorConfig for .NET 6+ projects
+root = true
+
+[*.cs]
+
+###############
+# Code Style  #
+###############
+
+# Permitir e preferir var
+dotnet_style_var_for_built_in_types = true:suggestion
+dotnet_style_var_when_type_is_apparent = true:suggestion
+dotnet_style_var_elsewhere = true:suggestion
+
+# Expressões e padrões modernos
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
+dotnet_style_prefer_pattern_matching = true:suggestion
+dotnet_style_prefer_conditional_expression_over_assignment = true:suggestion
+dotnet_style_prefer_conditional_expression_over_return = true:suggestion
+dotnet_style_prefer_inferred_tuple_names = true:suggestion
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
+dotnet_style_prefer_compound_assignment = true:suggestion
+dotnet_style_prefer_simplified_interpolation = true:suggestion
+dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
+dotnet_style_prefer_collection_expression = true:suggestion
+
+# Nullability
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_prefer_null_check_over_type_check = true:suggestion
+
+# this. e Me.
+dotnet_style_qualification_for_field = false:none
+dotnet_style_qualification_for_property = false:none
+dotnet_style_qualification_for_method = false:none
+dotnet_style_qualification_for_event = false:none
+
+# Parênteses
+dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity:suggestion
+dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity:suggestion
+dotnet_style_parentheses_in_other_binary_operators = for_clarity:suggestion
+
+##################
+# C# Code Style  #
+##################
+
+csharp_style_var_elsewhere = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion
+csharp_style_var_for_built_in_types = true:suggestion
+
+# Expressões e lambdas
+csharp_style_expression_bodied_methods = when_on_single_line:suggestion
+csharp_style_expression_bodied_properties = when_on_single_line:suggestion
+csharp_style_expression_bodied_accessors = when_on_single_line:suggestion
+csharp_style_expression_bodied_constructors = false:none
+
+# Padrões de correspondência
+csharp_style_pattern_matching_over_is_with_cast_check = true:suggestion
+csharp_style_pattern_matching_over_as_with_null_check = true:suggestion
+
+# Usar interpolação de string
+csharp_style_prefer_interpolated_string_over_string_concatenation = true:suggestion
+
+# Usar 'default' literal
+csharp_style_prefer_simple_default_expression = true:suggestion
+
+# Switch expression
+csharp_style_prefer_switch_expression = true:suggestion
+
+# Using placement
+csharp_prefer_braces = true:suggestion
+csharp_prefer_simple_using_statement = true:suggestion
+
+# Namespace e indentação
+csharp_style_namespace_declarations = file_scoped:suggestion
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+charset = utf-8
+end_of_line = lf
+
+# Organização de usings
+dotnet_sort_system_directives_first = true
+dotnet_separate_import_directive_groups = true
+
+###################
+# Code Formatting #
+###################
+
+# Usar parênteses, chaves, espaços
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_new_line_before_open_brace = all
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+
+##################
+# Code Analysis  #
+##################
+
+# Desativa IDE0008 (usar tipo explícito)
+dotnet_diagnostic.IDE0008.severity = none
+
+# Outros avisos que podem incomodar
+dotnet_diagnostic.IDE0044.severity = suggestion     # Tornar campos readonly
+dotnet_diagnostic.IDE0051.severity = silent         # Membros não usados
+dotnet_diagnostic.IDE0060.severity = silent         # Parâmetros não usados
+dotnet_diagnostic.IDE0090.severity = suggestion     # Usar "new()" target-typed
+dotnet_diagnostic.IDE0059.severity = silent         # Variável atribuída nunca usada

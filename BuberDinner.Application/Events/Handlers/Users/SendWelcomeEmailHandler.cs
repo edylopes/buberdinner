@@ -3,30 +3,29 @@ using BuberDinner.Domain.Entities.Users.Events;
 using Microsoft.Extensions.Logging;
 
 
-namespace BuberDinner.Application.Events.Handlers.Users
+namespace BuberDinner.Application.Events.Handlers.Users;
+
+public class SendWelcomeEmailHandler : INotificationHandler<UserRegisteredDomainEvent>
 {
-    public class SendWelcomeEmailHandler : INotificationHandler<UserRegisteredDomainEvent>
+    private readonly ILogger<SendWelcomeEmailHandler> _logger;
+    private const string WelcomeEmailTemplate = "WelcomeEmail.cshtml";
+    private const string WelcomeEmailSubject = "Bem-vindo ao Buber Dinner!";
+    private readonly IEmailService _emailService;
+    public SendWelcomeEmailHandler(ILogger<SendWelcomeEmailHandler> logger, IEmailService emailService)
     {
-        private readonly ILogger<SendWelcomeEmailHandler> _logger;
-        const string WelcomeEmailTemplate = "WelcomeEmail.cshtml";
-        const string WelcomeEmailSubject = "Bem-vindo ao Buber Dinner!";
-        private readonly IEmailService _emailService;
-        public SendWelcomeEmailHandler(ILogger<SendWelcomeEmailHandler> logger, IEmailService emailService)
+        _emailService = emailService;
+        _logger = logger;
+    }
+    public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
+    {
+        try
         {
-            _emailService = emailService;
-            _logger = logger;
+            _logger.LogInformation("✉️ Sending welcome email to {Email}", notification.Email);
+            await _emailService.SendAsync(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name, notification.UserId);
         }
-        public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
+        catch (Exception ex)
         {
-            try
-            {
-                _logger.LogInformation("Sending welcome email to {Email}", notification.Email);
-                await _emailService.SendAsync(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name, notification.UserId);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError("An error ocurred while attempt send email for new user {Email}:{ErrorMessage}", notification.Email, ex.Message);
-            }
+            _logger.LogError("An error ocurred while attempt send email for new user {Email}:{ErrorMessage}", notification.Email, ex.Message);
         }
     }
 }

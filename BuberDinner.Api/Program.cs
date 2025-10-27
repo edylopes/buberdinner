@@ -1,24 +1,27 @@
 using AspNetCoreRateLimit;
+
 using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
-using BuberDinner.Infrastructure.Authentication;
+using BuberDinner.Application.Authentication.Commands.Register;
+using BuberDinner.Application.Authentication.Common;
+using BuberDinner.Application.Common.Beahviors.Logger;
+using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Infrastructure.Persistence;
-using BuberDinner.Infrastructure.Persistence.Context;
-using BuberDinner.Infrastructure.Services.SMTP;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.OpenApi.Models;
+
+using OneOf;
 
 
 var builder = WebApplication.CreateBuilder(args);
 {
     builder.Services.AddInfraStructureModule(builder.Configuration);
 
-
-
     builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
 }
+
 
 
 builder.Services.AddSwaggerGen(c =>
@@ -39,8 +42,15 @@ builder.Services.AddHostedService<MigrationHostedService>();
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var provider = scope.ServiceProvider;
 
+    var strategie = provider.GetRequiredService<ILoggingStrategy<RegisterCommand, OneOf<AuthenticationResult, AppError>>>();
 
+    Console.WriteLine("📦Strategie encontrada:");
+    Console.WriteLine($"➡️ {strategie.GetType().Name}");
+}
 
 
 app.UseApiConfigurations();

@@ -3,8 +3,10 @@ using BuberDinner.Domain.Common.Errors;
 
 namespace BuberDinner.Application.Common.Errors;
 
-public record EmailAlreadyConfirmed(string Url = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4", string Message = "Email is already confirmed", string Title = "Validation Error")
-  : AppError(400, Url, Message, Title);
-public record EmailConfirmationFailed(string Url = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.1", string Title = "Validation Error")
-  : AppError(400, Url, "Email confirmation failed", Title);
+public record EmailAlreadyConfirmed(string url = TypeUrl.BadRequestUrl, string message = "Email is already confirmed")
+  : AppError(400, url, message);
+public record EmailConfirmationFailed(string url = TypeUrl.BadRequestUrl, string message = "Email onfirmation Failed", string title = "Validation Error")
+  : AppError(400, url, message, title);
 
+public record InvalidToken(string url = TypeUrl.BadRequestUrl, string message = "Invalid Token", string title = "Validation Error")
+  : AppError(400, url, message);

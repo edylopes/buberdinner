@@ -2,13 +2,15 @@ using BuberDinner.Application.Common.Extensions;
 using BuberDinner.Application.Common.Interfaces;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Domain.Common.Interfaces;
-using MediatR;
+
 using Microsoft.Extensions.Logging;
-using OneOf;
+
 using Polly;
 using Polly.Retry;
 
 namespace BuberDinner.Application.Common.Beahviors;
+
+
 
 public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
 where TRequest : IRequest<TResponse>
@@ -26,6 +28,7 @@ where TResponse : IOneOf
         this._logger = logger;
         this._publisher = publisher;
     }
+
     public async Task<TResponse> Handle(
     TRequest request,
     RequestHandlerDelegate<TResponse> next,
@@ -36,14 +39,19 @@ where TResponse : IOneOf
 
         try
         {
-            _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
-            await _uow.BeginTransactionAsync(cancellationToken);
-            // First try without transaction to validate
+
             var response = await next();
+
             // Only open transaction if success
             if (response.IsSuccess())
             {
 
+                _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
+                await _uow.BeginTransactionAsync(cancellationToken);
+
+                /* This code block is implementing a retry policy for committing a transaction. It uses a retry policy
+                from the Polly library to handle exceptions and retries committing the transaction up to a specified
+                number of times. */
 
                 await GetRetryPolicy().ExecuteAsync(async () => //Retry
                 {

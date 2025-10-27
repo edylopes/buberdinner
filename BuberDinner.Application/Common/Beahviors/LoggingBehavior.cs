@@ -1,10 +1,14 @@
+using System.Diagnostics;
+
+using BuberDinner.Application.Authentication.Commands.Email;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Common;
+using BuberDinner.Application.Common.Beahviors.Logger;
 using BuberDinner.Domain.Common.Errors;
-using MediatR;
+
 using Microsoft.Extensions.Logging;
-using OneOf;
+
 
 namespace BuberDinner.Application.Common.Beahviors;
 
@@ -13,36 +17,33 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     where TResponse : IOneOf
 {
     private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
-    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+    private readonly IEnumerable<ILoggingStrategy<TRequest, TResponse>> _strategies;
+
+    public LoggingBehavior(
+    ILogger<LoggingBehavior<TRequest, TResponse>> logger,
+    IEnumerable<ILoggingStrategy<TRequest, TResponse>> strategies)
     {
-        _logger = logger;
+        this._logger = logger;
+        this._strategies = strategies;
     }
     public async Task<TResponse> Handle(
       TRequest request,
-      RequestHandlerDelegate<TResponse> next,           
+      RequestHandlerDelegate<TResponse> next,
       CancellationToken cancellationToken)
     {
-        var response = await next(); //Chama o próximo da cadeia (ou o handler)
+        var requestName = typeof(TRequest).Name;
+        _logger.LogInformation("➡️ Handling {RequestName}: {@Request}", requestName, request);
 
-        return request switch
-        {
-            RegisterCommand rc => LogAuthResponse(response, rc.Email, operation: "User registration"),
-            LoginCommand lq => LogAuthResponse(response, lq.Email, "User login"),
-            _ => response
-        };
-    }
-    private TResponse LogAuthResponse(TResponse response, string email, string operation)
-    {
+        var stopwatch = Stopwatch.StartNew();
+        var response = await next();//Chama o próximo da cadeia (ou o handler)
+        stopwatch.Stop();
 
-        if (response is OneOf<AuthenticationResult, AppError> oneOfResponse)
-        {
-            oneOfResponse.Switch(
-                success => _logger.LogInformation("✅ {Operation} succeeded for {Email}", operation, email),
-                error => _logger.LogWarning("❌ {Operation} failed for email: {Email}: {Error}", operation, email, error.Message)
-            );
-        }
+        _logger.LogInformation("⬅️ Handled {RequestName} in {Elapsed} ms", requestName, stopwatch.ElapsedMilliseconds);
+
+        foreach (var strategy in _strategies)
+            await strategy.LogAsync(request, response);
+
         return response;
 
     }
-
 }

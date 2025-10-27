@@ -26,7 +26,7 @@ public class SmtpEmailService : IEmailService
         {
 
             UserName = name,
-            ConfirmLink = $"https://frontend:7104/api/v1/confirm-email?token={token}"
+            ConfirmLink = $"https://frontend.com.br:7104/api/v1/confirm-email?token={token}"
         };
         var templatePath = Path.Combine(AppContext.BaseDirectory, "Services/SMTP/Templates", $"{templateName}");
 

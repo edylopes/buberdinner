@@ -58,9 +58,8 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
                         .Distinct();  // evita duplicatas
 
                     foreach (var message in distinctMessages)
-                    {
                         modelState.AddModelError(group.Key, message);
-                    }
+
                     _logger.LogWarning("Validation failed: {@Errors}", distinctMessages);
                 }
 
@@ -80,8 +79,6 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
 
                 validationProblem.Extensions["exceptionType"] = context.Exception.GetType().Name;
                 context.ExceptionHandled = true;
-
-
                 return;
 
             default:

@@ -13,8 +13,6 @@ namespace BuberDinner.Api.Extensions.Auth;
 /// <summary>
 /// Extension for converting OneOf results to IActionResult
 /// </summary>
-
-//Generic extension for OneOf<TSuccess, TError>
 public static class OneOfResponseExtension
 {
     public static IActionResult ToResponseResult<TSuccess>(
@@ -49,10 +47,12 @@ public static class OneOfResponseExtension
     this OneOf<AuthenticationResult, AppError> result,
     IMapper mapper)
     {
-        return result.ToAuthResponse(
-            mapper,
-            payload => HttpResults.Created(payload, $"api/v1/users{payload.Id}")
-        );
+        return result.ToResponseResult(
+            success =>
+            {
+                var payload = mapper.Map<AuthResponse>(success);
+                return HttpResults.Created(payload, $"api/v1/users{payload.Id}");
+            });
     }
 
     public static IActionResult ToLogin(
@@ -65,7 +65,5 @@ public static class OneOfResponseExtension
         );
     }
     public static IActionResult ToOk<TSuccess>(this OneOf<TSuccess, AppError> result)
-     => result.ToResponseResult(s => HttpResults.Ok(s));
-
-
+        => result.ToResponseResult(success => HttpResults.Ok(success));
 }

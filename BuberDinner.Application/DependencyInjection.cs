@@ -1,9 +1,9 @@
 using BuberDinner.Application.Services.Authentication;
-using FluentValidation;
-using MediatR;
+
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using BuberDinner.Application.Common.Beahviors;
+using BuberDinner.Application.Common.Extensions;
 
 namespace BuberDinner.Application;
 
@@ -21,9 +21,14 @@ public static class DependencyInjection
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         // 3s. Behaviors MediatR (a ordem importa!)
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddLoggingStrategies(Assembly.GetExecutingAssembly());
+
+
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 
         return services;
     }
+
+
 }

@@ -1,14 +1,13 @@
 
 
-namespace BuberDinner.Domain.Exceptions
+namespace BuberDinner.Domain.Exceptions;
+
+public class BusinessRuleValidationException : DomainException
+
 {
-    public class BusinessRuleValidationException : DomainException
-
+    public BusinessRuleValidationException(string message)
+    : base(message)
     {
-        public BusinessRuleValidationException(string message)
-        : base(message)
-        {
 
-        }
     }
 }
