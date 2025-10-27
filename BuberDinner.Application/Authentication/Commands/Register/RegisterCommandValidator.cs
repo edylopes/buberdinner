@@ -7,9 +7,9 @@ namespace BuberDinner.Application.Authentication.Commands.Register
   {
     public RegisterCommandValidator()
     {
-       RuleFor(c => c.Email)
-      .NotEmpty()
-      .WithMessage("Email is required");
+      RuleFor(c => c.Email)
+     .NotEmpty()
+     .WithMessage("Email is required");
 
 
       RuleFor(c => c.Email)

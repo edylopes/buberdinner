@@ -1,6 +1,7 @@
 
 
 using BuberDinner.Domain.Common.Interfaces;
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BuberDinner.Application.Common.Interfaces.Persistence;
@@ -14,5 +15,5 @@ public interface IUnitOfWork : IDisposable
     Task CommitAsync(CancellationToken cancellationToken = default, bool detectChange = true);
     Task RollbackAsync(CancellationToken cancellationToken = default);
     IReadOnlyCollection<IDomainEvent> CollectDomainEvents();
-
+    bool HasActiveTransaction { get; }
 }

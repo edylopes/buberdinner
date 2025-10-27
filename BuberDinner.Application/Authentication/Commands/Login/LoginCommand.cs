@@ -5,4 +5,7 @@ using BuberDinner.Domain.Common.Errors;
 namespace BuberDinner.Application.Authentication.Commands.Login;
 
 public record LoginCommand(string Email, string Password)
-    : ICommand<OneOf<AuthenticationResult, AppError>>;
+    : ICommand<OneOf<AuthenticationResult, AppError>>
+{
+    public string Operation => "User Login ";
+}

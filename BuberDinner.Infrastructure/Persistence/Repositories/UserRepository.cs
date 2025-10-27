@@ -3,6 +3,7 @@ using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Domain.Entities;
 using BuberDinner.Domain.Entities.Users;
 using BuberDinner.Infrastructure.Persistence.Context;
+
 using MapsterMapper;
 
 
@@ -17,6 +18,7 @@ public class UserRepository : RepositoryBase<User>, IUserRepository
     public async Task<User?> GetByEmailAsync(string email)
     => await Context.Users
             .Include(u => u.RefreshTokens)
+            .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email);
     public Task AddRefreshTokenAsync(RefreshToken refreshToken)
     {

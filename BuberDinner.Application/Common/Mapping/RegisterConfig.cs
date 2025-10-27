@@ -2,7 +2,6 @@ using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Contracts.Authentication;
-using BuberDinner.Domain.Entities;
 using BuberDinner.Domain.Entities.Users;
 using Mapster;
 
@@ -27,6 +26,10 @@ public class AuthRegisterMapping : IRegister
         config.NewConfig<RegisterRequest, RegisterCommand>()
                .ConstructUsing(src =>
                new RegisterCommand(src.FirstName, src.LastName, src.Email, src.Password));
+
+        config.NewConfig<LoginRequest, LoginCommand>()
+              .ConstructUsing(src =>
+              new LoginCommand(src.Email, src.Password));
 
     }
 }

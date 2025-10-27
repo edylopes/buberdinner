@@ -1,11 +1,6 @@
 using System.Diagnostics;
 
-using BuberDinner.Application.Authentication.Commands.Email;
-using BuberDinner.Application.Authentication.Commands.Login;
-using BuberDinner.Application.Authentication.Commands.Register;
-using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Application.Common.Beahviors.Logger;
-using BuberDinner.Domain.Common.Errors;
 
 using Microsoft.Extensions.Logging;
 
@@ -32,7 +27,7 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
       CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        _logger.LogInformation("➡️ Handling {RequestName}: {@Request}", requestName, request);
+        //  _logger.LogInformation("➡️ Handling {RequestName}: {@Request}", requestName, request);
 
         var stopwatch = Stopwatch.StartNew();
         var response = await next();//Chama o próximo da cadeia (ou o handler)
@@ -40,8 +35,8 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
 
         _logger.LogInformation("⬅️ Handled {RequestName} in {Elapsed} ms", requestName, stopwatch.ElapsedMilliseconds);
 
-        foreach (var strategy in _strategies)
-            await strategy.LogAsync(request, response);
+        foreach (var _strategie in _strategies)
+            await _strategie.LogAsync(request, response);
 
         return response;
 

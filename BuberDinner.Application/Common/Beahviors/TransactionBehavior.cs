@@ -19,7 +19,8 @@ where TResponse : IOneOf
     private readonly IUnitOfWork _uow;
     private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
     private readonly IPublisher _publisher;
-    public TransactionBehavior(IUnitOfWork uow,
+    public TransactionBehavior(
+    IUnitOfWork uow,
     ILogger<TransactionBehavior<TRequest, TResponse>> logger,
     IPublisher publisher
     )
@@ -40,18 +41,13 @@ where TResponse : IOneOf
         try
         {
 
-            var response = await next();
 
+            var response = await next();
             // Only open transaction if success
             if (response.IsSuccess())
             {
-
                 _logger.LogInformation("Opening transaction for {RequestName}", typeof(TRequest).Name);
                 await _uow.BeginTransactionAsync(cancellationToken);
-
-                /* This code block is implementing a retry policy for committing a transaction. It uses a retry policy
-                from the Polly library to handle exceptions and retries committing the transaction up to a specified
-                number of times. */
 
                 await GetRetryPolicy().ExecuteAsync(async () => //Retry
                 {
@@ -78,7 +74,7 @@ where TResponse : IOneOf
         {
             await _uow.RollbackAsync(cancellationToken);
             _logger.LogInformation("Rolling back transaction: response not successful for {RequestName}", typeof(TRequest).Name);
-            _logger.LogError(ex, "Unhandled error on {RequestName}", typeof(TRequest).Name);
+            _logger.LogError(ex.Message, "Unhandled error on {RequestName}", typeof(TRequest).Name);
             throw;
         }
     }

@@ -10,5 +10,6 @@ public interface IRepository<T> where T : class
     void Delete(T entity);
     Task AddAsync(T entity);
     Task<bool> ExistsAsync(Expression<Func<T, bool>> predicate);
+    Task<T?> GetByIdAsync(Expression<Func<T, bool>> predicate);
 }
 

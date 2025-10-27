@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using BuberDinner.Application.Common.Beahviors;
 using BuberDinner.Application.Common.Extensions;
+using BuberDinner.Application.Common.Beahviors.Logger;
+using BuberDinner.Application.Common.Interfaces;
 
 namespace BuberDinner.Application;
 
@@ -20,10 +22,10 @@ public static class DependencyInjection
 
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         // 3s. Behaviors MediatR (a ordem importa!)
+        //services.AddLoggingStrategies(AppDomain.CurrentDomain.GetAssemblies());
+
+        services.AddTransient(typeof(ILoggingStrategy<,>), typeof(AuthLoggingStrategy<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddLoggingStrategies(Assembly.GetExecutingAssembly());
-
-
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
 

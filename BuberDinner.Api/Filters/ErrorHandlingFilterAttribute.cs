@@ -1,6 +1,9 @@
 using System.Data.Common;
+
 using BuberDinner.Domain.Exceptions;
+
 using FluentValidation;
+
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
@@ -69,7 +72,7 @@ public class ErrorHandlingFilterAttribute : ExceptionFilterAttribute
                     Status = StatusCodes.Status400BadRequest,
                     Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
                     Instance = context.HttpContext.Request.Path,
-                    Detail = "Validation failed"
+                    Detail = "Validation failure"
                 };
 
                 context.Result = new ObjectResult(validationProblem)

@@ -4,13 +4,9 @@ using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Commands.Login;
 using BuberDinner.Application.Authentication.Commands.Email;
 using BuberDinner.Contracts.Authentication;
-using BuberDinner.Api.Extensions;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authorization;
-using FluentEmail.Core;
 using BuberDinner.Application.Common.Dto;
-using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using System.Net;
 
 namespace BuberDinner.Api.Controllers;
 

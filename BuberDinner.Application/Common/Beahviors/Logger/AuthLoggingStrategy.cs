@@ -1,45 +1,34 @@
 
-
-
-
-using BuberDinner.Application.Authentication.Commands.Email;
-using BuberDinner.Application.Authentication.Commands.Login;
-using BuberDinner.Application.Authentication.Commands.Register;
 using BuberDinner.Application.Authentication.Common;
+using BuberDinner.Application.Common.Interfaces;
 using BuberDinner.Domain.Common.Errors;
 
 using Microsoft.Extensions.Logging;
 
 namespace BuberDinner.Application.Common.Beahviors.Logger;
 
-public class AuthLoggingStrategy<TRequest> :
-ILoggingStrategy<TRequest, OneOf<AuthenticationResult, AppError>>
+public class AuthLoggingStrategy<TRequest, TResponse> :
+ILoggingStrategy<TRequest, TResponse>
 {
-    private readonly ILogger<AuthLoggingStrategy<TRequest>> _logger;
-    public AuthLoggingStrategy(ILogger<AuthLoggingStrategy<TRequest>> logger)
+    private readonly ILogger<AuthLoggingStrategy<TRequest, TResponse>> _logger;
+    public AuthLoggingStrategy(ILogger<AuthLoggingStrategy<TRequest, TResponse>> logger)
     {
         _logger = logger;
     }
-    public ILogger Logger => throw new NotImplementedException();
 
-    public Task LogAsync(TRequest request, OneOf<AuthenticationResult, AppError> response)
+    public Task LogAsync(TRequest request, TResponse response)
     {
-        switch (request)
+        if (request is ICommand<object> command)
         {
-            case RegisterCommand cmd:
-                LogResponse(response, cmd.Email, "User registration");
-                break;
-            case LoginCommand cmd:
-                LogResponse(response, cmd.Email, "User login");
-                break;
-            case ConfirmEmailCommand cmd:
-                LogResponse(response, cmd.email!, "Email confirmation");
-                break;
+
+            LogResponse(response, command.Email!, command.Operation);
+
         }
+
         return Task.CompletedTask;
     }
 
-    private void LogResponse(IOneOf response, string email, string operation)
+    private void LogResponse(TResponse response, string email, string operation)
     {
         if (response is OneOf<AuthenticationResult, AppError> oneOf)
         {

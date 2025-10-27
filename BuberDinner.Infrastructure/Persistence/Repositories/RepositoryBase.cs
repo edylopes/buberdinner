@@ -1,6 +1,8 @@
 using System.Linq.Expressions;
+
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using BuberDinner.Infrastructure.Persistence.Context;
+
 using MapsterMapper;
 
 namespace BuberDinner.Infrastructure.Persistence.Repositories;
@@ -61,5 +63,5 @@ public class RepositoryBase<T> : IRepository<T> where T : class
             throw new ArgumentNullException(nameof(predicate));
         return await DbSet.AnyAsync(predicate);
     }
-    
+    public async Task<T?> GetByIdAsync(Expression<Func<T, bool>> predicate) => await DbSet.FirstOrDefaultAsync(predicate);
 }

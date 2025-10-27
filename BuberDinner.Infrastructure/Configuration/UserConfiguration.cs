@@ -1,6 +1,5 @@
-using BuberDinner.Domain.Entities;
 using BuberDinner.Domain.Entities.Users;
-using Microsoft.EntityFrameworkCore;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BuberDinner.Infrastructure.Configuration
@@ -24,7 +23,7 @@ namespace BuberDinner.Infrastructure.Configuration
 
             builder.HasIndex(u => u.FirstName);
             builder.HasIndex(u => u.Id);
-            builder.HasIndex(u => u.Email).IsUnique();
+            builder.HasIndex(u => u.Email);
 
             builder.HasMany(u => u.RefreshTokens)
                    .WithOne("User")

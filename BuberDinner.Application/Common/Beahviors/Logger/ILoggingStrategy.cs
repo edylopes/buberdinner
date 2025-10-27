@@ -1,5 +1,7 @@
 
 
+
+
 namespace BuberDinner.Application.Common.Beahviors.Logger;
 
 public interface ILoggingStrategy<TRequest, TResponse>

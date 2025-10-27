@@ -3,7 +3,6 @@ using Microsoft.IdentityModel.Tokens;
 using BuberDinner.Application.Common.Interfaces.Persistence;
 using BuberDinner.Application.Common.Interfaces.Persistence.Users;
 using Microsoft.Extensions.Configuration;
-using BuberDinner.Application.Common.Interfaces.Authentication;
 using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Application.Common.Dto;
 using BuberDinner.Application.Common.Errors;
@@ -18,7 +17,6 @@ public class ConfirmEmailCommandHandler : IRequestHandler<ConfirmEmailCommand, O
     private readonly IConfiguration _configuration;
     public ConfirmEmailCommandHandler(
     IUserRepository userRepository,
-    IUnitOfWork unitOfWork,
     IConfiguration configuration)
     {
         _userRepository = userRepository;

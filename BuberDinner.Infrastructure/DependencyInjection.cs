@@ -24,8 +24,9 @@ public static class DependencyInjection
 
         serviceCollection.AddScoped<IUnitOfWork, EfUnitOfWork>();
         serviceCollection.AddScoped<IDinnerRepository, DinnerRepository>();
-        //serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+        //  serviceCollection.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
         serviceCollection.AddScoped<IUserRepository, UserRepository>();
+        serviceCollection.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
 
 
         return serviceCollection;

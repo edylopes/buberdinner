@@ -41,7 +41,7 @@ builder.Services.AddHostedService<MigrationHostedService>();
 
 
 var app = builder.Build();
-
+/* 
 using (var scope = app.Services.CreateScope())
 {
     var provider = scope.ServiceProvider;
@@ -50,7 +50,7 @@ using (var scope = app.Services.CreateScope())
 
     Console.WriteLine("📦Strategie encontrada:");
     Console.WriteLine($"➡️ {strategie.GetType().Name}");
-}
+} */
 
 
 app.UseApiConfigurations();

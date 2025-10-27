@@ -1,5 +1,6 @@
 using BuberDinner.Domain.Common.Interfaces;
 using BuberDinner.Infrastructure.Persistence.Context;
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -11,6 +12,9 @@ public class EfUnitOfWork : IUnitOfWork
     private readonly List<IDomainEvent> _collectedEvents = new();
     private IDbContextTransaction? _transaction;
     public ChangeTracker ChangeTracker => _context.ChangeTracker;
+
+    public bool HasActiveTransaction => _transaction != null;
+
     public EfUnitOfWork(AppDbContext context)
     {
         _context = context;
@@ -25,7 +29,7 @@ public class EfUnitOfWork : IUnitOfWork
         {
             await _context.SaveChangesAsync(cancellationToken);
 
-            if (_transaction != null)
+            if (HasActiveTransaction)
             {
                 await _transaction.CommitAsync(cancellationToken);
                 await _transaction.DisposeAsync();
@@ -48,7 +52,8 @@ public class EfUnitOfWork : IUnitOfWork
     public async Task RollbackAsync(CancellationToken cancellationToken = default)
     {
 
-        await _transaction?.RollbackAsync()!;
+        if (HasActiveTransaction)
+            await _transaction?.RollbackAsync()!;
     }
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
