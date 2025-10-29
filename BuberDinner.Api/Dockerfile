@@ -25,7 +25,6 @@ RUN dotnet publish "./BuberDinner.Api.csproj" -c $BUILD_CONFIGURATION -o /app/pu
 FROM base AS final
 WORKDIR /app
 
-# ENV PATH="${PATH}:/opt/mssql-tools/bin"
 
 # Copia os arquivos publicados
 COPY --from=publish /app/publish .

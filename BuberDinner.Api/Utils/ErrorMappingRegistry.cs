@@ -7,18 +7,17 @@ public static class ErrorMappingRegistry
     const string ConflictUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.8";
     const string ForbiddenUrl = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.3";
 
-    private static readonly Dictionary<Type, (int statusCode, string title, string typeUrl)> Mappings = new();
+    private static readonly Dictionary<Type, (int statusCode, string title, string typeUrl)> _mappings = new();
     public static void Register<TError>(int statusCode, string title, string typeUrl)
         where TError : AppError
     {
-        Mappings[typeof(TError)] = (statusCode, title, typeUrl);
+        _mappings[typeof(TError)] = (statusCode, title, typeUrl);
 
     }
-
     public static (int statusCode, string title, string typeUrl)? GetMapping(AppError error)
     {
         var type = error.GetType();
-        return Mappings.TryGetValue(type, out var mapping) ? mapping : null;
+        return _mappings.TryGetValue(type, out var mapping) ? mapping : null;
     }
 
     public static void RegisterDefaults()

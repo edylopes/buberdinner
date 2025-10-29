@@ -3,26 +3,23 @@ using AspNetCoreRateLimit;
 using BuberDinner.Api;
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Filters;
-using BuberDinner.Application.Authentication.Commands.Register;
-using BuberDinner.Application.Authentication.Common;
-using BuberDinner.Application.Common.Beahviors.Logger;
-using BuberDinner.Domain.Common.Errors;
 using BuberDinner.Infrastructure.Persistence;
 
 using Microsoft.OpenApi.Models;
 
-using OneOf;
-
-
 var builder = WebApplication.CreateBuilder(args);
 {
+    //remove the server header
+    builder.WebHost.UseKestrel(options => options.AddServerHeader = false);
+    //Add Modules
     builder.Services.AddInfraStructureModule(builder.Configuration);
-
     builder.Services.AddControllers(options => options.Filters.Add<ErrorHandlingFilterAttribute>());
     builder.Services.AddSingleton<ProblemDetailsFactory, BuberDinnerProblemDetailsFactory>();
+    //Aplly Migrations
+    builder.Services.AddHostedService<MigrationHostedService>();
+    //Background Worker | SMTP
+    // builder.Services.AddHostedService<EmailBackgroundService>();
 }
-
-
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -33,25 +30,11 @@ builder.Services.AddSwaggerGen(c =>
         Description = "BuberDinner API",
     });
 });
-
-//Aplly MIGRATIONS
-builder.Services.AddHostedService<MigrationHostedService>();
-
-// builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHealthChecks();
 
 
 var app = builder.Build();
-/* 
-using (var scope = app.Services.CreateScope())
-{
-    var provider = scope.ServiceProvider;
-
-    var strategie = provider.GetRequiredService<ILoggingStrategy<RegisterCommand, OneOf<AuthenticationResult, AppError>>>();
-
-    Console.WriteLine("📦Strategie encontrada:");
-    Console.WriteLine($"➡️ {strategie.GetType().Name}");
-} */
-
 
 app.UseApiConfigurations();
 
@@ -68,11 +51,17 @@ if (builder.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-// middleware auth
+
 app.UseAuthentication();
 app.UseAuthorization();
-// middleware endpoints
+
+
 app.MapControllers();
+
+app.MapHealthChecks("/Health");
+
+app.MapGet("/Health", () => Results.Ok("API It's Okay"))
+  .WithTags("HealthCheck");
 
 
 app.Run();

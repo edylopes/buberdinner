@@ -1,16 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk.Worker">
-
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-BuberDinner.Worker-9947f9ac-829f-4199-922f-e3fdaf21d6e5</UserSecretsId>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\BuberDinner.Application\BuberDinner.Application.csproj" />
     <ProjectReference Include="..\BuberDinner.Infrastructure\BuberDinner.Infrastructure.csproj" />

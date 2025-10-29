@@ -9,7 +9,6 @@ namespace BuberDinner.Application.Common.Interfaces.Persistence;
 public interface IUnitOfWork : IDisposable
 {
 
-
     abstract ChangeTracker ChangeTracker { get; }
     Task BeginTransactionAsync(CancellationToken cancellationToken = default);
     Task CommitAsync(CancellationToken cancellationToken = default, bool detectChange = true);

@@ -32,7 +32,8 @@ public class MigrationHostedService : IHostedService
             try
             {
                 await context.Database.MigrateAsync(cancellationToken);
-                _logger.LogInformation("✅ Migrations aplicadas com sucesso!");
+                _logger.LogInformation("✅ Migrations applied or the database is already up to date!");
+
                 return;
             }
             catch (Exception ex)

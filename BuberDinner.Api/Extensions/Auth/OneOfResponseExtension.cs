@@ -6,7 +6,9 @@ using BuberDinner.Api.Results;
 using BuberDinner.Application.Authentication.Common;
 using BuberDinner.Contracts.Authentication;
 using BuberDinner.Domain.Common.Errors;
+
 using MapsterMapper;
+
 using OneOf;
 
 namespace BuberDinner.Api.Extensions.Auth;
@@ -47,7 +49,8 @@ public static class OneOfResponseExtension
     this OneOf<AuthenticationResult, AppError> result,
     IMapper mapper)
     {
-        return result.ToResponseResult(
+        return result.ToAuthResponse(
+            mapper,
             success =>
             {
                 var payload = mapper.Map<AuthResponse>(success);

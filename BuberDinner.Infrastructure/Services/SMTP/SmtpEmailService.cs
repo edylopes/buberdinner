@@ -3,6 +3,7 @@ using Microsoft.Extensions.Options;
 using FluentEmail.Core;
 
 using BuberDinner.Infrastructure.Services.SMTP.Model;
+using BuberDinner.Contracts.Authentication.Email;
 
 namespace BuberDinner.Infrastructure.Services.SMTP;
 
@@ -10,31 +11,30 @@ public class SmtpEmailService : IEmailService
 {
     private readonly SmtpOptions _options;
     private readonly IFluentEmail _fluentEmail;
-
-    private readonly IJwtTokenGenerator jwtTokenGenerator;
+    private readonly IJwtTokenGenerator _jwtTokenGenerator;
     public SmtpEmailService(IOptions<SmtpOptions> options, IFluentEmail fluentEmail, IJwtTokenGenerator jwtTokenGenerator)
     {
         this._options = options.Value;
         this._fluentEmail = fluentEmail;
-        this.jwtTokenGenerator = jwtTokenGenerator;
+        this._jwtTokenGenerator = jwtTokenGenerator;
     }
-    public async Task SendAsync(string to, string subject, string templateName, string name, Guid userId)
+    public async Task SendAsync(EmailMessage message)
     {
 
-        string token = jwtTokenGenerator.GenerateEmailConfirmationToken(userId.ToString());
+        var token = _jwtTokenGenerator.GenerateEmailConfirmationToken(message.userId.ToString());
         var model = new WelcomeEmail
         {
 
-            UserName = name,
+            UserName = message.name,
             ConfirmLink = $"https://frontend.com.br:7104/api/v1/confirm-email?token={token}"
         };
-        var templatePath = Path.Combine(AppContext.BaseDirectory, "Services/SMTP/Templates", $"{templateName}");
+        var templatePath = Path.Combine(AppContext.BaseDirectory, "Services/SMTP/Templates", $"{message.body}");
 
         await _fluentEmail
-            .To(to)
+            .To(message.to)
             .SetFrom(_options.FromEmail, _options.FromName)
             .ReplyTo(_options.FromEmail)
-            .Subject(subject)
+            .Subject(message.subject)
             .UsingTemplateFromFile(templatePath, model, isHtml: true)
             .SendAsync();
     }

@@ -1,31 +1,28 @@
-using BuberDinner.Application.Common.Interfaces.Services;
+using BuberDinner.Application.Common.Interfaces;
+using BuberDinner.Contracts.Authentication.Email;
 using BuberDinner.Domain.Entities.Users.Events;
-using Microsoft.Extensions.Logging;
 
 
 namespace BuberDinner.Application.Events.Handlers.Users;
 
 public class SendWelcomeEmailHandler : INotificationHandler<UserRegisteredDomainEvent>
 {
-    private readonly ILogger<SendWelcomeEmailHandler> _logger;
     private const string WelcomeEmailTemplate = "WelcomeEmail.cshtml";
     private const string WelcomeEmailSubject = "Bem-vindo ao Buber Dinner!";
-    private readonly IEmailService _emailService;
-    public SendWelcomeEmailHandler(ILogger<SendWelcomeEmailHandler> logger, IEmailService emailService)
+    private readonly IEmailQueue _emailQueue;
+
+    public SendWelcomeEmailHandler(IEmailQueue emailQueue)
     {
-        _emailService = emailService;
-        _logger = logger;
+        _emailQueue = emailQueue;
     }
+
     public async Task Handle(UserRegisteredDomainEvent notification, CancellationToken cancellationToken)
     {
-        try
-        {
-            _logger.LogInformation("✉️ Sending welcome email to {Email}", notification.Email);
-            await _emailService.SendAsync(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name, notification.UserId);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError("An error ocurred while attempt send email for new user {Email}:{ErrorMessage}", notification.Email, ex.Message);
-        }
+
+        var message = new EmailMessage(notification.Email, WelcomeEmailSubject, WelcomeEmailTemplate, notification.Name,
+            notification.UserId);
+
+        await _emailQueue.EnqueueAsync(message, cancellationToken);
     }
+
 }

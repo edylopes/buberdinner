@@ -1,9 +1,6 @@
 
 
-using System.Net.Mail;
 using BuberDinner.Infrastructure.Services.SMTP.Configurations;
-
-
 
 namespace BuberDinner.Infrastructure.Services.SMTP
 {
@@ -15,7 +12,6 @@ namespace BuberDinner.Infrastructure.Services.SMTP
             services.AddTransient<SmtpClientFactory>();
             services.AddTransient<IEmailService, SmtpEmailService>();
 
-
             services.Configure<SmtpOptions>(configuration.GetSection("SmtpOptions"));
 
             services.AddTransient(sp =>
@@ -23,6 +19,8 @@ namespace BuberDinner.Infrastructure.Services.SMTP
                  var factory = sp.GetRequiredService<SmtpClientFactory>();
                  return factory.Create();
              });
+
+
             return services;
         }
     }

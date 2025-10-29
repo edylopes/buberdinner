@@ -18,7 +18,7 @@ ILoggingStrategy<TRequest, TResponse>
 
     public Task LogAsync(TRequest request, TResponse response)
     {
-        if (request is ICommand<object> command)
+        if (request is ICommand<TResponse> command)
         {
 
             LogResponse(response, command.Email!, command.Operation);

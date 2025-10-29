@@ -8,3 +8,5 @@ global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.Logging;
 global using MediatR;
+global using BuberDinner.Infrastructure;
+global using BuberDinner.Application;

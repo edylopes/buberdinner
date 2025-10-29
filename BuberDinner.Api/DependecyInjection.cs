@@ -1,10 +1,9 @@
 ﻿
 using AspNetCoreRateLimit;
+
 using BuberDinner.Api.Common.Errors;
 using BuberDinner.Api.Common.Mapping;
-using BuberDinner.Application;
 using BuberDinner.Application.Common.Interfaces.Services;
-using BuberDinner.Infrastructure;
 using BuberDinner.Infrastructure.Authentication;
 using BuberDinner.Infrastructure.Services.SMTP.Configurations;
 
@@ -18,27 +17,19 @@ public static class DependencyInjection
     )
     {
         services.AddMappings();
-        services.AddInfrastructureServices(configuration);
-        services.AddApplicationServices();
+        services.AddInfrastructure();
+        services.AddApplication();
         services.AddHttpContextAccessor();
 
         // JWT Configuration
         services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.Jwt));
         services.AddRateLimiting(configuration);
 
-        // Email Service Configuration
-        //(errado) cria container Paralelo
-        /*    using var serviceProvider = services.BuildServiceProvider();
-              using var smtpClient = serviceProvider
-                                    .GetRequiredService<SmtpClientFactory>()
-                                    .Create(); */
-
         var smtpConfig = configuration.GetSection(nameof(SmtpOptions)).Get<SmtpOptions>()!;
-
-        services
-          .AddFluentEmail(smtpConfig.FromEmail, smtpConfig.FromName)
-          .AddSmtpSender(smtpConfig.Host, smtpConfig.Port, smtpConfig.Username, smtpConfig.Password)
-          .AddRazorRenderer();
+        // Send Email 
+        services.AddFluentEmail(smtpConfig.FromEmail, smtpConfig.FromName)
+                .AddSmtpSender(smtpConfig.Host, smtpConfig.Port, smtpConfig.Username, smtpConfig.Password)
+                .AddRazorRenderer();
 
         return services;
     }
@@ -53,6 +44,8 @@ public static class DependencyInjection
         var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
                     .CreateLogger("SMTP Configuration");
 
+        logger.LogInformation("Add SMTP Configuration");
+        //Executa ao iniciar o App!  
         var email = scope.ServiceProvider.GetRequiredService<IEmailService>();
 
         // await email.SendAsync("fenderlopes@gmail.com", "Test Email Buber Dinner", "WelcomeEmail.cshtml", "Ednei", Guid.NewGuid());

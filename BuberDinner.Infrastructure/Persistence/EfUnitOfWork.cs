@@ -1,3 +1,5 @@
+using System.Transactions;
+
 using BuberDinner.Domain.Common.Interfaces;
 using BuberDinner.Infrastructure.Persistence.Context;
 
@@ -12,53 +14,50 @@ public class EfUnitOfWork : IUnitOfWork
     private readonly List<IDomainEvent> _collectedEvents = new();
     private IDbContextTransaction? _transaction;
     public ChangeTracker ChangeTracker => _context.ChangeTracker;
-
     public bool HasActiveTransaction => _transaction != null;
-
     public EfUnitOfWork(AppDbContext context)
     {
         _context = context;
     }
-    public async Task CommitAsync(CancellationToken cancellationToken = default, bool detectChange = false)
+    public async Task CommitAsync(CancellationToken ct = default, bool detectChange = false)
     {
 
         if (detectChange)
             _context.ChangeTracker.DetectChanges();
-
         try
         {
-            await _context.SaveChangesAsync(cancellationToken);
-
-            if (HasActiveTransaction)
-            {
-                await _transaction.CommitAsync(cancellationToken);
-                await _transaction.DisposeAsync();
-                _transaction = null;
-            }
+            await _context.SaveChangesAsync(ct);
+            if (_transaction is not null)
+                await _transaction.CommitAsync(ct);
         }
         catch
         {
             if (_transaction != null)
+                await _transaction.RollbackAsync(ct);
+            throw;
+        }
+        finally
+        {
+            if (_transaction != null)
             {
-                await _transaction.RollbackAsync(cancellationToken);
                 await _transaction.DisposeAsync();
                 _transaction = null;
             }
-            throw;
         }
 
     }
 
-    public async Task RollbackAsync(CancellationToken cancellationToken = default)
+    public async Task RollbackAsync(CancellationToken ct = default)
     {
 
         if (HasActiveTransaction)
             await _transaction?.RollbackAsync()!;
     }
 
-    public async Task BeginTransactionAsync(CancellationToken cancellationToken = default)
+
+    public async Task BeginTransactionAsync(CancellationToken ct = default)
     {
-        _transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+        _transaction = await _context.Database.BeginTransactionAsync(ct);
     }
 
 

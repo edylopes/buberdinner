@@ -10,7 +10,7 @@ WORKDIR /src
 COPY ["BuberDinner.Worker/BuberDinner.Worker.csproj", "BuberDinner.Worker/"]
 COPY ["BuberDinner.Infrastructure/BuberDinner.Infrastructure.csproj", "BuberDinner.Infrastructure/"]
 COPY ["BuberDinner.Application/BuberDinner.Application.csproj", "BuberDinner.Application/"]
-COPY ["BuberDinner.Application/BuberDinner.Application.csproj", "BuberDinner.Application/"]
+COPY ["BuberDinner.Domain/BuberDinner.Domain.csproj", "BuberDinner.Domain/"]
 COPY ["BuberDinner.Contracts/BuberDinner.Contracts.csproj", "BuberDinner.Contracts/"]
 
 RUN dotnet restore "BuberDinner.Worker/BuberDinner.Worker.csproj"
